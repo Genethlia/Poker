@@ -1,0 +1,18 @@
+{
+  "configurations": [
+    {
+      "name": "MinGW64",
+      "includePath": [
+        "${workspaceFolder}/**",
+        "C:\\boost\\boost_1_84_0",
+        "C:\\raylib_mingw\\include"
+      ],
+      "defines": [],
+      "compilerPath": "C:\\mingw64\\bin\\g++.exe",
+      "cStandard": "c17",
+      "cppStandard": "c++17",
+      "intelliSenseMode": "windows-gcc-x64"
+    }
+  ],
+  "version": 4
+}
