@@ -1,0 +1,4 @@
+C:/Users/tgene/OneDrive - MOEC/Poker/build/CMakeFiles/server.dir
+C:/Users/tgene/OneDrive - MOEC/Poker/build/CMakeFiles/client.dir
+C:/Users/tgene/OneDrive - MOEC/Poker/build/CMakeFiles/edit_cache.dir
+C:/Users/tgene/OneDrive - MOEC/Poker/build/CMakeFiles/rebuild_cache.dir

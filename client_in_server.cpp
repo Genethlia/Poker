@@ -169,6 +169,15 @@ void Client::handle_line(const string &line)
         response.playerId = id;
         break;
     case MessageTypeClientToServer::Action:
+        if (serverState->gameState == GameState::WaitingForPlayers || serverState->gameState == GameState::Showdown || serverState->toAct != id)
+        {
+            cout << "[" << display_name() << "] attempted action is invalid\n";
+            response.type = MessageTypeServerToClient::ActionResult;
+            response.playerId = id;
+            response.action = PlayerActionType::Failed;
+            break;
+        }
+
         cout << "[" << display_name() << "] action: " << int(msg.action) << " amount: " << msg.amount << "\n";
         response.type = MessageTypeServerToClient::ActionResult;
         response.playerId = id;
