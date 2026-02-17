@@ -44,6 +44,8 @@ public:
     int money = 1000;
     bool inHand;
     bool allin;
+    bool hasPendingAction;
+    std::string PendingAction;
     int betThisRound = 0;
 
 private:

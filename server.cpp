@@ -70,6 +70,9 @@ public:
         for (auto &client : state.clients)
             players.push_back(client);
 
+        sort(players.begin(), players.end(), [](const shared_ptr<Client> &a, const shared_ptr<Client> &b)
+             { return a->id < b->id; });
+
         if (state.clients.size() < 2)
         {
             cout << "Not enough players to start the game.\n";
@@ -136,6 +139,17 @@ public:
             .cards = to_string(card2.value) + "." + to_string(card2.suit)}));
         // last round of bets
 
+        /*cout << "\n--- HAND MAPPING DEBUG ---\n";
+        for (size_t j = 0; j < players.size(); j++)
+        {
+            cout << "index " << j
+                 << " = " << players[j]->display_name()
+                 << " id=" << players[j]->id
+                 << " hole=(" << playerHands[j].first.value << "." << playerHands[j].first.suit
+                 << "," << playerHands[j].second.value << "." << playerHands[j].second.suit
+                 << ")\n";
+        }*/
+
         cout << "Showdown! Determining winner...\n";
         vector<int> winners = determine_winner(playerHands, communityCards);
         state.broadcast_all(serialize_server(MessageServerToClient{
@@ -185,5 +199,4 @@ private:
 int main()
 {
     Server server;
-    server.start();
 }

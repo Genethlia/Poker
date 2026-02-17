@@ -35,6 +35,7 @@ Client::Client(tcp::socket s, ServerState *state)
     ready = false;
     inHand = true;
     allin = false;
+    hasPendingAction = false;
 }
 
 void Client::start()
@@ -169,6 +170,8 @@ void Client::handle_line(const string &line)
         response.playerId = id;
         break;
     case MessageTypeClientToServer::Action:
+        hasPendingAction = true;
+        PendingAction = line;
         if (serverState->gameState == GameState::WaitingForPlayers || serverState->gameState == GameState::Showdown || serverState->toAct != id)
         {
             cout << "[" << display_name() << "] attempted action is invalid\n";
