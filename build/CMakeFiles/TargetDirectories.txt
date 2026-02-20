@@ -1,4 +1,4 @@
 C:/Users/tgene/OneDrive - MOEC/Poker/build/CMakeFiles/server.dir
 C:/Users/tgene/OneDrive - MOEC/Poker/build/CMakeFiles/client.dir
-C:/Users/tgene/OneDrive - MOEC/Poker/build/CMakeFiles/edit_cache.dir
-C:/Users/tgene/OneDrive - MOEC/Poker/build/CMakeFiles/rebuild_cache.dir
+C:/Users/tgene/OneDrive - MOEC/Poker/build/CMakeFiles/ALL_BUILD.dir
+C:/Users/tgene/OneDrive - MOEC/Poker/build/CMakeFiles/ZERO_CHECK.dir

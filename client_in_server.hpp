@@ -3,9 +3,30 @@
 
 class Client;
 
+struct HandState
+{
+    bool active = false;
+
+    std::vector<int> playersOrderd;
+    std::vector<hand> hole;
+    std::vector<valRank> communityCards;
+
+    int street = 0; // 0: PreFlop, 1: Flop, 2: Turn, 3: River
+
+    void clear()
+    {
+        active = false;
+        playersOrderd.clear();
+        hole.clear();
+        communityCards.clear();
+    }
+};
+
 struct ServerState
 {
     std::set<std::shared_ptr<Client>> clients;
+
+    HandState handstate;
 
     int nextId = 0;
     int pot = 0;
@@ -13,6 +34,8 @@ struct ServerState
     int minRaise = 0;
     int lastAggressor = -1;
     int toAct = 0;
+
+    std::unordered_set<int> needsAction; // player ids that need to act in the current betting round
 
     std::unordered_map<int, std::string> idToName;
 

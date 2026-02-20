@@ -1,0 +1,10 @@
+^C:\USERS\TGENE\ONEDRIVE - MOEC\POKER\BUILD\CMAKEFILES\BDC3F64B4C8A496051EF126F7EB25259\GENERATE.STAMP.RULE
+setlocal
+"C:\Program Files\CMake\bin\cmake.exe" "-SC:/Users/tgene/OneDrive - MOEC/Poker" "-BC:/Users/tgene/OneDrive - MOEC/Poker/build" --check-stamp-list CMakeFiles/generate.stamp.list --vs-solution-file "C:/Users/tgene/OneDrive - MOEC/Poker/build/POKER.slnx"
+if %errorlevel% neq 0 goto :cmEnd
+:cmEnd
+endlocal & call :cmErrorLevel %errorlevel% & goto :cmDone
+:cmErrorLevel
+exit /b %1
+:cmDone
+if %errorlevel% neq 0 goto :VCEnd

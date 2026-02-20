@@ -4,13 +4,16 @@
 #include <unordered_map>
 #include <iostream>
 #include <memory>
+#include <vector>
 #include <set>
+#include <unordered_set>
 #include <functional>
 #include <deque>
 #include <string>
 #include <thread>
 #include <sstream>
 using boost::asio::ip::tcp;
+using hand = pair<valRank, valRank>;
 
 enum class MessageTypeClientToServer
 {

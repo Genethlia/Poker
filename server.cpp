@@ -83,10 +83,30 @@ public:
             cout << "Not all players are ready.\n";
             return;
         }
+
+        state.pot = 0;
+        state.gameState = GameState::PreFlop;
+        state.currentBet = 0;
+        state.minRaise = 50;
+        state.needsAction.clear();
+
+        state.handstate.clear();
+        state.handstate.active = true;
+        state.handstate.street = 0;
+
+        for (auto &client : players)
+        {
+            client->inHand = true;
+            client->allin = false;
+            client->betThisRound = 0;
+            state.handstate.playersOrderd.push_back(client->id);
+        }
+
+        state.handstate.hole.resize(players.size());
+
         cout << "All players are ready. Starting game...\n";
         state.gameState = GameState::PreFlop;
         cout << "Dealing cards...\n";
-        vector<hand> playerHands(state.clients.size());
         for (int round = 0; round < 2; round++)
         {
             for (size_t j = 0; j < players.size(); j++)
@@ -95,11 +115,11 @@ public:
                 cout << "Dealt card " << card.value << " of suit " << card.suit << " to player " << players[j]->display_name() << endl;
                 if (round == 0)
                 {
-                    playerHands[j].first = card;
+                    state.handstate.hole[j].first = card;
                 }
                 else
                 {
-                    playerHands[j].second = card;
+                    state.handstate.hole[j].second = card;
                 }
                 players[j]->send_to(serialize_server(MessageServerToClient{
                                         .type = MessageTypeServerToClient::PlayerHand,
@@ -109,14 +129,13 @@ public:
         }
         // bets
         cout << "Dealing community cards...\n";
-        vector<valRank> communityCards;
         for (int i = 0; i < 3; i++)
         {
             auto card = deck.DrawCard();
-            communityCards.push_back(card);
+            state.handstate.communityCards.push_back(card);
             cout << "Dealing community card " << card.value << " of suit " << card.suit << endl;
         }
-        for (auto &card : communityCards)
+        for (auto &card : state.handstate.communityCards)
         {
             state.broadcast_all(serialize_server(MessageServerToClient{
                 .type = MessageTypeServerToClient::CommunityCard,
@@ -124,7 +143,7 @@ public:
         }
         // more bets
         auto card1 = deck.DrawCard();
-        communityCards.push_back(card1);
+        state.handstate.communityCards.push_back(card1);
         cout << "Dealing turn card: " << card1.value << " of suit " << card1.suit << endl;
         state.broadcast_all(serialize_server(MessageServerToClient{
             .type = MessageTypeServerToClient::CommunityCard,
@@ -132,7 +151,7 @@ public:
 
         // more bets
         auto card2 = deck.DrawCard();
-        communityCards.push_back(card2);
+        state.handstate.communityCards.push_back(card2);
         cout << "Dealing river card: " << card2.value << " of suit " << card2.suit << endl;
         state.broadcast_all(serialize_server(MessageServerToClient{
             .type = MessageTypeServerToClient::CommunityCard,
@@ -151,11 +170,27 @@ public:
         }*/
 
         cout << "Showdown! Determining winner...\n";
-        vector<int> winners = determine_winner(playerHands, communityCards);
+        vector<int> winners = determine_winner(state.handstate.hole, state.handstate.communityCards);
         state.broadcast_all(serialize_server(MessageServerToClient{
             .type = MessageTypeServerToClient::Showdown,
             .potAmount = state.pot,
             .idWinners = winners}));
+    }
+
+    void StartBettingRound(int firstToAct)
+    {
+        state.currentBet = 0;
+        state.minRaise = 50; // BB for now
+        state.needsAction.clear();
+
+        for (auto &c : state.clients)
+        {
+            c->betThisRound = 0;
+            if (c->inHand && !c->allin)
+                state.needsAction.insert(c->id);
+        }
+
+        state.toAct = firstToAct;
     }
 
 private:

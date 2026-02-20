@@ -30,15 +30,22 @@ add_executable(client
   ${SHARED_SOURCES}
 )
 
-# Threads (Boost.Asio often relies on this)
+# Threads
 find_package(Threads REQUIRED)
 target_link_libraries(server PRIVATE Threads::Threads)
 target_link_libraries(client PRIVATE Threads::Threads)
+
+# Boost headers
+set(BOOST_ROOT "C:\\boost\\boost_1_84_0")
+target_include_directories(server PRIVATE "${BOOST_ROOT}")
+target_include_directories(client PRIVATE "${BOOST_ROOT}")
 
 # Windows networking libs (important on MinGW)
 if (WIN32)
   target_link_libraries(server PRIVATE ws2_32 mswsock)
   target_link_libraries(client PRIVATE ws2_32 mswsock)
+  target_compile_definitions(server PRIVATE _WIN32_WINNT=0x0A00 WIN32_LEAN_AND_MEAN NOMINMAX)
+  target_compile_definitions(client PRIVATE _WIN32_WINNT=0x0A00 WIN32_LEAN_AND_MEAN NOMINMAX)
 endif()
 
 

@@ -18,8 +18,6 @@ struct valRank
     int suit;
 };
 
-using hand = pair<valRank, valRank>;
-
 static inline int valueOf(valRank card) { return card.value; }
 static inline int suitOf(valRank card) { return card.suit; }
 
