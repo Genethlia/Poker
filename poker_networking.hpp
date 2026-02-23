@@ -13,7 +13,6 @@
 #include <thread>
 #include <sstream>
 using boost::asio::ip::tcp;
-using hand = pair<valRank, valRank>;
 
 enum class MessageTypeClientToServer
 {

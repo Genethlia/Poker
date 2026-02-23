@@ -106,6 +106,8 @@ public:
 
         cout << "All players are ready. Starting game...\n";
         state.gameState = GameState::PreFlop;
+        StartBettingRound(state.handstate.playersOrderd[0]);
+
         cout << "Dealing cards...\n";
         for (int round = 0; round < 2; round++)
         {
@@ -191,6 +193,46 @@ public:
         }
 
         state.toAct = firstToAct;
+
+        AdvanceBetting();
+    }
+    void AdvanceBetting()
+    {
+        for (auto &c : state.clients)
+        {
+            if (!c->inHand || c->allin)
+            {
+                state.needsAction.erase(c->id);
+            }
+        }
+        if (countInHand() <= 1)
+        {
+            int winnerId = -1;
+            for (auto &c : state.clients)
+            {
+                if (c->inHand)
+                {
+                    winnerId = c->id;
+                    break;
+                }
+            }
+
+            if (winnerId != -1)
+            {
+                auto winner = find_client_by_id(winnerId);
+                if (winner)
+                {
+                    winner->money += state.pot;
+                    cout << "Player " << winner->display_name() << " wins the pot of " << state.pot << " by everyone else folding!\n";
+                }
+            }
+            state.gameState = GameState::Showdown;
+            state.broadcast_all(serialize_server(MessageServerToClient{
+                .type = MessageTypeServerToClient::Showdown,
+                .potAmount = state.pot,
+                .idWinners = {winnerId}}));
+        }
+        return;
     }
 
 private:
@@ -228,6 +270,16 @@ private:
                 count++;
         }
         return count;
+    }
+    int CountCanAct()
+    {
+        int n = 0;
+        for (auto &c : state.clients)
+        {
+            if (c->inHand && !c->allin)
+                n++;
+        }
+        return n;
     }
 };
 

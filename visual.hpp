@@ -8,6 +8,7 @@
 #include <array>
 #include <algorithm>
 #include <unordered_map>
+#include "poker_networking.hpp"
 
 using namespace std;
 
@@ -17,6 +18,7 @@ struct valRank
     int value;
     int suit;
 };
+using hand = pair<valRank, valRank>;
 
 static inline int valueOf(valRank card) { return card.value; }
 static inline int suitOf(valRank card) { return card.suit; }

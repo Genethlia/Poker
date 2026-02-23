@@ -1,5 +1,6 @@
 #pragma once
 #include "poker_networking.hpp"
+#include "visual.hpp"
 
 class Client;
 
