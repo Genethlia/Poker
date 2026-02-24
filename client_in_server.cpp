@@ -186,6 +186,11 @@ void Client::handle_line(const string &line)
         response.playerId = id;
         response.action = msg.action;
         response.amount = msg.amount;
+
+        if (on_action_ptr)
+            on_action_ptr(id, msg.action, msg.amount);
+
+        validMessage = false; // Don't broadcast the action message to other clients, the server will broadcast the result after processing the action
         break;
     case MessageTypeClientToServer::RequestState:
         cout << "[" << display_name() << "] requested game state\n";

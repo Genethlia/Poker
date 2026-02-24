@@ -70,6 +70,7 @@ public:
     bool allin;
     bool hasPendingAction;
     std::string PendingAction;
+    std::function<void(int /*playerId*/, PlayerActionType, int /*amount*/)> on_action_ptr;
     int betThisRound = 0;
 
 private:

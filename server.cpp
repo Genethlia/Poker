@@ -40,6 +40,8 @@ public:
 
                             client->play_game_ptr = [this]()
                             { this->play_game(); };
+                            client->on_action_ptr = [this](int playerId, PlayerActionType action, int amount)
+                            { this->onPlayerAction(playerId, action, amount); };
 
                             state.clients.insert(client);
                             client->start();
@@ -105,8 +107,6 @@ public:
         state.handstate.hole.resize(players.size());
 
         cout << "All players are ready. Starting game...\n";
-        state.gameState = GameState::PreFlop;
-        StartBettingRound(state.handstate.playersOrderd[0]);
 
         cout << "Dealing cards...\n";
         for (int round = 0; round < 2; round++)
@@ -129,54 +129,8 @@ public:
                                     players[j]->id);
             }
         }
-        // bets
-        cout << "Dealing community cards...\n";
-        for (int i = 0; i < 3; i++)
-        {
-            auto card = deck.DrawCard();
-            state.handstate.communityCards.push_back(card);
-            cout << "Dealing community card " << card.value << " of suit " << card.suit << endl;
-        }
-        for (auto &card : state.handstate.communityCards)
-        {
-            state.broadcast_all(serialize_server(MessageServerToClient{
-                .type = MessageTypeServerToClient::CommunityCard,
-                .cards = to_string(card.value) + "." + to_string(card.suit)}));
-        }
-        // more bets
-        auto card1 = deck.DrawCard();
-        state.handstate.communityCards.push_back(card1);
-        cout << "Dealing turn card: " << card1.value << " of suit " << card1.suit << endl;
-        state.broadcast_all(serialize_server(MessageServerToClient{
-            .type = MessageTypeServerToClient::CommunityCard,
-            .cards = to_string(card1.value) + "." + to_string(card1.suit)}));
-
-        // more bets
-        auto card2 = deck.DrawCard();
-        state.handstate.communityCards.push_back(card2);
-        cout << "Dealing river card: " << card2.value << " of suit " << card2.suit << endl;
-        state.broadcast_all(serialize_server(MessageServerToClient{
-            .type = MessageTypeServerToClient::CommunityCard,
-            .cards = to_string(card2.value) + "." + to_string(card2.suit)}));
-        // last round of bets
-
-        /*cout << "\n--- HAND MAPPING DEBUG ---\n";
-        for (size_t j = 0; j < players.size(); j++)
-        {
-            cout << "index " << j
-                 << " = " << players[j]->display_name()
-                 << " id=" << players[j]->id
-                 << " hole=(" << playerHands[j].first.value << "." << playerHands[j].first.suit
-                 << "," << playerHands[j].second.value << "." << playerHands[j].second.suit
-                 << ")\n";
-        }*/
-
-        cout << "Showdown! Determining winner...\n";
-        vector<int> winners = determine_winner(state.handstate.hole, state.handstate.communityCards);
-        state.broadcast_all(serialize_server(MessageServerToClient{
-            .type = MessageTypeServerToClient::Showdown,
-            .potAmount = state.pot,
-            .idWinners = winners}));
+        state.gameState = GameState::PreFlop;
+        StartBettingRound(state.handstate.playersOrderd[0]);
     }
 
     void StartBettingRound(int firstToAct)
@@ -232,6 +186,56 @@ public:
                 .potAmount = state.pot,
                 .idWinners = {winnerId}}));
         }
+
+        if (CountCanAct() == 0 && countInHand() > 1)
+        {
+            runOutToFive();
+            doShowdown();
+            return;
+        }
+
+        if (state.needsAction.empty())
+        {
+            if (state.handstate.street == 0)
+            {
+                dealFlop();
+                state.handstate.street = 1;
+                state.gameState = GameState::Flop;
+            }
+            else if (state.handstate.street == 1)
+            {
+                dealTurnorRiver();
+                state.handstate.street = 2;
+                state.gameState = GameState::Turn;
+            }
+            else if (state.handstate.street == 2)
+            {
+                dealTurnorRiver();
+                state.handstate.street = 3;
+                state.gameState = GameState::River;
+            }
+            else
+            {
+                doShowdown();
+                return;
+            }
+
+            int next = nextIdNeedingAction(state, state.handstate.playersOrderd[0]);
+            state.toAct = next;
+
+            auto p = find_client_by_id(next);
+            if (!p)
+                return;
+
+            state.broadcast_all(serialize_server(MessageServerToClient{
+                .type = MessageTypeServerToClient::GameState,
+                .playerId = next,
+                .toCall = toCall,
+                .currentBet = state.currentBet,
+                .minRaise = state.minRaise,
+                .potAmount = state.pot}));
+        }
+
         return;
     }
 
@@ -280,6 +284,112 @@ private:
                 n++;
         }
         return n;
+    }
+    void dealFlop()
+    {
+        for (int i = 0; i < 3; i++)
+        {
+            auto card = deck.DrawCard();
+            state.handstate.communityCards.push_back(card);
+            cout << "Dealing community card " << card.value << " of suit " << card.suit << endl;
+            state.broadcast_all(serialize_server(MessageServerToClient{
+                .type = MessageTypeServerToClient::CommunityCard,
+                .cards = to_string(card.value) + "." + to_string(card.suit)}));
+        }
+    }
+    void dealTurnorRiver()
+    {
+        auto card = deck.DrawCard();
+        state.handstate.communityCards.push_back(card);
+        cout << "Dealing community card " << card.value << " of suit " << card.suit << endl;
+        state.broadcast_all(serialize_server(MessageServerToClient{
+            .type = MessageTypeServerToClient::CommunityCard,
+            .cards = to_string(card.value) + "." + to_string(card.suit)}));
+    }
+    void runOutToFive()
+    {
+        while (state.handstate.communityCards.size() < 5)
+        {
+            auto card = deck.DrawCard();
+            state.handstate.communityCards.push_back(card);
+            cout << "Dealing community card " << card.value << " of suit " << card.suit << endl;
+            state.broadcast_all(serialize_server(MessageServerToClient{
+                .type = MessageTypeServerToClient::CommunityCard,
+                .cards = to_string(card.value) + "." + to_string(card.suit)}));
+        }
+    }
+
+    void doShowdown()
+    {
+        vector<hand> hands = state.handstate.hole;
+        vector<valRank> community = state.handstate.communityCards;
+
+        auto winners = determine_winner(hands, community);
+        state.gameState = GameState::Showdown;
+        state.broadcast_all(serialize_server(MessageServerToClient{
+            .type = MessageTypeServerToClient::Showdown,
+            .potAmount = state.pot,
+            .idWinners = winners}));
+
+        if (winners.size() == 1)
+        {
+            auto winner = find_client_by_id(winners[0]);
+            if (winner)
+            {
+                winner->money += state.pot;
+                cout << "Player " << winner->display_name() << " wins the pot of " << state.pot << " with a showdown!\n";
+            }
+        }
+        state.handstate.active = false;
+    }
+    shared_ptr<Client> findClientById(ServerState &st, int pid)
+    {
+        for (auto &c : st.clients)
+            if (c->id == pid)
+                return c;
+        return nullptr;
+    }
+
+    int countInHand(ServerState &st)
+    {
+        int n = 0;
+        for (auto &c : st.clients)
+            if (c->inHand)
+                n++;
+        return n;
+    }
+
+    vector<int> orderedActiveIds(ServerState &st)
+    {
+        vector<int> ids;
+        for (auto &c : st.clients)
+            if (c->inHand && !c->allin)
+                ids.push_back(c->id);
+        sort(ids.begin(), ids.end());
+        return ids;
+    }
+
+    int nextIdNeedingAction(ServerState &st, int startId)
+    {
+        auto ids = orderedActiveIds(st);
+        if (ids.empty())
+            return -1;
+
+        int startIndex = 0;
+        for (int i = 0; i < (int)ids.size(); i++)
+            if (ids[i] == startId)
+            {
+                startIndex = i;
+                break;
+            }
+
+        for (int k = 0; k < (int)ids.size(); k++)
+        {
+            int pid = ids[(startIndex + k) % ids.size()];
+            if (st.needsAction.count(pid))
+                return pid;
+        }
+        return ids[0];
     }
 };
 
