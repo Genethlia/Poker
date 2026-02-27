@@ -75,8 +75,8 @@ void PokerClient::terminal(const string &input)
         {
             istringstream actionStream(arg);
             string actionStr;
-            int amount = 0;
-            actionStream >> actionStr >> amount;
+            int actionAmount = 0;
+            actionStream >> actionStr >> actionAmount;
 
             PlayerActionType actionType = PlayerActionType::Failed;
             if (actionStr == "fold")
@@ -91,7 +91,7 @@ void PokerClient::terminal(const string &input)
             MessageClientToServer msg;
             msg.type = MessageTypeClientToServer::Action;
             msg.action = actionType;
-            msg.amount = amount;
+            msg.actionAmount = actionAmount;
 
             write_line(serialize_client(msg));
         }
@@ -218,7 +218,7 @@ void PokerClient::handle_line(const string &line, ClientState &state)
         cout << "Your hand: " << msg.cards << "\n";
         break;
     case MessageTypeServerToClient::PotUpdate:
-        cout << "Pot updated: $" << msg.amount << "\n";
+        cout << "Pot updated: $" << msg.potAmount << "\n";
         break;
     case MessageTypeServerToClient::Showdown:
         cout << "Showdown! Pot: $" << msg.potAmount << ". Winners: ";
@@ -226,6 +226,9 @@ void PokerClient::handle_line(const string &line, ClientState &state)
         {
             cout << nameOf(id) << " (ID: " << id << ") \n";
         }
+        break;
+    case MessageTypeServerToClient::BettingUpdate:
+        cout << "Betting update: To Act: " << nameOf(msg.toAct) << " (ID: " << msg.toAct << "), To Call: $" << msg.toCall << ", Current Bet: $" << msg.currentBet << ", Min Raise: $" << msg.minRaise << ", Pot: $" << msg.potAmount << "\n";
         break;
     default:
         cout << "Unknown message type received.\n";

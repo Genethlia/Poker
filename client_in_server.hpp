@@ -44,6 +44,8 @@ struct ServerState
 
     void broadcast_all(const std::string &msg);
 
+    void send_to(const std::string &msg, int id);
+
     bool all_ready() const;
 
     void reset_game();
@@ -70,7 +72,7 @@ public:
     bool allin;
     bool hasPendingAction;
     std::string PendingAction;
-    std::function<void(int /*playerId*/, PlayerActionType, int /*amount*/)> on_action_ptr;
+    std::function<void(int /*playerId*/, PlayerActionType, int /*actionAmount*/)> on_action_ptr;
     int betThisRound = 0;
 
 private:

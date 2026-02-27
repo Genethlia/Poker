@@ -1,6 +1,15 @@
 #include "client_in_server.hpp"
 using namespace std;
 
+void ServerState::send_to(const string &msg, int id)
+{
+    auto target = find_if(clients.begin(), clients.end(),
+                          [id](const shared_ptr<Client> &c)
+                          { return c->id == id; });
+    if (target != clients.end())
+        (*target)->send(make_shared<string>(msg));
+}
+
 bool ServerState::all_ready() const
 {
     for (const auto &client : clients)
@@ -181,14 +190,14 @@ void Client::handle_line(const string &line)
             break;
         }
 
-        cout << "[" << display_name() << "] action: " << int(msg.action) << " amount: " << msg.amount << "\n";
+        cout << "[" << display_name() << "] action: " << int(msg.action) << " actionAmount: " << msg.actionAmount << "\n";
         response.type = MessageTypeServerToClient::ActionResult;
         response.playerId = id;
         response.action = msg.action;
-        response.amount = msg.amount;
+        response.actionAmount = msg.actionAmount;
 
         if (on_action_ptr)
-            on_action_ptr(id, msg.action, msg.amount);
+            on_action_ptr(id, msg.action, msg.actionAmount);
 
         validMessage = false; // Don't broadcast the action message to other clients, the server will broadcast the result after processing the action
         break;

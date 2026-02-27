@@ -40,8 +40,8 @@ public:
 
                             client->play_game_ptr = [this]()
                             { this->play_game(); };
-                            client->on_action_ptr = [this](int playerId, PlayerActionType action, int amount)
-                            { this->onPlayerAction(playerId, action, amount); };
+                            client->on_action_ptr = [this](int playerId, PlayerActionType action, int actionAmount)
+                            { this->onPlayerAction(playerId, action, actionAmount); };
 
                             state.clients.insert(client);
                             client->start();
@@ -185,6 +185,8 @@ public:
                 .type = MessageTypeServerToClient::Showdown,
                 .potAmount = state.pot,
                 .idWinners = {winnerId}}));
+
+            return;
         }
 
         if (CountCanAct() == 0 && countInHand() > 1)
@@ -227,16 +229,132 @@ public:
             if (!p)
                 return;
 
+            int toCall = max(0, state.currentBet - p->betThisRound);
+
             state.broadcast_all(serialize_server(MessageServerToClient{
-                .type = MessageTypeServerToClient::GameState,
+                .type = MessageTypeServerToClient::BettingUpdate,
                 .playerId = next,
+                .potAmount = state.pot,
                 .toCall = toCall,
                 .currentBet = state.currentBet,
                 .minRaise = state.minRaise,
-                .potAmount = state.pot}));
+
+            }));
+        }
+    }
+    void onPlayerAction(int playerId, PlayerActionType action, int actionAmount)
+    {
+        if (playerId != state.toAct)
+        {
+            cout << "Received action from player " << playerId << " but it's not their turn.\n";
+            state.send_to(serialize_server(MessageServerToClient{
+                              .type = MessageTypeServerToClient::ActionResult,
+                              .playerId = playerId,
+                              .action = PlayerActionType::Failed,
+                              .actionAmount = 0}),
+                          playerId);
+            return;
+        }
+        auto p = find_client_by_id(playerId);
+        if (!p)
+        {
+            cout << "Received action from unknown player " << playerId << ".\n";
+            return;
+        }
+        if (!p->inHand || p->allin)
+        {
+            cout << "Received action from player " << playerId << " who is not in hand or already all-in.\n";
+            return;
         }
 
-        return;
+        int toCall = max(0, state.currentBet - p->betThisRound);
+
+        bool ok = true;
+
+        auto pay = [&](int amt)
+        {
+            int act = min(amt, p->money);
+            p->money -= act;
+            p->betThisRound += act;
+            state.pot += act;
+            if (p->money == 0)
+                p->allin = true;
+            return act;
+        };
+
+        switch (action)
+        {
+        case PlayerActionType::Fold:
+            p->inHand = false;
+            state.needsAction.erase(playerId);
+            break;
+        case PlayerActionType::Check:
+            if (toCall != 0)
+            {
+                ok = false;
+                break;
+            }
+            state.needsAction.erase(playerId);
+            break;
+        case PlayerActionType::Call:
+            if (toCall > 0)
+                pay(toCall);
+            state.needsAction.erase(playerId);
+            break;
+        case PlayerActionType::Raise:
+        {
+            if (state.currentBet == 0)
+            {
+                ok = false;
+                break;
+            }
+            int raiseTo = actionAmount;
+            int minTo = state.currentBet + state.minRaise;
+            int maxTo = p->betThisRound + p->money;
+            if (raiseTo < minTo && raiseTo < maxTo)
+            {
+                ok = false;
+                break;
+            }
+            if (raiseTo > maxTo)
+            {
+                raiseTo = maxTo;
+            }
+
+            int additional = raiseTo - p->betThisRound;
+            if (additional <= 0)
+            {
+                ok = false;
+                break;
+            }
+            pay(additional);
+
+            int newTotalBet = p->betThisRound;
+            int raiseAmount = newTotalBet - state.currentBet;
+            if (raiseAmount > 0)
+                state.minRaise = raiseAmount;
+            state.currentBet = max(state.currentBet, newTotalBet);
+            state.needsAction.clear();
+            for (auto &c : state.clients)
+            {
+                if (c->inHand && !c->allin && c->id != playerId)
+                    state.needsAction.insert(c->id);
+            }
+            break;
+        }
+        default:
+            ok = false;
+            break;
+        }
+        state.broadcast_all(serialize_server(MessageServerToClient{
+            .type = MessageTypeServerToClient::ActionResult,
+            .playerId = playerId,
+            .potAmount = state.pot,
+            .action = ok ? action : PlayerActionType::Failed,
+            .actionAmount = actionAmount,
+        }));
+
+        AdvanceBetting();
     }
 
 private:

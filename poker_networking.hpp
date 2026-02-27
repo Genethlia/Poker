@@ -34,6 +34,7 @@ enum class MessageTypeServerToClient
     ChatFrom,
     GameState,
     ActionResult,
+    BettingUpdate,
     CommunityCard,
     PlayerHand,
     PotUpdate,
@@ -67,7 +68,7 @@ struct MessageClientToServer
     std::string chatText; // For CHAT
 
     PlayerActionType action; // For ACTION
-    int amount = 0;          // For BET/RAISE
+    int actionAmount = 0;          // For BET/RAISE
 };
 
 struct MessageServerToClient
@@ -86,11 +87,16 @@ struct MessageServerToClient
     GameState gameState;
 
     PlayerActionType action;
-    int amount = 0;
+    int actionAmount = 0;
 
     std::string cards; // later can be vector<Card>
 
     std::vector<int> idWinners; // For Showdown
+
+    int toAct = -1;     // For GameState
+    int toCall = 0;     // For GameState
+    int currentBet = 0; // For GameState
+    int minRaise = 0;   // For GameState
 };
 
 inline std::string serialize_client(const MessageClientToServer &m)
@@ -109,7 +115,7 @@ inline std::string serialize_client(const MessageClientToServer &m)
         out << "CHAT " << m.chatText;
         break;
     case MessageTypeClientToServer::Action:
-        out << "ACTION " << int(m.action) << " " << m.amount;
+        out << "ACTION " << int(m.action) << " " << m.actionAmount;
         break;
     case MessageTypeClientToServer::RequestState:
         out << "REQUEST_STATE ";
@@ -163,7 +169,7 @@ inline MessageClientToServer deserialize_client(const std::string &line)
         }
         msg.type = MessageTypeClientToServer::Action;
         int tempAction;
-        in >> tempAction >> msg.amount;
+        in >> tempAction >> msg.actionAmount;
         msg.action = static_cast<PlayerActionType>(tempAction);
         break;
     case 'L': // LEAVE
@@ -205,7 +211,7 @@ inline std::string serialize_server(const MessageServerToClient &m)
         out << " " << m.potAmount;
         break;
     case MessageTypeServerToClient::ActionResult:
-        out << "ACTION_RESULT " << m.playerId << " " << int(m.action) << " " << m.amount;
+        out << "ACTION_RESULT " << m.playerId << " " << int(m.action) << " " << m.actionAmount;
         break;
     case MessageTypeServerToClient::CommunityCard:
         out << "COMMUNITY_CARD " << m.cards;
@@ -214,7 +220,7 @@ inline std::string serialize_server(const MessageServerToClient &m)
         out << "PLAYER_HAND " << m.cards;
         break;
     case MessageTypeServerToClient::PotUpdate:
-        out << "POT_UPDATE " << m.amount;
+        out << "POT_UPDATE " << m.potAmount;
         break;
     case MessageTypeServerToClient::Showdown:
         out << "SHOWDOWN ";
@@ -224,6 +230,9 @@ inline std::string serialize_server(const MessageServerToClient &m)
         {
             out << " " << id;
         }
+        break;
+    case MessageTypeServerToClient::BettingUpdate:
+        out << "BETTING_UPDATE " << m.toAct << " " << m.toCall << " " << m.currentBet << " " << m.minRaise << " " << m.potAmount;
         break;
     default:
         out << "UNKNOWN_MESSAGE";
@@ -281,7 +290,7 @@ inline MessageServerToClient deserialize_server(const std::string &line)
         else
         {
             msg.type = MessageTypeServerToClient::PotUpdate;
-            in >> msg.amount;
+            in >> msg.potAmount;
         }
         break;
     case 'C': // CHAT_FROM or COMMUNITY_CARD
@@ -307,7 +316,7 @@ inline MessageServerToClient deserialize_server(const std::string &line)
     case 'A': // ACTION_RESULT
         msg.type = MessageTypeServerToClient::ActionResult;
         int tempAction;
-        in >> msg.playerId >> tempAction >> msg.amount;
+        in >> msg.playerId >> tempAction >> msg.actionAmount;
         msg.action = static_cast<PlayerActionType>(tempAction);
         break;
     case 'S': // SHOWDOWN
@@ -320,6 +329,11 @@ inline MessageServerToClient deserialize_server(const std::string &line)
             in >> id;
             msg.idWinners.push_back(id);
         }
+        break;
+    case 'B': // BETTING_UPDATE
+        msg.type = MessageTypeServerToClient::BettingUpdate;
+        in >> msg.toAct >> msg.toCall >> msg.currentBet >> msg.minRaise >> msg.potAmount;
+        break;
     default:
         break;
     }
