@@ -20,6 +20,16 @@ private:
     {
         std::unordered_map<int, std::string> playerNames;
         int myId = -1;
+
+        GameState gameState = GameState::WaitingForPlayers;
+        int potAmount = 0;
+        std::vector<valRank> communityCards;
+        hand myHand;
+        std::vector<hand> playerHands; // indexed by player id, -1 if unknown
+        int toAct = -1;
+        int toCall = 0;
+        int currentBet = 0;
+        int minRaise = 50;
     };
 
     boost::asio::io_context io;

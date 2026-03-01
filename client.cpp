@@ -11,7 +11,7 @@ int main()
     try
     {
         PokerClient client;
-        client.connect_to("127.0.0.1", "12345");
+        client.connect_to("127.0.0.1", "6767");
         client.join_us(name);
         client.start();
     }

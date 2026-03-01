@@ -13,12 +13,6 @@
 using namespace std;
 
 // Struct to hold card value and rank
-struct valRank
-{
-    int value;
-    int suit;
-};
-using hand = pair<valRank, valRank>;
 
 static inline int valueOf(valRank card) { return card.value; }
 static inline int suitOf(valRank card) { return card.suit; }

@@ -183,15 +183,11 @@ void Client::handle_line(const string &line)
         PendingAction = line;
         if (serverState->gameState == GameState::WaitingForPlayers || serverState->gameState == GameState::Showdown || serverState->toAct != id)
         {
-            cout << "[" << display_name() << "] attempted action is invalid\n";
-            response.type = MessageTypeServerToClient::ActionResult;
-            response.playerId = id;
-            response.action = PlayerActionType::Failed;
+            cout << "[" << display_name() << "] invalid action because " << "gameState=" << int(serverState->gameState) << " toAct=" << serverState->toAct << " myId=" << id << "\n";
             break;
         }
 
         cout << "[" << display_name() << "] action: " << int(msg.action) << " actionAmount: " << msg.actionAmount << "\n";
-        response.type = MessageTypeServerToClient::ActionResult;
         response.playerId = id;
         response.action = msg.action;
         response.actionAmount = msg.actionAmount;

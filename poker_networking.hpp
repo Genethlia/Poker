@@ -14,6 +14,13 @@
 #include <sstream>
 using boost::asio::ip::tcp;
 
+struct valRank
+{
+    int value;
+    int suit;
+};
+using hand = std::pair<valRank, valRank>;
+
 enum class MessageTypeClientToServer
 {
     Join,
@@ -68,7 +75,7 @@ struct MessageClientToServer
     std::string chatText; // For CHAT
 
     PlayerActionType action; // For ACTION
-    int actionAmount = 0;          // For BET/RAISE
+    int actionAmount = 0;    // For BET/RAISE
 };
 
 struct MessageServerToClient

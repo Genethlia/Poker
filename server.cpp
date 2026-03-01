@@ -22,9 +22,9 @@ public:
 
             tcp::acceptor acceptor(
                 io,
-                tcp::endpoint(tcp::v4(), 12345));
+                tcp::endpoint(tcp::v4(), 6767));
 
-            cout << "Server running on port 12345...\n";
+            cout << "Server running on port 6767...\n";
 
             function<void()> accept_loop;
 
@@ -96,6 +96,13 @@ public:
         state.handstate.active = true;
         state.handstate.street = 0;
 
+        state.broadcast_all(serialize_server(MessageServerToClient{
+            .type = MessageTypeServerToClient::GameState,
+            .gameState = state.gameState}));
+        state.broadcast_all(serialize_server(MessageServerToClient{
+            .type = MessageTypeServerToClient::PotUpdate,
+            .potAmount = state.pot}));
+
         for (auto &client : players)
         {
             client->inHand = true;
@@ -147,6 +154,14 @@ public:
         }
 
         state.toAct = firstToAct;
+
+        state.broadcast_all(serialize_server(MessageServerToClient{
+            .type = MessageTypeServerToClient::BettingUpdate,
+            .potAmount = state.pot,
+            .toAct = state.toAct,
+            .toCall = 50,
+            .currentBet = state.currentBet,
+            .minRaise = state.minRaise}));
 
         AdvanceBetting();
     }
@@ -246,7 +261,8 @@ public:
     {
         if (playerId != state.toAct)
         {
-            cout << "Received action from player " << playerId << " but it's not their turn.\n";
+            auto it = state.idToName.find(playerId);
+            cout << "Received action from player " << (it != state.idToName.end() ? it->second : "Unknown") << " but it's not their turn.\n";
             state.send_to(serialize_server(MessageServerToClient{
                               .type = MessageTypeServerToClient::ActionResult,
                               .playerId = playerId,
@@ -311,7 +327,7 @@ public:
             int raiseTo = actionAmount;
             int minTo = state.currentBet + state.minRaise;
             int maxTo = p->betThisRound + p->money;
-            if (raiseTo < minTo && raiseTo < maxTo)
+            if (raiseTo < minTo)
             {
                 ok = false;
                 break;

@@ -73,6 +73,11 @@ void PokerClient::terminal(const string &input)
         }
         else if (command == "/action")
         {
+            if (state.myId != state.toAct)
+            {
+                cout << "It is not your turn to act.\n";
+                return;
+            }
             istringstream actionStream(arg);
             string actionStr;
             int actionAmount = 0;
@@ -207,12 +212,14 @@ void PokerClient::handle_line(const string &line, ClientState &state)
         break;
     case MessageTypeServerToClient::GameState:
         cout << "Game state changed: " << int(msg.gameState) << "\n";
+        state.gameState = msg.gameState;
         break;
     case MessageTypeServerToClient::ActionResult:
-        cout << "Action result for player " << nameOf(msg.playerId) /*<< ": " << int(msg.actionResult)*/ << "\n";
+        cout << "Action result for player " << nameOf(msg.playerId) << ": " << int(msg.action) << "\n";
         break;
     case MessageTypeServerToClient::CommunityCard:
         cout << "Community cards updated: " << msg.cards << "\n";
+
         break;
     case MessageTypeServerToClient::PlayerHand:
         cout << "Your hand: " << msg.cards << "\n";
@@ -229,6 +236,11 @@ void PokerClient::handle_line(const string &line, ClientState &state)
         break;
     case MessageTypeServerToClient::BettingUpdate:
         cout << "Betting update: To Act: " << nameOf(msg.toAct) << " (ID: " << msg.toAct << "), To Call: $" << msg.toCall << ", Current Bet: $" << msg.currentBet << ", Min Raise: $" << msg.minRaise << ", Pot: $" << msg.potAmount << "\n";
+        state.toAct = msg.toAct;           // Update the client state with the new player to act
+        state.toCall = msg.toCall;         // Update the client state with the new amount to call
+        state.currentBet = msg.currentBet; // Update the client state with the new current bet
+        state.minRaise = msg.minRaise;     // Update the client state with the new minimum raise
+        state.potAmount = msg.potAmount;   // Update the client state with the new pot amount
         break;
     default:
         cout << "Unknown message type received.\n";
