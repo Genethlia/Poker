@@ -34,7 +34,7 @@ struct ServerState
     int currentBet = 0;
     int minRaise = 0;
     int lastAggressor = -1;
-    int toAct = 0;
+    int toAct = -1;
     int toCall = 0;
 
     std::unordered_set<int> needsAction; // player ids that need to act in the current betting round

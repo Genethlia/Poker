@@ -88,7 +88,7 @@ public:
 
         state.pot = 0;
         state.gameState = GameState::PreFlop;
-        state.currentBet = 0;
+        state.currentBet = 50; // BB for now
         state.minRaise = 50;
         state.needsAction.clear();
 
@@ -142,8 +142,8 @@ public:
 
     void StartBettingRound(int firstToAct)
     {
-        state.currentBet = 0;
-        state.minRaise = 50; // BB for now
+        state.currentBet = 50; // BB for now
+        state.minRaise = 50;   // BB for now
         state.needsAction.clear();
 
         for (auto &c : state.clients)
@@ -154,6 +154,8 @@ public:
         }
 
         state.toAct = firstToAct;
+
+        cout << "Starting betting round. firstToAct=" << findNameById(firstToAct) << " toAct=" << findNameById(state.toAct) << "\n";
 
         state.broadcast_all(serialize_server(MessageServerToClient{
             .type = MessageTypeServerToClient::BettingUpdate,
@@ -237,25 +239,33 @@ public:
                 return;
             }
 
-            int next = nextIdNeedingAction(state, state.handstate.playersOrderd[0]);
-            state.toAct = next;
-
-            auto p = find_client_by_id(next);
-            if (!p)
-                return;
-
-            int toCall = max(0, state.currentBet - p->betThisRound);
-
-            state.broadcast_all(serialize_server(MessageServerToClient{
-                .type = MessageTypeServerToClient::BettingUpdate,
-                .playerId = next,
-                .potAmount = state.pot,
-                .toCall = toCall,
-                .currentBet = state.currentBet,
-                .minRaise = state.minRaise,
-
-            }));
+            int firstToAct = nextIdNeedingAction(state, state.handstate.playersOrderd[0]);
+            StartBettingRound(firstToAct);
         }
+
+        int next = nextIdNeedingAction(state, state.toAct);
+        if (next == -1)
+        {
+            cout << "ERROR: no active ids, cannot pick toAct\n";
+            return;
+        }
+        state.toAct = next;
+
+        auto p = find_client_by_id(next);
+        if (!p)
+            return;
+
+        int toCall = max(0, state.currentBet - p->betThisRound);
+
+        state.broadcast_all(serialize_server(MessageServerToClient{
+            .type = MessageTypeServerToClient::BettingUpdate,
+            .playerId = next,
+            .potAmount = state.pot,
+            .toCall = toCall,
+            .currentBet = state.currentBet,
+            .minRaise = state.minRaise,
+
+        }));
     }
     void onPlayerAction(int playerId, PlayerActionType action, int actionAmount)
     {
@@ -369,7 +379,7 @@ public:
             .action = ok ? action : PlayerActionType::Failed,
             .actionAmount = actionAmount,
         }));
-
+        cout << "Player " << p->display_name() << " performed action " << int(action) << " with amount " << actionAmount << (ok ? "" : " (invalid)") << ". Pot is now " << state.pot << ".\n";
         AdvanceBetting();
     }
 
@@ -524,6 +534,14 @@ private:
                 return pid;
         }
         return ids[0];
+    }
+
+    string findNameById(int id)
+    {
+        auto it = state.idToName.find(id);
+        if (it != state.idToName.end())
+            return it->second;
+        return "Unknown";
     }
 };
 

@@ -42,9 +42,10 @@ Client::Client(tcp::socket s, ServerState *state)
     : socket(move(s)), serverState(state)
 {
     ready = false;
-    inHand = true;
+    inHand = false;
     allin = false;
     hasPendingAction = false;
+    betThisRound = 0;
 }
 
 void Client::start()
@@ -150,7 +151,7 @@ void Client::handle_line(const string &line)
     {
     case MessageTypeClientToServer::Join:
         name = msg.name;
-        id = serverState->nextId++;
+        this->id = serverState->nextId++;
         serverState->idToName[id] = name;
         cout << "[" << display_name() << "] joined\n";
 
@@ -192,6 +193,11 @@ void Client::handle_line(const string &line)
         response.action = msg.action;
         response.actionAmount = msg.actionAmount;
 
+        cout << "[" << display_name() << "] entered Action case. id=" << id
+             << " toAct=" << serverState->toAct
+             << " gameState=" << int(serverState->gameState)
+             << " on_action_ptr=" << (on_action_ptr ? "set" : "NULL") << "\n";
+
         if (on_action_ptr)
             on_action_ptr(id, msg.action, msg.actionAmount);
 
@@ -200,7 +206,7 @@ void Client::handle_line(const string &line)
     case MessageTypeClientToServer::RequestState:
         cout << "[" << display_name() << "] requested game state\n";
         response.type = MessageTypeServerToClient::GameState;
-        response.gameState = GameState::WaitingForPlayers; // TODO: actual game state
+        response.gameState = serverState->gameState;
         break;
     case MessageTypeClientToServer::Leave:
         cout << "[" << display_name() << "] left\n";
