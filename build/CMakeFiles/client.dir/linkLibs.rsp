@@ -1,1 +1,1 @@
- -lws2_32 -lmswsock -lkernel32 -luser32 -lgdi32 -lwinspool -lshell32 -lole32 -loleaut32 -luuid -lcomdlg32 -ladvapi32 
+ raylib_build/raylib/libraylib.a -lws2_32 -lmswsock -lopengl32 -lglu32 -lwinmm -lkernel32 -luser32 -lgdi32 -lwinspool -lshell32 -lole32 -loleaut32 -luuid -lcomdlg32 -ladvapi32 

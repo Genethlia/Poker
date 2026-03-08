@@ -1,7 +1,11 @@
 {
 	"InstallScripts" : 
 	[
-		"C:/Users/tgene/OneDrive - MOEC/Poker/build/cmake_install.cmake"
+		"C:/Users/tgene/OneDrive - MOEC/Poker/build/cmake_install.cmake",
+		"C:/Users/tgene/OneDrive - MOEC/Poker/build/raylib_build/cmake_install.cmake",
+		"C:/Users/tgene/OneDrive - MOEC/Poker/build/raylib_build/raylib/cmake_install.cmake",
+		"C:/Users/tgene/OneDrive - MOEC/Poker/build/raylib_build/raylib/external/glfw/cmake_install.cmake",
+		"C:/Users/tgene/OneDrive - MOEC/Poker/build/raylib_build/raylib/external/glfw/src/cmake_install.cmake"
 	],
 	"Parallel" : false
 }

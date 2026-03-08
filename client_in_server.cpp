@@ -193,11 +193,6 @@ void Client::handle_line(const string &line)
         response.action = msg.action;
         response.actionAmount = msg.actionAmount;
 
-        cout << "[" << display_name() << "] entered Action case. id=" << id
-             << " toAct=" << serverState->toAct
-             << " gameState=" << int(serverState->gameState)
-             << " on_action_ptr=" << (on_action_ptr ? "set" : "NULL") << "\n";
-
         if (on_action_ptr)
             on_action_ptr(id, msg.action, msg.actionAmount);
 

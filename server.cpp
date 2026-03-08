@@ -137,13 +137,13 @@ public:
             }
         }
         state.gameState = GameState::PreFlop;
-        StartBettingRound(state.handstate.playersOrderd[0]);
+        StartBettingRound();
     }
 
-    void StartBettingRound(int firstToAct)
+    void StartBettingRound()
     {
-        state.currentBet = 50; // BB for now
-        state.minRaise = 50;   // BB for now
+        state.minRaise = 50;                                       // BB for now
+        state.currentBet = (state.handstate.street == 0) ? 50 : 0; // PreFlop, start with BB, otherwise start with 0
         state.needsAction.clear();
 
         for (auto &c : state.clients)
@@ -152,18 +152,6 @@ public:
             if (c->inHand && !c->allin)
                 state.needsAction.insert(c->id);
         }
-
-        state.toAct = firstToAct;
-
-        cout << "Starting betting round. firstToAct=" << findNameById(firstToAct) << " toAct=" << findNameById(state.toAct) << "\n";
-
-        state.broadcast_all(serialize_server(MessageServerToClient{
-            .type = MessageTypeServerToClient::BettingUpdate,
-            .potAmount = state.pot,
-            .toAct = state.toAct,
-            .toCall = 50,
-            .currentBet = state.currentBet,
-            .minRaise = state.minRaise}));
 
         AdvanceBetting();
     }
@@ -239,8 +227,8 @@ public:
                 return;
             }
 
-            int firstToAct = nextIdNeedingAction(state, state.handstate.playersOrderd[0]);
-            StartBettingRound(firstToAct);
+            StartBettingRound();
+            return;
         }
 
         int next = nextIdNeedingAction(state, state.toAct);
@@ -257,14 +245,15 @@ public:
 
         int toCall = max(0, state.currentBet - p->betThisRound);
 
+        cout << "Next to act: " << state.toAct << " toCall=" << toCall << " currentBet=" << state.currentBet << " minRaise=" << state.minRaise << "\n";
+
         state.broadcast_all(serialize_server(MessageServerToClient{
             .type = MessageTypeServerToClient::BettingUpdate,
-            .playerId = next,
             .potAmount = state.pot,
+            .toAct = state.toAct,
             .toCall = toCall,
             .currentBet = state.currentBet,
             .minRaise = state.minRaise,
-
         }));
     }
     void onPlayerAction(int playerId, PlayerActionType action, int actionAmount)
@@ -329,11 +318,6 @@ public:
             break;
         case PlayerActionType::Raise:
         {
-            if (state.currentBet == 0)
-            {
-                ok = false;
-                break;
-            }
             int raiseTo = actionAmount;
             int minTo = state.currentBet + state.minRaise;
             int maxTo = p->betThisRound + p->money;

@@ -72,6 +72,7 @@ CMakeFiles/server.dir/codegen:
 .PHONY : CMakeFiles/server.dir/codegen
 
 CMakeFiles/server.dir/server.cpp.obj: CMakeFiles/server.dir/flags.make
+CMakeFiles/server.dir/server.cpp.obj: CMakeFiles/server.dir/includes_CXX.rsp
 CMakeFiles/server.dir/server.cpp.obj: C:/Users/tgene/OneDrive\ -\ MOEC/Poker/server.cpp
 CMakeFiles/server.dir/server.cpp.obj: CMakeFiles/server.dir/compiler_depend.ts
 	@$(CMAKE_COMMAND) -E cmake_echo_color "--switch=$(COLOR)" --green --progress-dir="C:\Users\tgene\OneDrive - MOEC\Poker\build\CMakeFiles" --progress-num=$(CMAKE_PROGRESS_1) "Building CXX object CMakeFiles/server.dir/server.cpp.obj"
@@ -86,6 +87,7 @@ CMakeFiles/server.dir/server.cpp.s: cmake_force
 	C:\msys64\mingw64\bin\c++.exe $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -S "C:\Users\tgene\OneDrive - MOEC\Poker\server.cpp" -o CMakeFiles\server.dir\server.cpp.s
 
 CMakeFiles/server.dir/client_in_server.cpp.obj: CMakeFiles/server.dir/flags.make
+CMakeFiles/server.dir/client_in_server.cpp.obj: CMakeFiles/server.dir/includes_CXX.rsp
 CMakeFiles/server.dir/client_in_server.cpp.obj: C:/Users/tgene/OneDrive\ -\ MOEC/Poker/client_in_server.cpp
 CMakeFiles/server.dir/client_in_server.cpp.obj: CMakeFiles/server.dir/compiler_depend.ts
 	@$(CMAKE_COMMAND) -E cmake_echo_color "--switch=$(COLOR)" --green --progress-dir="C:\Users\tgene\OneDrive - MOEC\Poker\build\CMakeFiles" --progress-num=$(CMAKE_PROGRESS_2) "Building CXX object CMakeFiles/server.dir/client_in_server.cpp.obj"
@@ -100,6 +102,7 @@ CMakeFiles/server.dir/client_in_server.cpp.s: cmake_force
 	C:\msys64\mingw64\bin\c++.exe $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -S "C:\Users\tgene\OneDrive - MOEC\Poker\client_in_server.cpp" -o CMakeFiles\server.dir\client_in_server.cpp.s
 
 CMakeFiles/server.dir/deck.cpp.obj: CMakeFiles/server.dir/flags.make
+CMakeFiles/server.dir/deck.cpp.obj: CMakeFiles/server.dir/includes_CXX.rsp
 CMakeFiles/server.dir/deck.cpp.obj: C:/Users/tgene/OneDrive\ -\ MOEC/Poker/deck.cpp
 CMakeFiles/server.dir/deck.cpp.obj: CMakeFiles/server.dir/compiler_depend.ts
 	@$(CMAKE_COMMAND) -E cmake_echo_color "--switch=$(COLOR)" --green --progress-dir="C:\Users\tgene\OneDrive - MOEC\Poker\build\CMakeFiles" --progress-num=$(CMAKE_PROGRESS_3) "Building CXX object CMakeFiles/server.dir/deck.cpp.obj"

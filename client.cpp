@@ -1,3 +1,9 @@
+#define WIN32_LEAN_AND_MEAN
+#define NOMINMAX
+#define NOGDI
+#define NOUSER
+#include "raylib.h"
+
 #include "client_in_client.hpp"
 
 using namespace std;
