@@ -11,6 +11,7 @@ set(CMAKE_DEPENDS_DEPENDENCY_FILES
   "C:/Users/tgene/OneDrive - MOEC/Poker/client.cpp" "CMakeFiles/client.dir/client.cpp.obj" "gcc" "CMakeFiles/client.dir/client.cpp.obj.d"
   "C:/Users/tgene/OneDrive - MOEC/Poker/client_in_client.cpp" "CMakeFiles/client.dir/client_in_client.cpp.obj" "gcc" "CMakeFiles/client.dir/client_in_client.cpp.obj.d"
   "C:/Users/tgene/OneDrive - MOEC/Poker/deck.cpp" "CMakeFiles/client.dir/deck.cpp.obj" "gcc" "CMakeFiles/client.dir/deck.cpp.obj.d"
+  "C:/Users/tgene/OneDrive - MOEC/Poker/raylib_client.cpp" "CMakeFiles/client.dir/raylib_client.cpp.obj" "gcc" "CMakeFiles/client.dir/raylib_client.cpp.obj.d"
   )
 
 # Targets to which this target links which contain Fortran sources.

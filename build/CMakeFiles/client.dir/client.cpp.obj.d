@@ -1,5 +1,6 @@
 CMakeFiles/client.dir/client.cpp.obj: \
  C:\Users\tgene\OneDrive\ -\ MOEC\Poker\client.cpp \
+ C:\Users\tgene\OneDrive\ -\ MOEC\Poker\raylib_client.hpp \
  C:/Users/tgene/ONEDRI~1/Poker/raylib/src/raylib.h \
  C:/msys64/mingw64/lib/gcc/x86_64-w64-mingw32/15.2.0/include/stdarg.h \
  C:/msys64/mingw64/include/stdarg.h \

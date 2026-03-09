@@ -1,4 +1,8 @@
 #pragma once
+#define WIN32_LEAN_AND_MEAN
+#define NOMINMAX
+#define NOGDI
+#define NOUSER
 #include <boost/asio.hpp>
 #include <map>
 #include <unordered_map>
@@ -11,6 +15,8 @@
 #include <deque>
 #include <string>
 #include <thread>
+#include <mutex>
+#include <atomic>
 #include <sstream>
 using boost::asio::ip::tcp;
 

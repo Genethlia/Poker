@@ -42,6 +42,7 @@ add_executable(server
 add_executable(client
   client.cpp
   client_in_client.cpp
+  raylib_client.cpp
   ${SHARED_SOURCES}
 )
 

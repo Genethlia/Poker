@@ -5,6 +5,8 @@ file(REMOVE_RECURSE
   "CMakeFiles/client.dir/client_in_client.cpp.obj.d"
   "CMakeFiles/client.dir/deck.cpp.obj"
   "CMakeFiles/client.dir/deck.cpp.obj.d"
+  "CMakeFiles/client.dir/raylib_client.cpp.obj"
+  "CMakeFiles/client.dir/raylib_client.cpp.obj.d"
   "client.exe"
   "client.exe.manifest"
   "client.pdb"

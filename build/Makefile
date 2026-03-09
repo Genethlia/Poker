@@ -344,6 +344,30 @@ deck.cpp.s:
 	$(MAKE) $(MAKESILENT) -f CMakeFiles\client.dir\build.make CMakeFiles/client.dir/deck.cpp.s
 .PHONY : deck.cpp.s
 
+raylib_client.obj: raylib_client.cpp.obj
+.PHONY : raylib_client.obj
+
+# target to build an object file
+raylib_client.cpp.obj:
+	$(MAKE) $(MAKESILENT) -f CMakeFiles\client.dir\build.make CMakeFiles/client.dir/raylib_client.cpp.obj
+.PHONY : raylib_client.cpp.obj
+
+raylib_client.i: raylib_client.cpp.i
+.PHONY : raylib_client.i
+
+# target to preprocess a source file
+raylib_client.cpp.i:
+	$(MAKE) $(MAKESILENT) -f CMakeFiles\client.dir\build.make CMakeFiles/client.dir/raylib_client.cpp.i
+.PHONY : raylib_client.cpp.i
+
+raylib_client.s: raylib_client.cpp.s
+.PHONY : raylib_client.s
+
+# target to generate assembly for a file
+raylib_client.cpp.s:
+	$(MAKE) $(MAKESILENT) -f CMakeFiles\client.dir\build.make CMakeFiles/client.dir/raylib_client.cpp.s
+.PHONY : raylib_client.cpp.s
+
 server.obj: server.cpp.obj
 .PHONY : server.obj
 
@@ -399,6 +423,9 @@ help:
 	@echo ... deck.obj
 	@echo ... deck.i
 	@echo ... deck.s
+	@echo ... raylib_client.obj
+	@echo ... raylib_client.i
+	@echo ... raylib_client.s
 	@echo ... server.obj
 	@echo ... server.i
 	@echo ... server.s

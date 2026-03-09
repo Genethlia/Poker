@@ -488,9 +488,8 @@ CMakeFiles/client.dir/deck.cpp.obj: \
  C:/msys64/mingw64/include/winerror.h \
  C:/msys64/mingw64/include/fltwinerror.h \
  C:/msys64/mingw64/include/timezoneapi.h \
- C:/msys64/mingw64/include/wingdi.h C:/msys64/mingw64/include/pshpack1.h \
- C:/msys64/mingw64/include/winuser.h C:/msys64/mingw64/include/tvout.h \
- C:/msys64/mingw64/include/winnls.h \
+ C:/msys64/mingw64/include/wingdi.h C:/msys64/mingw64/include/winuser.h \
+ C:/msys64/mingw64/include/tvout.h C:/msys64/mingw64/include/winnls.h \
  C:/msys64/mingw64/include/datetimeapi.h \
  C:/msys64/mingw64/include/stringapiset.h \
  C:/msys64/mingw64/include/wincon.h \

@@ -1,7 +1,15 @@
 #include "client_in_client.hpp"
 using namespace std;
 
-PokerClient::PokerClient() : socket(io), running(false) {}
+PokerClient::ClientState PokerClient::getClientStateCopy()
+{
+    lock_guard<mutex> lock(stateMutex);
+    return state;
+}
+
+PokerClient::PokerClient() : socket(io), running(false)
+{
+}
 PokerClient::~PokerClient()
 {
     stop();
@@ -29,92 +37,55 @@ void PokerClient::start()
 
     readerThread = thread([this]()
                           { readerLoop(); });
-    input();
 }
 
-void PokerClient::input()
+void PokerClient::sendReady()
 {
-    string line;
-    while (running)
+    MessageClientToServer msg;
+    msg.type = MessageTypeClientToServer::Ready;
+
+    write_line(serialize_client(msg));
+}
+
+void PokerClient::requestState()
+{
+    MessageClientToServer msg;
+    msg.type = MessageTypeClientToServer::RequestState;
+
+    write_line(serialize_client(msg));
+}
+
+void PokerClient::leaveGame()
+{
+    MessageClientToServer msg;
+    msg.type = MessageTypeClientToServer::Leave;
+
+    write_line(serialize_client(msg));
+    stop();
+}
+
+void PokerClient::sendAction(PlayerActionType action, int amount)
+{
+    ClientState snapshot = getClientStateCopy();
+    if (snapshot.toAct != snapshot.myId)
     {
-        getline(cin, line);
-        terminal(line);
-    }
-}
-
-void PokerClient::terminal(const string &input)
-{
-    if (input.empty())
+        cout << "It's not your turn to act!\n";
         return;
-    if (input[0] == '/' && input.size() > 1)
-    {
-        string command, arg;
-        istringstream iss(input);
-        iss >> command;
-        getline(iss, arg);
-        if (command == "/ready")
-        {
-            MessageClientToServer msg;
-            msg.type = MessageTypeClientToServer::Ready;
-            write_line(serialize_client(msg));
-        }
-        else if (command == "/request_state")
-        {
-            MessageClientToServer msg;
-            msg.type = MessageTypeClientToServer::RequestState;
-            write_line(serialize_client(msg));
-        }
-        else if (command == "/leave")
-        {
-            MessageClientToServer msg;
-            msg.type = MessageTypeClientToServer::Leave;
-            write_line(serialize_client(msg));
-            stop();
-        }
-        else if (command == "/action")
-        {
-            if (state.myId != state.toAct)
-            {
-                cout << "It is not your turn to act.\n";
-                return;
-            }
-            istringstream actionStream(arg);
-            string actionStr;
-            int actionAmount = 0;
-            actionStream >> actionStr >> actionAmount;
-
-            PlayerActionType actionType = PlayerActionType::Failed;
-            if (actionStr == "fold")
-                actionType = PlayerActionType::Fold;
-            else if (actionStr == "check")
-                actionType = PlayerActionType::Check;
-            else if (actionStr == "call")
-                actionType = PlayerActionType::Call;
-            else if (actionStr == "raise")
-                actionType = PlayerActionType::Raise;
-
-            MessageClientToServer msg;
-            msg.type = MessageTypeClientToServer::Action;
-            msg.action = actionType;
-            msg.actionAmount = actionAmount;
-
-            write_line(serialize_client(msg));
-        }
-        else if (command == "/admin_play")
-        {
-            MessageClientToServer msg;
-            msg.type = MessageTypeClientToServer::AdminPlay;
-            write_line(serialize_client(msg));
-        }
-        else
-        {
-            cout << "Unknown command.\n";
-        }
     }
-    else
-    {
-        sendChat(input);
-    }
+
+    MessageClientToServer msg;
+    msg.type = MessageTypeClientToServer::Action;
+    msg.action = action;
+    msg.actionAmount = amount;
+
+    write_line(serialize_client(msg));
+}
+
+void PokerClient::startGame()
+{
+    MessageClientToServer msg;
+    msg.type = MessageTypeClientToServer::AdminPlay;
+    write_line(serialize_client(msg));
 }
 
 void PokerClient::sendChat(const string &chat)
@@ -173,6 +144,12 @@ void PokerClient::readerLoop()
 
 string PokerClient::nameOf(int id)
 {
+    lock_guard<std::mutex> lock(stateMutex);
+    nameOfUnsafe(id);
+}
+
+std::string PokerClient::nameOfUnsafe(int id)
+{
     auto it = state.playerNames.find(id);
     if (it != state.playerNames.end() && !it->second.empty())
         return it->second;
@@ -181,6 +158,7 @@ string PokerClient::nameOf(int id)
 
 void PokerClient::handle_line(const string &line, ClientState &state)
 {
+    lock_guard<std::mutex> lock(stateMutex);
     MessageServerToClient msg = deserialize_server(line);
     switch (msg.type)
     {
@@ -201,21 +179,21 @@ void PokerClient::handle_line(const string &line, ClientState &state)
         state.playerNames[msg.playerId] = msg.name;
         break;
     case MessageTypeServerToClient::PlayerLeft:
-        cout << "Player left: " << nameOf(msg.playerId) << "\n";
+        cout << "Player left: " << nameOfUnsafe(msg.playerId) << "\n";
         state.playerNames.erase(msg.playerId);
         break;
     case MessageTypeServerToClient::PlayerReady:
-        cout << "Player ready: " << nameOf(msg.playerId) << "\n";
+        cout << "Player ready: " << nameOfUnsafe(msg.playerId) << "\n";
         break;
     case MessageTypeServerToClient::ChatFrom:
-        cout << nameOf(msg.playerId) << ": " << msg.chatText << "\n";
+        cout << nameOfUnsafe(msg.playerId) << ": " << msg.chatText << "\n";
         break;
     case MessageTypeServerToClient::GameState:
         cout << "Game state changed: " << int(msg.gameState) << "\n";
         state.gameState = msg.gameState;
         break;
     case MessageTypeServerToClient::ActionResult:
-        cout << "Action result for player " << nameOf(msg.playerId) << ": " << int(msg.action) << "\n";
+        cout << "Action result for player " << nameOfUnsafe(msg.playerId) << ": " << int(msg.action) << "\n";
         break;
     case MessageTypeServerToClient::CommunityCard:
         cout << "Community cards updated: " << msg.cards << "\n";
@@ -231,11 +209,11 @@ void PokerClient::handle_line(const string &line, ClientState &state)
         cout << "Showdown! Pot: $" << msg.potAmount << ". Winners: ";
         for (int id : msg.idWinners)
         {
-            cout << nameOf(id) << " (ID: " << id << ") \n";
+            cout << nameOfUnsafe(id) << " (ID: " << id << ") \n";
         }
         break;
     case MessageTypeServerToClient::BettingUpdate:
-        cout << "Betting update: To Act: " << nameOf(msg.toAct) << " (ID: " << msg.toAct << "), To Call: $" << msg.toCall << ", Current Bet: $" << msg.currentBet << ", Min Raise: $" << msg.minRaise << ", Pot: $" << msg.potAmount << "\n";
+        cout << "Betting update: To Act: " << nameOfUnsafe(msg.toAct) << " (ID: " << msg.toAct << "), To Call: $" << msg.toCall << ", Current Bet: $" << msg.currentBet << ", Min Raise: $" << msg.minRaise << ", Pot: $" << msg.potAmount << "\n";
         state.toAct = msg.toAct;           // Update the client state with the new player to act
         state.toCall = msg.toCall;         // Update the client state with the new amount to call
         state.currentBet = msg.currentBet; // Update the client state with the new current bet

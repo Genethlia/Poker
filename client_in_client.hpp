@@ -10,12 +10,18 @@ public:
     void connect_to(const std::string &host, const std::string &port);
     void join_us(const std::string &name);
     void start();
-    void input();
-    void terminal(const std::string &input);
-    void sendChat(const std::string &chat);
     void stop();
 
-private:
+    void sendReady();
+    void requestState();
+    void leaveGame();
+    void sendAction(PlayerActionType action, int amount = 0);
+    void startGame();
+    void sendChat(const std::string &chat);
+
+    std::string nameOf(int id);
+    std::string nameOfUnsafe(int id);
+
     struct ClientState
     {
         std::unordered_map<int, std::string> playerNames;
@@ -31,19 +37,20 @@ private:
         int currentBet = 0;
         int minRaise = 50;
     };
+    ClientState getClientStateCopy();
 
+private:
     boost::asio::io_context io;
     tcp::socket socket;
 
     ClientState state;
+    std::mutex stateMutex;
 
     std::atomic<bool> running;
     std::thread readerThread;
 
     void write_line(const std::string &s);
     void readerLoop();
-
-    std::string nameOf(int id);
 
     void handle_line(const std::string &line, ClientState &state);
 };

@@ -855,7 +855,6 @@ CMakeFiles/server.dir/client_in_server.cpp.obj
  C:/msys64/mingw64/include/psdk_inc/_wsadata.h
  C:/msys64/mingw64/include/psdk_inc/_xmitfile.h
  C:/msys64/mingw64/include/psdk_inc/intrin-impl.h
- C:/msys64/mingw64/include/pshpack1.h
  C:/msys64/mingw64/include/pshpack2.h
  C:/msys64/mingw64/include/pshpack4.h
  C:/msys64/mingw64/include/pshpack8.h
@@ -1911,7 +1910,6 @@ CMakeFiles/server.dir/deck.cpp.obj
  C:/msys64/mingw64/include/psdk_inc/_wsadata.h
  C:/msys64/mingw64/include/psdk_inc/_xmitfile.h
  C:/msys64/mingw64/include/psdk_inc/intrin-impl.h
- C:/msys64/mingw64/include/pshpack1.h
  C:/msys64/mingw64/include/pshpack2.h
  C:/msys64/mingw64/include/pshpack4.h
  C:/msys64/mingw64/include/pshpack8.h
@@ -2967,7 +2965,6 @@ CMakeFiles/server.dir/server.cpp.obj
  C:/msys64/mingw64/include/psdk_inc/_wsadata.h
  C:/msys64/mingw64/include/psdk_inc/_xmitfile.h
  C:/msys64/mingw64/include/psdk_inc/intrin-impl.h
- C:/msys64/mingw64/include/pshpack1.h
  C:/msys64/mingw64/include/pshpack2.h
  C:/msys64/mingw64/include/pshpack4.h
  C:/msys64/mingw64/include/pshpack8.h

@@ -854,7 +854,6 @@ CMakeFiles/server.dir/client_in_server.cpp.obj: C:/Users/tgene/OneDrive\ -\ MOEC
   C:/msys64/mingw64/include/psdk_inc/_wsadata.h \
   C:/msys64/mingw64/include/psdk_inc/_xmitfile.h \
   C:/msys64/mingw64/include/psdk_inc/intrin-impl.h \
-  C:/msys64/mingw64/include/pshpack1.h \
   C:/msys64/mingw64/include/pshpack2.h \
   C:/msys64/mingw64/include/pshpack4.h \
   C:/msys64/mingw64/include/pshpack8.h \
@@ -1909,7 +1908,6 @@ CMakeFiles/server.dir/deck.cpp.obj: C:/Users/tgene/OneDrive\ -\ MOEC/Poker/deck.
   C:/msys64/mingw64/include/psdk_inc/_wsadata.h \
   C:/msys64/mingw64/include/psdk_inc/_xmitfile.h \
   C:/msys64/mingw64/include/psdk_inc/intrin-impl.h \
-  C:/msys64/mingw64/include/pshpack1.h \
   C:/msys64/mingw64/include/pshpack2.h \
   C:/msys64/mingw64/include/pshpack4.h \
   C:/msys64/mingw64/include/pshpack8.h \
@@ -2964,7 +2962,6 @@ CMakeFiles/server.dir/server.cpp.obj: C:/Users/tgene/OneDrive\ -\ MOEC/Poker/ser
   C:/msys64/mingw64/include/psdk_inc/_wsadata.h \
   C:/msys64/mingw64/include/psdk_inc/_xmitfile.h \
   C:/msys64/mingw64/include/psdk_inc/intrin-impl.h \
-  C:/msys64/mingw64/include/pshpack1.h \
   C:/msys64/mingw64/include/pshpack2.h \
   C:/msys64/mingw64/include/pshpack4.h \
   C:/msys64/mingw64/include/pshpack8.h \
@@ -5107,8 +5104,6 @@ C:/msys64/mingw64/include/psdk_inc/_socket_types.h:
 C:/msys64/mingw64/include/psdk_inc/_wsa_errnos.h:
 
 C:/msys64/mingw64/include/psdk_inc/_xmitfile.h:
-
-C:/msys64/mingw64/include/pshpack1.h:
 
 C:/msys64/mingw64/lib/gcc/x86_64-w64-mingw32/15.2.0/include/rtmintrin.h:
 
