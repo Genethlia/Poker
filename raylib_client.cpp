@@ -70,6 +70,11 @@ void Game::input()
 void Game::update()
 {
     currentState = client.getClientStateCopy();
+    switch (currentState.gameState)
+    {
+    default:
+        break;
+    }
 }
 
 void Game::draw()
@@ -80,6 +85,7 @@ void Game::draw()
     DrawText(TextFormat("Current Bet: %d", currentState.currentBet), 20, 140, 24, WHITE);
     DrawText(TextFormat("Min Raise: %d", currentState.minRaise), 20, 180, 24, WHITE);
     DrawText(TextFormat("To Act: %d", currentState.toAct), 20, 220, 24, WHITE);
+    DrawText(TextFormat("Money: %d", currentState.playerMoney[currentState.myId]), 20, 260, 24, WHITE);
 
     DrawText("R = Ready", 20, 300, 20, YELLOW);
     DrawText("Q = Fold", 20, 330, 20, YELLOW);

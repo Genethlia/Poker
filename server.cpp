@@ -468,6 +468,24 @@ private:
                 cout << "Player " << winner->display_name() << " wins the pot of " << state.pot << " with a showdown!\n";
             }
         }
+        else
+        {
+            cout << "Players ";
+            for (size_t i = 0; i < winners.size(); i++)
+            {
+                auto winner = find_client_by_id(winners[i]);
+                if (winner)
+                {
+                    winner->money += state.pot / winners.size();
+                    cout << winner->display_name() << " (ID: " << winner->id << ") ";
+                }
+            }
+            cout << "split the pot of " << state.pot << " with a showdown!\n";
+            auto remainder_winner = find_client_by_id(state.toAct);
+            if (remainder_winner)
+                remainder_winner->money += state.pot % winners.size();
+        }
+
         state.handstate.active = false;
     }
     shared_ptr<Client> findClientById(ServerState &st, int pid)

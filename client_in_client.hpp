@@ -1,5 +1,6 @@
 #pragma once
 #include "poker_networking.hpp"
+#include "cards.h"
 
 class PokerClient
 {
@@ -29,6 +30,7 @@ public:
 
         GameState gameState = GameState::WaitingForPlayers;
         int potAmount = 0;
+        std::unordered_map<int, int> playerMoney; // player id -> money
         std::vector<valRank> communityCards;
         hand myHand;
         std::vector<hand> playerHands; // indexed by player id, -1 if unknown
@@ -49,8 +51,10 @@ private:
     std::atomic<bool> running;
     std::thread readerThread;
 
+    void UpdateMoney(const MessageServerToClient &msg);
+
     void write_line(const std::string &s);
     void readerLoop();
 
-    void handle_line(const std::string &line, ClientState &state);
+    void handle_line(const std::string &line);
 };

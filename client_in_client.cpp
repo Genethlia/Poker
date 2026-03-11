@@ -113,6 +113,21 @@ void PokerClient::stop()
     }
 }
 
+void PokerClient::UpdateMoney(const MessageServerToClient &msg)
+{
+    switch (msg.action)
+    {
+    case PlayerActionType::Call:
+        state.playerMoney[msg.playerId] -= state.toCall;
+        break;
+    case PlayerActionType::Raise:
+        state.playerMoney[msg.playerId] -= msg.actionAmount;
+        break;
+    default:
+        break;
+    }
+}
+
 void PokerClient::write_line(const string &s)
 {
     boost::asio::write(socket, boost::asio::buffer(s));
@@ -138,14 +153,14 @@ void PokerClient::readerLoop()
         string line;
         getline(is, line);
 
-        handle_line(line, state);
+        handle_line(line);
     }
 }
 
 string PokerClient::nameOf(int id)
 {
     lock_guard<std::mutex> lock(stateMutex);
-    nameOfUnsafe(id);
+    return nameOfUnsafe(id);
 }
 
 std::string PokerClient::nameOfUnsafe(int id)
@@ -156,7 +171,7 @@ std::string PokerClient::nameOfUnsafe(int id)
     return "ID:  " + to_string(id);
 }
 
-void PokerClient::handle_line(const string &line, ClientState &state)
+void PokerClient::handle_line(const string &line)
 {
     lock_guard<std::mutex> lock(stateMutex);
     MessageServerToClient msg = deserialize_server(line);
@@ -167,6 +182,7 @@ void PokerClient::handle_line(const string &line, ClientState &state)
         for (int i = 0; i < msg.playerSum; i++)
         {
             cout << "Player " << msg.playerNames[i] << " (ID: " << i << ") is in the game.";
+            state.playerMoney[i] = 1000; // Initialize player money, can be updated later with actual values from the server
             if (i == msg.playerId)
                 cout << " (You)";
             state.playerNames[i] = msg.playerNames[i];
@@ -177,10 +193,12 @@ void PokerClient::handle_line(const string &line, ClientState &state)
     case MessageTypeServerToClient::PlayerJoined:
         cout << "Player joined: " << msg.name << " (ID: " << msg.playerId << ")\n";
         state.playerNames[msg.playerId] = msg.name;
+        state.playerMoney[msg.playerId] = 1000; // Initialize player money for the new player
         break;
     case MessageTypeServerToClient::PlayerLeft:
         cout << "Player left: " << nameOfUnsafe(msg.playerId) << "\n";
         state.playerNames.erase(msg.playerId);
+        state.playerMoney.erase(msg.playerId); // Remove player money for the player who left
         break;
     case MessageTypeServerToClient::PlayerReady:
         cout << "Player ready: " << nameOfUnsafe(msg.playerId) << "\n";
@@ -194,6 +212,7 @@ void PokerClient::handle_line(const string &line, ClientState &state)
         break;
     case MessageTypeServerToClient::ActionResult:
         cout << "Action result for player " << nameOfUnsafe(msg.playerId) << ": " << int(msg.action) << "\n";
+        UpdateMoney(msg); // Update player money based on the action result
         break;
     case MessageTypeServerToClient::CommunityCard:
         cout << "Community cards updated: " << msg.cards << "\n";
@@ -210,7 +229,9 @@ void PokerClient::handle_line(const string &line, ClientState &state)
         for (int id : msg.idWinners)
         {
             cout << nameOfUnsafe(id) << " (ID: " << id << ") \n";
+            state.playerMoney[id] += msg.potAmount / msg.idWinners.size(); // Distribute pot among winners
         }
+        state.playerMoney[state.toAct] += msg.potAmount % msg.idWinners.size();
         break;
     case MessageTypeServerToClient::BettingUpdate:
         cout << "Betting update: To Act: " << nameOfUnsafe(msg.toAct) << " (ID: " << msg.toAct << "), To Call: $" << msg.toCall << ", Current Bet: $" << msg.currentBet << ", Min Raise: $" << msg.minRaise << ", Pot: $" << msg.potAmount << "\n";
