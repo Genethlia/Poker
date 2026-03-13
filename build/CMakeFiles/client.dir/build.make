@@ -116,11 +116,41 @@ CMakeFiles/client.dir/raylib_client.cpp.s: cmake_force
 	@$(CMAKE_COMMAND) -E cmake_echo_color "--switch=$(COLOR)" --green "Compiling CXX source to assembly CMakeFiles/client.dir/raylib_client.cpp.s"
 	C:\msys64\mingw64\bin\c++.exe $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -S "C:\Users\tgene\OneDrive - MOEC\Poker\raylib_client.cpp" -o CMakeFiles\client.dir\raylib_client.cpp.s
 
+CMakeFiles/client.dir/cards.cpp.obj: CMakeFiles/client.dir/flags.make
+CMakeFiles/client.dir/cards.cpp.obj: CMakeFiles/client.dir/includes_CXX.rsp
+CMakeFiles/client.dir/cards.cpp.obj: C:/Users/tgene/OneDrive\ -\ MOEC/Poker/cards.cpp
+CMakeFiles/client.dir/cards.cpp.obj: CMakeFiles/client.dir/compiler_depend.ts
+	@$(CMAKE_COMMAND) -E cmake_echo_color "--switch=$(COLOR)" --green --progress-dir="C:\Users\tgene\OneDrive - MOEC\Poker\build\CMakeFiles" --progress-num=$(CMAKE_PROGRESS_4) "Building CXX object CMakeFiles/client.dir/cards.cpp.obj"
+	C:\msys64\mingw64\bin\c++.exe $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -MD -MT CMakeFiles/client.dir/cards.cpp.obj -MF CMakeFiles\client.dir\cards.cpp.obj.d -o CMakeFiles\client.dir\cards.cpp.obj -c "C:\Users\tgene\OneDrive - MOEC\Poker\cards.cpp"
+
+CMakeFiles/client.dir/cards.cpp.i: cmake_force
+	@$(CMAKE_COMMAND) -E cmake_echo_color "--switch=$(COLOR)" --green "Preprocessing CXX source to CMakeFiles/client.dir/cards.cpp.i"
+	C:\msys64\mingw64\bin\c++.exe $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -E "C:\Users\tgene\OneDrive - MOEC\Poker\cards.cpp" > CMakeFiles\client.dir\cards.cpp.i
+
+CMakeFiles/client.dir/cards.cpp.s: cmake_force
+	@$(CMAKE_COMMAND) -E cmake_echo_color "--switch=$(COLOR)" --green "Compiling CXX source to assembly CMakeFiles/client.dir/cards.cpp.s"
+	C:\msys64\mingw64\bin\c++.exe $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -S "C:\Users\tgene\OneDrive - MOEC\Poker\cards.cpp" -o CMakeFiles\client.dir\cards.cpp.s
+
+CMakeFiles/client.dir/images.cpp.obj: CMakeFiles/client.dir/flags.make
+CMakeFiles/client.dir/images.cpp.obj: CMakeFiles/client.dir/includes_CXX.rsp
+CMakeFiles/client.dir/images.cpp.obj: C:/Users/tgene/OneDrive\ -\ MOEC/Poker/images.cpp
+CMakeFiles/client.dir/images.cpp.obj: CMakeFiles/client.dir/compiler_depend.ts
+	@$(CMAKE_COMMAND) -E cmake_echo_color "--switch=$(COLOR)" --green --progress-dir="C:\Users\tgene\OneDrive - MOEC\Poker\build\CMakeFiles" --progress-num=$(CMAKE_PROGRESS_5) "Building CXX object CMakeFiles/client.dir/images.cpp.obj"
+	C:\msys64\mingw64\bin\c++.exe $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -MD -MT CMakeFiles/client.dir/images.cpp.obj -MF CMakeFiles\client.dir\images.cpp.obj.d -o CMakeFiles\client.dir\images.cpp.obj -c "C:\Users\tgene\OneDrive - MOEC\Poker\images.cpp"
+
+CMakeFiles/client.dir/images.cpp.i: cmake_force
+	@$(CMAKE_COMMAND) -E cmake_echo_color "--switch=$(COLOR)" --green "Preprocessing CXX source to CMakeFiles/client.dir/images.cpp.i"
+	C:\msys64\mingw64\bin\c++.exe $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -E "C:\Users\tgene\OneDrive - MOEC\Poker\images.cpp" > CMakeFiles\client.dir\images.cpp.i
+
+CMakeFiles/client.dir/images.cpp.s: cmake_force
+	@$(CMAKE_COMMAND) -E cmake_echo_color "--switch=$(COLOR)" --green "Compiling CXX source to assembly CMakeFiles/client.dir/images.cpp.s"
+	C:\msys64\mingw64\bin\c++.exe $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -S "C:\Users\tgene\OneDrive - MOEC\Poker\images.cpp" -o CMakeFiles\client.dir\images.cpp.s
+
 CMakeFiles/client.dir/deck.cpp.obj: CMakeFiles/client.dir/flags.make
 CMakeFiles/client.dir/deck.cpp.obj: CMakeFiles/client.dir/includes_CXX.rsp
 CMakeFiles/client.dir/deck.cpp.obj: C:/Users/tgene/OneDrive\ -\ MOEC/Poker/deck.cpp
 CMakeFiles/client.dir/deck.cpp.obj: CMakeFiles/client.dir/compiler_depend.ts
-	@$(CMAKE_COMMAND) -E cmake_echo_color "--switch=$(COLOR)" --green --progress-dir="C:\Users\tgene\OneDrive - MOEC\Poker\build\CMakeFiles" --progress-num=$(CMAKE_PROGRESS_4) "Building CXX object CMakeFiles/client.dir/deck.cpp.obj"
+	@$(CMAKE_COMMAND) -E cmake_echo_color "--switch=$(COLOR)" --green --progress-dir="C:\Users\tgene\OneDrive - MOEC\Poker\build\CMakeFiles" --progress-num=$(CMAKE_PROGRESS_6) "Building CXX object CMakeFiles/client.dir/deck.cpp.obj"
 	C:\msys64\mingw64\bin\c++.exe $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -MD -MT CMakeFiles/client.dir/deck.cpp.obj -MF CMakeFiles\client.dir\deck.cpp.obj.d -o CMakeFiles\client.dir\deck.cpp.obj -c "C:\Users\tgene\OneDrive - MOEC\Poker\deck.cpp"
 
 CMakeFiles/client.dir/deck.cpp.i: cmake_force
@@ -136,6 +166,8 @@ client_OBJECTS = \
 "CMakeFiles/client.dir/client.cpp.obj" \
 "CMakeFiles/client.dir/client_in_client.cpp.obj" \
 "CMakeFiles/client.dir/raylib_client.cpp.obj" \
+"CMakeFiles/client.dir/cards.cpp.obj" \
+"CMakeFiles/client.dir/images.cpp.obj" \
 "CMakeFiles/client.dir/deck.cpp.obj"
 
 # External object files for target client
@@ -144,13 +176,15 @@ client_EXTERNAL_OBJECTS =
 client.exe: CMakeFiles/client.dir/client.cpp.obj
 client.exe: CMakeFiles/client.dir/client_in_client.cpp.obj
 client.exe: CMakeFiles/client.dir/raylib_client.cpp.obj
+client.exe: CMakeFiles/client.dir/cards.cpp.obj
+client.exe: CMakeFiles/client.dir/images.cpp.obj
 client.exe: CMakeFiles/client.dir/deck.cpp.obj
 client.exe: CMakeFiles/client.dir/build.make
 client.exe: raylib_build/raylib/libraylib.a
 client.exe: CMakeFiles/client.dir/linkLibs.rsp
 client.exe: CMakeFiles/client.dir/objects1.rsp
 client.exe: CMakeFiles/client.dir/link.txt
-	@$(CMAKE_COMMAND) -E cmake_echo_color "--switch=$(COLOR)" --green --bold --progress-dir="C:\Users\tgene\OneDrive - MOEC\Poker\build\CMakeFiles" --progress-num=$(CMAKE_PROGRESS_5) "Linking CXX executable client.exe"
+	@$(CMAKE_COMMAND) -E cmake_echo_color "--switch=$(COLOR)" --green --bold --progress-dir="C:\Users\tgene\OneDrive - MOEC\Poker\build\CMakeFiles" --progress-num=$(CMAKE_PROGRESS_7) "Linking CXX executable client.exe"
 	$(CMAKE_COMMAND) -E cmake_link_script CMakeFiles\client.dir\link.txt --verbose=$(VERBOSE)
 
 # Rule to build all files generated by this target.

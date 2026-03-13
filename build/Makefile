@@ -245,6 +245,30 @@ update_mappings/fast:
 	$(MAKE) $(MAKESILENT) -f raylib_build\raylib\external\glfw\src\CMakeFiles\update_mappings.dir\build.make raylib_build/raylib/external/glfw/src/CMakeFiles/update_mappings.dir/build
 .PHONY : update_mappings/fast
 
+cards.obj: cards.cpp.obj
+.PHONY : cards.obj
+
+# target to build an object file
+cards.cpp.obj:
+	$(MAKE) $(MAKESILENT) -f CMakeFiles\client.dir\build.make CMakeFiles/client.dir/cards.cpp.obj
+.PHONY : cards.cpp.obj
+
+cards.i: cards.cpp.i
+.PHONY : cards.i
+
+# target to preprocess a source file
+cards.cpp.i:
+	$(MAKE) $(MAKESILENT) -f CMakeFiles\client.dir\build.make CMakeFiles/client.dir/cards.cpp.i
+.PHONY : cards.cpp.i
+
+cards.s: cards.cpp.s
+.PHONY : cards.s
+
+# target to generate assembly for a file
+cards.cpp.s:
+	$(MAKE) $(MAKESILENT) -f CMakeFiles\client.dir\build.make CMakeFiles/client.dir/cards.cpp.s
+.PHONY : cards.cpp.s
+
 client.obj: client.cpp.obj
 .PHONY : client.obj
 
@@ -344,6 +368,30 @@ deck.cpp.s:
 	$(MAKE) $(MAKESILENT) -f CMakeFiles\client.dir\build.make CMakeFiles/client.dir/deck.cpp.s
 .PHONY : deck.cpp.s
 
+images.obj: images.cpp.obj
+.PHONY : images.obj
+
+# target to build an object file
+images.cpp.obj:
+	$(MAKE) $(MAKESILENT) -f CMakeFiles\client.dir\build.make CMakeFiles/client.dir/images.cpp.obj
+.PHONY : images.cpp.obj
+
+images.i: images.cpp.i
+.PHONY : images.i
+
+# target to preprocess a source file
+images.cpp.i:
+	$(MAKE) $(MAKESILENT) -f CMakeFiles\client.dir\build.make CMakeFiles/client.dir/images.cpp.i
+.PHONY : images.cpp.i
+
+images.s: images.cpp.s
+.PHONY : images.s
+
+# target to generate assembly for a file
+images.cpp.s:
+	$(MAKE) $(MAKESILENT) -f CMakeFiles\client.dir\build.make CMakeFiles/client.dir/images.cpp.s
+.PHONY : images.cpp.s
+
 raylib_client.obj: raylib_client.cpp.obj
 .PHONY : raylib_client.obj
 
@@ -411,6 +459,9 @@ help:
 	@echo ... glfw
 	@echo ... raylib
 	@echo ... server
+	@echo ... cards.obj
+	@echo ... cards.i
+	@echo ... cards.s
 	@echo ... client.obj
 	@echo ... client.i
 	@echo ... client.s
@@ -423,6 +474,9 @@ help:
 	@echo ... deck.obj
 	@echo ... deck.i
 	@echo ... deck.s
+	@echo ... images.obj
+	@echo ... images.i
+	@echo ... images.s
 	@echo ... raylib_client.obj
 	@echo ... raylib_client.i
 	@echo ... raylib_client.s

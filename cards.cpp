@@ -1,7 +1,7 @@
 #include "cards.h"
 
-Card::Card(float x, float y, valRank card, Font *font, vector<valRank> *cards, bool *soundenabled)
-    : font(font), cards(cards), soundenabled(soundenabled)
+Card::Card(float x, float y, valRank card, Images *suitTextures, Font *font, Images *gameimages)
+    : suitTextures(suitTextures), font(font), gameimages(gameimages)
 {
     target = {x + 300, y};
     pos = {1100, 300};
@@ -96,7 +96,6 @@ void Card::Update()
     float speed = dist * 12 * GetFrameTime();
     if (!moving && !secret && firstsecret)
     {
-        cards->push_back(card);
         firstsecret = false;
         StartFlip();
         return;

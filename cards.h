@@ -1,14 +1,15 @@
 #pragma once
 #include "poker_networking.hpp"
-#include <raylib.h>
 #include "deck.h"
+#include "images.h"
 
 using namespace std;
 
 class Card
 {
 public:
-	Card(float x, float y, valRank card, Font *font, vector<valRank> *cards, bool *soundenabled);
+	Card(float x, float y, valRank card, Images *suitTextures, Font *font, Images *gameimages);
+	;
 	~Card() = default;
 	void Draw();
 	void Update();
@@ -34,7 +35,7 @@ private:
 	int bigoffset;					  // Offset for centering big rank image
 	int smalloffset;				  // Offset for centering small rank image
 
-		Font *font;
-	vector<valRank> *cards;
-	bool *soundenabled;
+	Images *suitTextures;
+	Images *gameimages;
+	Font *font;
 };

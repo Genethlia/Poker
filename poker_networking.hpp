@@ -94,17 +94,17 @@ struct MessageServerToClient
 
     std::string name;
 
-    std::unordered_map<int, std::string> playerNames; // For PlayerJoined, PlayerLeft, PlayerReady, ChatFrom
-    std::string chatText;
+    std::unordered_map<int, std::string> playerNames = {}; // For PlayerJoined, PlayerLeft, PlayerReady, ChatFrom
+    std::string chatText = "";
 
-    GameState gameState;
+    GameState gameState = GameState::WaitingForPlayers;
 
-    PlayerActionType action;
+    PlayerActionType action = PlayerActionType::Failed;
     int actionAmount = 0;
 
     std::string cards; // later can be vector<Card>
 
-    std::vector<int> idWinners; // For Showdown
+    std::vector<int> idWinners = {}; // For Showdown
 
     int toAct = -1;     // For GameState
     int toCall = 0;     // For GameState

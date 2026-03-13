@@ -1,4 +1,5 @@
 #include "raylib_client.hpp"
+#include "assets.h"
 using namespace std;
 
 Game::Game()
@@ -24,6 +25,11 @@ void Game::start()
     client.join_us(playerName);
     client.start();
 
+    for (int i = 0; i < 4; i++)
+        suitTextures[i].LoadSuit(i);
+    gameImages.LoadMatHiddenCardAndHome();
+    cardFont = LoadFontFromMemory(".ttf", cardfont_ttf, cardfont_ttf_len, 32, nullptr, 0);  
+
     while (!WindowShouldClose())
     {
         input();
@@ -39,6 +45,11 @@ void Game::start()
 
 void Game::input()
 {
+    if (IsKeyPressed(KEY_B))
+    {
+        Card card(20, 500, valRank{14, 0}, &suitTextures[0], &cardFont, &gameImages);
+        cards.push_back(card);
+    }
     if (IsKeyPressed(KEY_P))
         client.startGame();
 
@@ -87,6 +98,11 @@ void Game::draw()
     DrawText(TextFormat("To Act: %d", currentState.toAct), 20, 220, 24, WHITE);
     DrawText(TextFormat("Money: %d", currentState.playerMoney[currentState.myId]), 20, 260, 24, WHITE);
 
+    for (auto &card : cards)
+    {
+        card.Update();
+        card.Draw();
+    }
     DrawText("R = Ready", 20, 300, 20, YELLOW);
     DrawText("Q = Fold", 20, 330, 20, YELLOW);
     DrawText("K = Check", 20, 360, 20, YELLOW);

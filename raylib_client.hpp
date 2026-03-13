@@ -1,6 +1,7 @@
 #pragma once
 #include "raylib.h"
 #include "client_in_client.hpp"
+#include "cards.h"
 
 class Game
 {
@@ -18,6 +19,12 @@ private:
     PokerClient client;
     PokerClient::ClientState currentState;
     std::string playerName;
+
+    Images suitTextures[4];
+    Images gameImages;
+
+    Font cardFont;
+    std::vector<Card> cards;
 
     int raiseAmount;
 };

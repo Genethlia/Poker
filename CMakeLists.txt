@@ -43,6 +43,8 @@ add_executable(client
   client.cpp
   client_in_client.cpp
   raylib_client.cpp
+  cards.cpp
+  images.cpp
   ${SHARED_SOURCES}
 )
 
