@@ -16,7 +16,7 @@ private:
     void update();
     void draw();
 
-    PokerClient client;
+    PokerClient client = PokerClient();
     PokerClient::ClientState currentState;
     std::string playerName;
 
@@ -24,7 +24,6 @@ private:
     Images gameImages;
 
     Font cardFont;
-    std::vector<Card> cards;
 
     int raiseAmount;
 };

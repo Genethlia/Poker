@@ -28,7 +28,9 @@ void Game::start()
     for (int i = 0; i < 4; i++)
         suitTextures[i].LoadSuit(i);
     gameImages.LoadMatHiddenCardAndHome();
-    cardFont = LoadFontFromMemory(".ttf", cardfont_ttf, cardfont_ttf_len, 32, nullptr, 0);  
+    cardFont = LoadFontFromMemory(".ttf", cardfont_ttf, cardfont_ttf_len, 32, nullptr, 0);
+
+    client.Init(suitTextures, &gameImages, &cardFont);
 
     while (!WindowShouldClose())
     {
@@ -45,11 +47,6 @@ void Game::start()
 
 void Game::input()
 {
-    if (IsKeyPressed(KEY_B))
-    {
-        Card card(20, 500, valRank{14, 0}, &suitTextures[0], &cardFont, &gameImages);
-        cards.push_back(card);
-    }
     if (IsKeyPressed(KEY_P))
         client.startGame();
 
@@ -81,6 +78,15 @@ void Game::input()
 void Game::update()
 {
     currentState = client.getClientStateCopy();
+    for (auto &card : currentState.myCards)
+    {
+        card.Update();
+    }
+    for (auto &card : currentState.opponentCards)
+    {
+        card.Update();
+    }
+
     switch (currentState.gameState)
     {
     default:
@@ -98,9 +104,12 @@ void Game::draw()
     DrawText(TextFormat("To Act: %d", currentState.toAct), 20, 220, 24, WHITE);
     DrawText(TextFormat("Money: %d", currentState.playerMoney[currentState.myId]), 20, 260, 24, WHITE);
 
-    for (auto &card : cards)
+    for (auto &card : currentState.myCards)
     {
-        card.Update();
+        card.Draw();
+    }
+    for (auto &card : currentState.opponentCards)
+    {
         card.Draw();
     }
     DrawText("R = Ready", 20, 300, 20, YELLOW);

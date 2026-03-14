@@ -10,6 +10,13 @@ PokerClient::ClientState PokerClient::getClientStateCopy()
 PokerClient::PokerClient() : socket(io), running(false)
 {
 }
+void PokerClient::Init(Images suitTextures[4], Images *gameImages, Font *cardFont)
+{
+    for (int i = 0; i < 4; i++)
+        this->suitTextures[i] = &suitTextures[i];
+    this->gameImages = gameImages;
+    this->cardFont = cardFont;
+}
 PokerClient::~PokerClient()
 {
     stop();
@@ -182,10 +189,14 @@ void PokerClient::handle_line(const string &line)
         for (int i = 0; i < msg.playerSum; i++)
         {
             cout << "Player " << msg.playerNames[i] << " (ID: " << i << ") is in the game.";
-            state.playerMoney[i] = 1000; // Initialize player money, can be updated later with actual values from the server
+            PlayerPosition[i] = playerCardPositions[nextAvailablePosition++];
+            if (msg.playerMoney.find(i) != msg.playerMoney.end())
+                state.playerMoney[i] = msg.playerMoney[i]; // Initialize player money, can be updated later with actual values from the server
             if (i == msg.playerId)
-                cout << " (You)";
-            state.playerNames[i] = msg.playerNames[i];
+                cout
+                    << " (You)";
+            if (msg.playerNames.find(i) != msg.playerNames.end())
+                state.playerNames[i] = msg.playerNames[i];
             cout << "\n";
         }
         state.myId = msg.playerId;
@@ -194,6 +205,7 @@ void PokerClient::handle_line(const string &line)
         cout << "Player joined: " << msg.name << " (ID: " << msg.playerId << ")\n";
         state.playerNames[msg.playerId] = msg.name;
         state.playerMoney[msg.playerId] = 1000; // Initialize player money for the new player
+        PlayerPosition[msg.playerId] = playerCardPositions[nextAvailablePosition++];
         break;
     case MessageTypeServerToClient::PlayerLeft:
         cout << "Player left: " << nameOfUnsafe(msg.playerId) << "\n";
@@ -219,8 +231,21 @@ void PokerClient::handle_line(const string &line)
 
         break;
     case MessageTypeServerToClient::PlayerHand:
-        cout << "Your hand: " << msg.cards << "\n";
+    {
+        auto temp = make_card(msg);
+        if (msg.playerId == state.myId)
+        {
+            cout << "Your hand: " << msg.cards << "\n";
+            state.myCards.push_back(temp);
+        }
+        else
+        {
+            cout << nameOfUnsafe(msg.playerId) << "'s hand updated.\n";
+
+            state.opponentCards.push_back(temp);
+        }
         break;
+    }
     case MessageTypeServerToClient::PotUpdate:
         cout << "Pot updated: $" << msg.potAmount << "\n";
         break;
@@ -245,4 +270,30 @@ void PokerClient::handle_line(const string &line)
         cout << "Unknown message type received.\n";
         break;
     }
+}
+
+Card PokerClient::make_card(const MessageServerToClient &msg)
+{
+    int value;
+    int suit;
+
+    value = stoi(msg.cards.substr(0, msg.cards.find('.')));
+    suit = stoi(msg.cards.substr(msg.cards.find('.') + 1));
+
+    int x = PlayerPosition[msg.playerId].x;
+    int y = PlayerPosition[msg.playerId].y;
+
+    if (firstCard[msg.playerId])
+    {
+        firstCard[msg.playerId] = false;
+        x += 20;
+    }
+    else
+    {
+        firstCard[msg.playerId] = true;
+    }
+
+    auto temp = Card(x, y, valRank{value, suit}, suitTextures[suit], cardFont, gameImages);
+
+    return temp;
 }

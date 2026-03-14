@@ -1,0 +1,1 @@
+C:\Users\tgene\OneDrive - MOEC\Poker\build\raylib_build\raylib\external\glfw\src\glfw.dir\Release\glfw.lib

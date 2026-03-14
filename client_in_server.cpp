@@ -153,6 +153,7 @@ void Client::handle_line(const string &line)
         name = msg.name;
         this->id = serverState->nextId++;
         serverState->idToName[id] = name;
+        serverState->idToMoney[id] = 1000; // Give each player 1000 money when they join
         cout << "[" << display_name() << "] joined\n";
 
         send(make_shared<string>(serialize_server(
@@ -161,7 +162,8 @@ void Client::handle_line(const string &line)
                 .playerId = id,
                 .playerSum = int(serverState->idToName.size()),
                 .name = name,
-                .playerNames = serverState->idToName})));
+                .playerNames = serverState->idToName,
+                .playerMoney = serverState->idToMoney})));
 
         response.type = MessageTypeServerToClient::PlayerJoined;
         response.playerId = id;
@@ -185,6 +187,7 @@ void Client::handle_line(const string &line)
         if (serverState->gameState == GameState::WaitingForPlayers || serverState->gameState == GameState::Showdown || serverState->toAct != id)
         {
             cout << "[" << display_name() << "] invalid action because " << "gameState=" << int(serverState->gameState) << " toAct=" << serverState->toAct << " myId=" << id << "\n";
+            validMessage = false;
             break;
         }
 

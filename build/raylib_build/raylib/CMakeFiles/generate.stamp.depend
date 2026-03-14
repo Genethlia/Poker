@@ -1,0 +1,20 @@
+# CMake generation dependency list for this directory.
+C:/Program Files/CMake/share/cmake-4.2/Modules/CPack.cmake
+C:/Program Files/CMake/share/cmake-4.2/Modules/CPackComponent.cmake
+C:/Program Files/CMake/share/cmake-4.2/Modules/FindOpenGL.cmake
+C:/Program Files/CMake/share/cmake-4.2/Modules/FindPackageHandleStandardArgs.cmake
+C:/Program Files/CMake/share/cmake-4.2/Modules/FindPackageMessage.cmake
+C:/Program Files/CMake/share/cmake-4.2/Modules/GNUInstallDirs.cmake
+C:/Program Files/CMake/share/cmake-4.2/Templates/CPackConfig.cmake.in
+C:/Users/tgene/OneDrive - MOEC/Poker/raylib/cmake/CompileDefinitions.cmake
+C:/Users/tgene/OneDrive - MOEC/Poker/raylib/cmake/GlfwImport.cmake
+C:/Users/tgene/OneDrive - MOEC/Poker/raylib/cmake/InstallConfigurations.cmake
+C:/Users/tgene/OneDrive - MOEC/Poker/raylib/cmake/JoinPaths.cmake
+C:/Users/tgene/OneDrive - MOEC/Poker/raylib/cmake/LibraryConfigurations.cmake
+C:/Users/tgene/OneDrive - MOEC/Poker/raylib/cmake/LibraryPathToLinkerFlags.cmake
+C:/Users/tgene/OneDrive - MOEC/Poker/raylib/cmake/PackConfigurations.cmake
+C:/Users/tgene/OneDrive - MOEC/Poker/raylib/cmake/PopulateConfigVariablesLocally.cmake
+C:/Users/tgene/OneDrive - MOEC/Poker/raylib/cmake/raylib-config-version.cmake
+C:/Users/tgene/OneDrive - MOEC/Poker/raylib/cmake/raylib-config.cmake
+C:/Users/tgene/OneDrive - MOEC/Poker/raylib/raylib.pc.in
+C:/Users/tgene/OneDrive - MOEC/Poker/raylib/src/CMakeLists.txt

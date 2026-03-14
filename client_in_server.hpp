@@ -40,6 +40,7 @@ struct ServerState
     std::unordered_set<int> needsAction; // player ids that need to act in the current betting round
 
     std::unordered_map<int, std::string> idToName;
+    std::unordered_map<int, int> idToMoney;
 
     GameState gameState = GameState::WaitingForPlayers;
 

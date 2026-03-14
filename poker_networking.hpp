@@ -94,7 +94,8 @@ struct MessageServerToClient
 
     std::string name;
 
-    std::unordered_map<int, std::string> playerNames = {}; // For PlayerJoined, PlayerLeft, PlayerReady, ChatFrom
+    std::unordered_map<int, std::string> playerNames = {};
+    std::unordered_map<int, int> playerMoney = {};
     std::string chatText = "";
 
     GameState gameState = GameState::WaitingForPlayers;
@@ -206,6 +207,10 @@ inline std::string serialize_server(const MessageServerToClient &m)
         {
             out << " " << it->first << " " << it->second;
         }
+        for (auto it = m.playerMoney.begin(); it != m.playerMoney.end(); it++)
+        {
+            out << " " << it->first << " " << it->second;
+        }
         break;
     case MessageTypeServerToClient::PlayerJoined:
         out << "PLAYER_JOINED " << m.playerId << " " << m.name;
@@ -230,7 +235,7 @@ inline std::string serialize_server(const MessageServerToClient &m)
         out << "COMMUNITY_CARD " << m.cards;
         break;
     case MessageTypeServerToClient::PlayerHand:
-        out << "PLAYER_HAND " << m.cards;
+        out << "PLAYER_HAND " << m.playerId << " " << m.cards;
         break;
     case MessageTypeServerToClient::PotUpdate:
         out << "POT_UPDATE " << m.potAmount;
@@ -278,6 +283,13 @@ inline MessageServerToClient deserialize_server(const std::string &line)
             in >> id >> name;
             msg.playerNames[id] = name;
         }
+        for (int i = 0; i < msg.playerSum; i++)
+        {
+            int id;
+            int money;
+            in >> id >> money;
+            msg.playerMoney[id] = money;
+        }
         break;
     case 'P': // PLAYER_JOINED or PLAYER_LEFT or PLAYER_READY or PLAYER_HAND or POT_UPDATE
         if (command == "PLAYER_JOINED")
@@ -298,7 +310,7 @@ inline MessageServerToClient deserialize_server(const std::string &line)
         else if (command == "PLAYER_HAND")
         {
             msg.type = MessageTypeServerToClient::PlayerHand;
-            in >> msg.cards;
+            in >> msg.playerId >> msg.cards;
         }
         else
         {

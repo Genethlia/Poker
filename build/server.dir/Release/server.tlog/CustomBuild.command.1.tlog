@@ -1,0 +1,10 @@
+^C:\USERS\TGENE\ONEDRIVE - MOEC\POKER\CMAKELISTS.TXT
+setlocal
+"C:\Program Files\CMake\bin\cmake.exe" "-SC:/Users/tgene/OneDrive - MOEC/Poker" "-BC:/Users/tgene/OneDrive - MOEC/Poker/build" --check-stamp-file "C:/Users/tgene/OneDrive - MOEC/Poker/build/CMakeFiles/generate.stamp"
+if %errorlevel% neq 0 goto :cmEnd
+:cmEnd
+endlocal & call :cmErrorLevel %errorlevel% & goto :cmDone
+:cmErrorLevel
+exit /b %1
+:cmDone
+if %errorlevel% neq 0 goto :VCEnd

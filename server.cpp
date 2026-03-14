@@ -130,10 +130,10 @@ public:
                 {
                     state.handstate.hole[j].second = card;
                 }
-                players[j]->send_to(serialize_server(MessageServerToClient{
-                                        .type = MessageTypeServerToClient::PlayerHand,
-                                        .cards = to_string(card.value) + "." + to_string(card.suit)}),
-                                    players[j]->id);
+                state.broadcast_all(serialize_server(MessageServerToClient{
+                    .type = MessageTypeServerToClient::PlayerHand,
+                    .playerId = players[j]->id,
+                    .cards = to_string(card.value) + "," + to_string(card.suit)}));
             }
         }
         state.gameState = GameState::PreFlop;

@@ -1,0 +1,50 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<Solution>
+	<Configurations>
+		<BuildType Name="Debug"/>
+		<BuildType Name="Release"/>
+		<BuildType Name="MinSizeRel"/>
+		<BuildType Name="RelWithDebInfo"/>
+		<Platform Name="x64"/>
+	</Configurations>
+	<Project Path="raylib/raylib.vcxproj" Type="8bc9ceb8-8b4a-11d0-8d11-00a0c91bc942" Id="b78b5d41-960c-3e53-b2cd-f438b6cadde9">
+		<BuildDependency Project="../ZERO_CHECK.vcxproj"/>
+		<BuildDependency Project="raylib/external/glfw/src/glfw.vcxproj"/>
+	</Project>
+	<Folder Name="/CMakePredefinedTargets/">
+		<Project Path="ALL_BUILD.vcxproj" Type="8bc9ceb8-8b4a-11d0-8d11-00a0c91bc942" Id="8f3e490f-55b0-3373-93f3-608089ed76c0" DefaultStartup="true">
+			<BuildDependency Project="../ZERO_CHECK.vcxproj"/>
+			<BuildDependency Project="raylib/external/glfw/src/glfw.vcxproj"/>
+			<BuildDependency Project="raylib/raylib.vcxproj"/>
+		</Project>
+		<Project Path="INSTALL.vcxproj" Type="8bc9ceb8-8b4a-11d0-8d11-00a0c91bc942" Id="ce1eec08-693c-3c31-9ceb-07ba5c5d983d">
+			<BuildDependency Project="ALL_BUILD.vcxproj"/>
+			<BuildDependency Project="../ZERO_CHECK.vcxproj"/>
+			<Build Solution="Debug|*" Project="false"/>
+			<Build Solution="Release|*" Project="false"/>
+			<Build Solution="MinSizeRel|*" Project="false"/>
+			<Build Solution="RelWithDebInfo|*" Project="false"/>
+		</Project>
+		<Project Path="PACKAGE.vcxproj" Type="8bc9ceb8-8b4a-11d0-8d11-00a0c91bc942" Id="22923f14-2f8b-3eea-95b1-4fc9eb28d085">
+			<BuildDependency Project="ALL_BUILD.vcxproj"/>
+			<BuildDependency Project="../ZERO_CHECK.vcxproj"/>
+			<Build Solution="Debug|*" Project="false"/>
+			<Build Solution="Release|*" Project="false"/>
+			<Build Solution="MinSizeRel|*" Project="false"/>
+			<Build Solution="RelWithDebInfo|*" Project="false"/>
+		</Project>
+		<Project Path="../ZERO_CHECK.vcxproj" Type="8bc9ceb8-8b4a-11d0-8d11-00a0c91bc942" Id="49c11bfb-a482-36fe-8096-092b6227f0e2"/>
+	</Folder>
+	<Folder Name="/GLFW3/">
+		<Project Path="raylib/external/glfw/src/glfw.vcxproj" Type="8bc9ceb8-8b4a-11d0-8d11-00a0c91bc942" Id="03b1bbaf-113e-3016-8546-e407fc0ba866">
+			<BuildDependency Project="../ZERO_CHECK.vcxproj"/>
+		</Project>
+		<Project Path="raylib/external/glfw/src/update_mappings.vcxproj" Type="8bc9ceb8-8b4a-11d0-8d11-00a0c91bc942" Id="4a0170e3-fce8-3523-8448-e08b607a1c64">
+			<BuildDependency Project="../ZERO_CHECK.vcxproj"/>
+			<Build Solution="Debug|*" Project="false"/>
+			<Build Solution="Release|*" Project="false"/>
+			<Build Solution="MinSizeRel|*" Project="false"/>
+			<Build Solution="RelWithDebInfo|*" Project="false"/>
+		</Project>
+	</Folder>
+</Solution>
