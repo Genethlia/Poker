@@ -78,17 +78,30 @@ void Game::input()
 void Game::update()
 {
     currentState = client.getClientStateCopy();
-    for (auto &card : currentState.myCards)
-    {
-        card.Update();
-    }
-    for (auto &card : currentState.opponentCards)
-    {
-        card.Update();
-    }
+    shouldNewCardBeMade();
 
     switch (currentState.gameState)
     {
+    case GameState::WaitingForPlayers:
+        break;
+    case GameState::PreFlop:
+    case GameState::Flop:
+    case GameState::Turn:
+    case GameState::River:
+    case GameState::Showdown:
+        for (auto &card : myCards)
+        {
+            card.Update();
+        }
+        for (auto &card : opponentCards)
+        {
+            card.Update();
+        }
+        for (auto &card : communityCards)
+        {
+            card.Update();
+        }
+        break;
     default:
         break;
     }
@@ -104,15 +117,20 @@ void Game::draw()
     DrawText(TextFormat("To Act: %d", currentState.toAct), 20, 220, 24, WHITE);
     DrawText(TextFormat("Money: %d", currentState.playerMoney[currentState.myId]), 20, 260, 24, WHITE);
 
-    for (auto &card : currentState.myCards)
+    for (auto &card : myCards)
     {
         card.Draw();
     }
-    for (auto &card : currentState.opponentCards)
+    for (auto &card : opponentCards)
     {
         card.Draw();
     }
-    DrawText("R = Ready", 20, 300, 20, YELLOW);
+    for (auto &card : communityCards)
+    {
+        card.Draw();
+    }
+
+    DrawText("R = Reeady", 20, 300, 20, YELLOW);
     DrawText("Q = Fold", 20, 330, 20, YELLOW);
     DrawText("K = Check", 20, 360, 20, YELLOW);
     DrawText("C = Call", 20, 390, 20, YELLOW);
@@ -120,4 +138,30 @@ void Game::draw()
     DrawText("ENTER = Raise", 20, 450, 20, YELLOW);
 
     DrawText(TextFormat("Raise Amount: %d", raiseAmount), 20, 500, 24, ORANGE);
+}
+
+void Game::shouldNewCardBeMade()
+{
+    while (currentState.myCards.size() > myCards.size())
+    {
+        valRank cardInfo = currentState.myCards[myCards.size()];
+        holeCardsDrownCount[currentState.myId]++;
+        myCards.emplace_back(getPlayerCardBasePos(currentState.myId).x + holeCardsDrownCount[currentState.myId] * 100, getPlayerCardBasePos(currentState.myId).y, cardInfo, suitTextures, &cardFont, &gameImages);
+    }
+    while (currentState.opponentCards.size() > opponentCards.size())
+    {
+        auto &[id, cardInfo] = currentState.opponentCards[opponentCards.size()];
+        holeCardsDrownCount[id]++;
+        opponentCards.emplace_back(getPlayerCardBasePos(id).x + holeCardsDrownCount[id] * 100, getPlayerCardBasePos(id).y, cardInfo, suitTextures, &cardFont, &gameImages);
+    }
+    while (currentState.communityCards.size() > communityCards.size())
+    {
+        valRank cardInfo = currentState.communityCards[communityCards.size()];
+        communityCards.emplace_back(350 + communityCards.size() * 100, 300, cardInfo, suitTextures, &cardFont, &gameImages);
+    }
+}
+
+pos Game::getPlayerCardBasePos(int id)
+{
+    return currentState.PlayerPosition.at(id);
 }

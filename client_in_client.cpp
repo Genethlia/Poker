@@ -185,32 +185,36 @@ void PokerClient::handle_line(const string &line)
     switch (msg.type)
     {
     case MessageTypeServerToClient::Welcome:
+        rebuildPlayerPositions();
+        state.playerNames.clear();
+        state.playerMoney.clear();
         cout << "Welcome, " << msg.name << "! Your player ID is " << msg.playerId << ". There are " << msg.playerSum << " players in the game.\n";
-        for (int i = 0; i < msg.playerSum; i++)
+        for (auto &[id, name] : msg.playerNames)
         {
-            cout << "Player " << msg.playerNames[i] << " (ID: " << i << ") is in the game.";
-            PlayerPosition[i] = playerCardPositions[nextAvailablePosition++];
-            if (msg.playerMoney.find(i) != msg.playerMoney.end())
-                state.playerMoney[i] = msg.playerMoney[i]; // Initialize player money, can be updated later with actual values from the server
-            if (i == msg.playerId)
+            cout << "Player " << name << " (ID: " << id << ") is in the game.";
+            if (msg.playerMoney.find(id) != msg.playerMoney.end())
+                state.playerMoney[id] = msg.playerMoney[id]; // Initialize player money, can be updated later with actual values from the server
+            if (id == msg.playerId)
                 cout
                     << " (You)";
-            if (msg.playerNames.find(i) != msg.playerNames.end())
-                state.playerNames[i] = msg.playerNames[i];
+            if (msg.playerNames.find(id) != msg.playerNames.end())
+                state.playerNames[id] = msg.playerNames[id];
             cout << "\n";
         }
+        rebuildPlayerPositions();
         state.myId = msg.playerId;
         break;
     case MessageTypeServerToClient::PlayerJoined:
         cout << "Player joined: " << msg.name << " (ID: " << msg.playerId << ")\n";
         state.playerNames[msg.playerId] = msg.name;
         state.playerMoney[msg.playerId] = 1000; // Initialize player money for the new player
-        PlayerPosition[msg.playerId] = playerCardPositions[nextAvailablePosition++];
+        rebuildPlayerPositions();
         break;
     case MessageTypeServerToClient::PlayerLeft:
         cout << "Player left: " << nameOfUnsafe(msg.playerId) << "\n";
         state.playerNames.erase(msg.playerId);
         state.playerMoney.erase(msg.playerId); // Remove player money for the player who left
+        rebuildPlayerPositions();
         break;
     case MessageTypeServerToClient::PlayerReady:
         cout << "Player ready: " << nameOfUnsafe(msg.playerId) << "\n";
@@ -228,11 +232,11 @@ void PokerClient::handle_line(const string &line)
         break;
     case MessageTypeServerToClient::CommunityCard:
         cout << "Community cards updated: " << msg.cards << "\n";
-
+        state.communityCards.push_back(find_valRank(msg));
         break;
     case MessageTypeServerToClient::PlayerHand:
     {
-        auto temp = make_card(msg);
+        auto temp = find_valRank(msg);
         if (msg.playerId == state.myId)
         {
             cout << "Your hand: " << msg.cards << "\n";
@@ -242,7 +246,7 @@ void PokerClient::handle_line(const string &line)
         {
             cout << nameOfUnsafe(msg.playerId) << "'s hand updated.\n";
 
-            state.opponentCards.push_back(temp);
+            state.opponentCards.push_back({msg.playerId, temp});
         }
         break;
     }
@@ -272,28 +276,26 @@ void PokerClient::handle_line(const string &line)
     }
 }
 
-Card PokerClient::make_card(const MessageServerToClient &msg)
+valRank PokerClient::find_valRank(const MessageServerToClient &msg)
 {
-    int value;
-    int suit;
+    cout<<msg.cards<<"\n";
+    int value = stoi(msg.cards.substr(0, msg.cards.find(',')));
+    int suit = stoi(msg.cards.substr(msg.cards.find(',') + 1));
+    cout << "Parsed card: Value = " << value << ", Suit = " << suit << "\n";
+    return {value, suit};
+}
 
-    value = stoi(msg.cards.substr(0, msg.cards.find('.')));
-    suit = stoi(msg.cards.substr(msg.cards.find('.') + 1));
-
-    int x = PlayerPosition[msg.playerId].x;
-    int y = PlayerPosition[msg.playerId].y;
-
-    if (firstCard[msg.playerId])
+void PokerClient::rebuildPlayerPositions()
+{
+    state.PlayerPosition.clear();
+    std::vector<int> ids;
+    for (auto &[id, name] : state.playerNames)
     {
-        firstCard[msg.playerId] = false;
-        x += 20;
+        ids.push_back(id);
     }
-    else
+    std::sort(ids.begin(), ids.end());
+    for (int i = 0; i < ids.size() && i < playerCardPositions.size(); i++)
     {
-        firstCard[msg.playerId] = true;
+        state.PlayerPosition[ids[i]] = playerCardPositions[i];
     }
-
-    auto temp = Card(x, y, valRank{value, suit}, suitTextures[suit], cardFont, gameImages);
-
-    return temp;
 }

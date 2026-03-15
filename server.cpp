@@ -422,7 +422,7 @@ private:
             cout << "Dealing community card " << card.value << " of suit " << card.suit << endl;
             state.broadcast_all(serialize_server(MessageServerToClient{
                 .type = MessageTypeServerToClient::CommunityCard,
-                .cards = to_string(card.value) + "." + to_string(card.suit)}));
+                .cards = to_string(card.value) + "," + to_string(card.suit)}));
         }
     }
     void dealTurnorRiver()
@@ -432,7 +432,7 @@ private:
         cout << "Dealing community card " << card.value << " of suit " << card.suit << endl;
         state.broadcast_all(serialize_server(MessageServerToClient{
             .type = MessageTypeServerToClient::CommunityCard,
-            .cards = to_string(card.value) + "." + to_string(card.suit)}));
+            .cards = to_string(card.value) + "," + to_string(card.suit)}));
     }
     void runOutToFive()
     {
@@ -443,7 +443,7 @@ private:
             cout << "Dealing community card " << card.value << " of suit " << card.suit << endl;
             state.broadcast_all(serialize_server(MessageServerToClient{
                 .type = MessageTypeServerToClient::CommunityCard,
-                .cards = to_string(card.value) + "." + to_string(card.suit)}));
+                .cards = to_string(card.value) + "," + to_string(card.suit)}));
         }
     }
 

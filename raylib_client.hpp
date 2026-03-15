@@ -15,6 +15,7 @@ private:
     void input();
     void update();
     void draw();
+    void shouldNewCardBeMade();
 
     PokerClient client = PokerClient();
     PokerClient::ClientState currentState;
@@ -25,5 +26,12 @@ private:
 
     Font cardFont;
 
+    std::vector<Card> myCards;
+    std::vector<Card> opponentCards;
+    std::vector<Card> communityCards;
+
     int raiseAmount;
+
+    pos getPlayerCardBasePos(int id);
+    std::unordered_map<int, int> holeCardsDrownCount = {};
 };

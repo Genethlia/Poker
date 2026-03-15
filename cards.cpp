@@ -3,8 +3,8 @@
 Card::Card(float x, float y, valRank card, Images *suitTextures, Font *font, Images *gameimages)
     : suitTextures(suitTextures), font(font), gameimages(gameimages)
 {
-    target = {x + 300, y};
-    pos = {1100, 300};
+    target = {x, y};
+    pos = {700, 20};
 
     width = 120;
     height = 200;
