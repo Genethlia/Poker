@@ -10,13 +10,7 @@ PokerClient::ClientState PokerClient::getClientStateCopy()
 PokerClient::PokerClient() : socket(io), running(false)
 {
 }
-void PokerClient::Init(Images suitTextures[4], Images *gameImages, Font *cardFont)
-{
-    for (int i = 0; i < 4; i++)
-        this->suitTextures[i] = &suitTextures[i];
-    this->gameImages = gameImages;
-    this->cardFont = cardFont;
-}
+
 PokerClient::~PokerClient()
 {
     stop();
@@ -26,7 +20,7 @@ void PokerClient::connect_to(const string &host, const string &port)
     tcp::resolver resolver(io);
     auto endpoints = resolver.resolve(host, port);
     boost::asio::connect(socket, endpoints);
-    cout << "Connected to server!\n";
+    cout << "Waiting server response...\n";
 }
 
 void PokerClient::join_us(const string &name)
@@ -225,6 +219,10 @@ void PokerClient::handle_line(const string &line)
     case MessageTypeServerToClient::GameState:
         cout << "Game state changed: " << int(msg.gameState) << "\n";
         state.gameState = msg.gameState;
+        if (msg.gameState == GameState::PreFlop)
+        {
+            newGame();
+        }
         break;
     case MessageTypeServerToClient::ActionResult:
         cout << "Action result for player " << nameOfUnsafe(msg.playerId) << ": " << int(msg.action) << "\n";
@@ -252,6 +250,7 @@ void PokerClient::handle_line(const string &line)
     }
     case MessageTypeServerToClient::PotUpdate:
         cout << "Pot updated: $" << msg.potAmount << "\n";
+        state.potAmount = msg.potAmount; // Update the client state with the new pot amount
         break;
     case MessageTypeServerToClient::Showdown:
         cout << "Showdown! Pot: $" << msg.potAmount << ". Winners: ";
@@ -270,15 +269,45 @@ void PokerClient::handle_line(const string &line)
         state.minRaise = msg.minRaise;     // Update the client state with the new minimum raise
         state.potAmount = msg.potAmount;   // Update the client state with the new pot amount
         break;
+    case MessageTypeServerToClient::Reject:
+    {
+        if (msg.rejectionReason == reason_for_rejection::TooManyPlayers)
+        {
+            running = false;
+            cout << "Connection rejected: Too many players in the game.\n";
+        }
+        else if (msg.rejectionReason == reason_for_rejection::GameInProgress)
+        {
+            running = false;
+            cout << "Connection rejected: Game already in progress.\n";
+        }
+        MessageClientToServer ack;
+        ack.type = MessageTypeClientToServer::RejectAck;
+        write_line(serialize_client(ack));
+        break;
+    }
     default:
         cout << "Unknown message type received.\n";
         break;
     }
 }
 
+void PokerClient::newGame()
+{
+
+    state.communityCards.clear();
+    state.myCards.clear();
+    state.opponentCards.clear();
+    state.toAct = -1;
+    state.toCall = 0;
+    state.currentBet = 0;
+    state.minRaise = 50;
+    state.potAmount = 0;
+}
+
 valRank PokerClient::find_valRank(const MessageServerToClient &msg)
 {
-    cout<<msg.cards<<"\n";
+    cout << msg.cards << "\n";
     int value = stoi(msg.cards.substr(0, msg.cards.find(',')));
     int suit = stoi(msg.cards.substr(msg.cards.find(',') + 1));
     cout << "Parsed card: Value = " << value << ", Suit = " << suit << "\n";

@@ -35,12 +35,14 @@ enum class MessageTypeClientToServer
     Action,
     RequestState,
     Leave,
-    AdminPlay
+    AdminPlay,
+    RejectAck
 };
 
 enum class MessageTypeServerToClient
 {
     Welcome,
+    Reject,
     PlayerJoined,
     PlayerLeft,
     PlayerReady,
@@ -71,6 +73,12 @@ enum class GameState
     Turn,
     River,
     Showdown
+};
+
+enum class reason_for_rejection
+{
+    GameInProgress,
+    TooManyPlayers
 };
 
 struct MessageClientToServer
@@ -111,6 +119,8 @@ struct MessageServerToClient
     int toCall = 0;     // For GameState
     int currentBet = 0; // For GameState
     int minRaise = 0;   // For GameState
+
+    reason_for_rejection rejectionReason = reason_for_rejection::TooManyPlayers; // For Reject
 };
 
 inline std::string serialize_client(const MessageClientToServer &m)
@@ -139,6 +149,9 @@ inline std::string serialize_client(const MessageClientToServer &m)
         break;
     case MessageTypeClientToServer::AdminPlay:
         out << "ADMIN_PLAY ";
+        break;
+    case MessageTypeClientToServer::RejectAck:
+        out << "REJECT_ACK ";
         break;
     default:
         break;
@@ -179,6 +192,11 @@ inline MessageClientToServer deserialize_client(const std::string &line)
         if (command == "ADMIN_PLAY")
         {
             msg.type = MessageTypeClientToServer::AdminPlay;
+            break;
+        }
+        if (command == "REJECT_ACK")
+        {
+            msg.type = MessageTypeClientToServer::RejectAck;
             break;
         }
         msg.type = MessageTypeClientToServer::Action;
@@ -251,6 +269,9 @@ inline std::string serialize_server(const MessageServerToClient &m)
         break;
     case MessageTypeServerToClient::BettingUpdate:
         out << "BETTING_UPDATE " << m.toAct << " " << m.toCall << " " << m.currentBet << " " << m.minRaise << " " << m.potAmount;
+        break;
+    case MessageTypeServerToClient::Reject:
+        out << "REJECT " << int(m.rejectionReason);
         break;
     default:
         out << "UNKNOWN_MESSAGE";
@@ -358,6 +379,12 @@ inline MessageServerToClient deserialize_server(const std::string &line)
     case 'B': // BETTING_UPDATE
         msg.type = MessageTypeServerToClient::BettingUpdate;
         in >> msg.toAct >> msg.toCall >> msg.currentBet >> msg.minRaise >> msg.potAmount;
+        break;
+    case 'R': // REJECT
+        msg.type = MessageTypeServerToClient::Reject;
+        int tempReason;
+        in >> tempReason;
+        msg.rejectionReason = static_cast<reason_for_rejection>(tempReason);
         break;
     default:
         break;

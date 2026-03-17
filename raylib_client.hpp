@@ -16,6 +16,7 @@ private:
     void update();
     void draw();
     void shouldNewCardBeMade();
+    void clearCardsIfNecessary(); // Check if cards have been cleared in the client state and clear them in the game if that's the case
 
     PokerClient client = PokerClient();
     PokerClient::ClientState currentState;

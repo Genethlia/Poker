@@ -18,7 +18,7 @@ void Game::start()
     std::cout << "Enter your name: ";
     std::getline(std::cin, playerName);
 
-    InitWindow(1000, 700, "Poker Game");
+    InitWindow(1366, 768, "Poker Game");
     SetTargetFPS(60);
 
     client.connect_to("127.0.0.1", "6767");
@@ -30,9 +30,7 @@ void Game::start()
     gameImages.LoadMatHiddenCardAndHome();
     cardFont = LoadFontFromMemory(".ttf", cardfont_ttf, cardfont_ttf_len, 32, nullptr, 0);
 
-    client.Init(suitTextures, &gameImages, &cardFont);
-
-    while (!WindowShouldClose())
+    while (!WindowShouldClose() && client.running)
     {
         input();
         update();
@@ -78,6 +76,7 @@ void Game::input()
 void Game::update()
 {
     currentState = client.getClientStateCopy();
+    clearCardsIfNecessary();
     shouldNewCardBeMade();
 
     switch (currentState.gameState)
@@ -130,7 +129,7 @@ void Game::draw()
         card.Draw();
     }
 
-    DrawText("R = Reeady", 20, 300, 20, YELLOW);
+    DrawText("R = Ready", 20, 300, 20, YELLOW);
     DrawText("Q = Fold", 20, 330, 20, YELLOW);
     DrawText("K = Check", 20, 360, 20, YELLOW);
     DrawText("C = Call", 20, 390, 20, YELLOW);
@@ -146,18 +145,29 @@ void Game::shouldNewCardBeMade()
     {
         valRank cardInfo = currentState.myCards[myCards.size()];
         holeCardsDrownCount[currentState.myId]++;
-        myCards.emplace_back(getPlayerCardBasePos(currentState.myId).x + holeCardsDrownCount[currentState.myId] * 100, getPlayerCardBasePos(currentState.myId).y, cardInfo, suitTextures, &cardFont, &gameImages);
+        myCards.emplace_back(getPlayerCardBasePos(currentState.myId).x + holeCardsDrownCount[currentState.myId] * 100, getPlayerCardBasePos(currentState.myId).y, cardInfo, &suitTextures[cardInfo.suit], &cardFont, &gameImages);
     }
     while (currentState.opponentCards.size() > opponentCards.size())
     {
         auto &[id, cardInfo] = currentState.opponentCards[opponentCards.size()];
         holeCardsDrownCount[id]++;
-        opponentCards.emplace_back(getPlayerCardBasePos(id).x + holeCardsDrownCount[id] * 100, getPlayerCardBasePos(id).y, cardInfo, suitTextures, &cardFont, &gameImages);
+        opponentCards.emplace_back(getPlayerCardBasePos(id).x + holeCardsDrownCount[id] * 100, getPlayerCardBasePos(id).y, cardInfo, &suitTextures[cardInfo.suit], &cardFont, &gameImages);
     }
     while (currentState.communityCards.size() > communityCards.size())
     {
         valRank cardInfo = currentState.communityCards[communityCards.size()];
-        communityCards.emplace_back(350 + communityCards.size() * 100, 300, cardInfo, suitTextures, &cardFont, &gameImages);
+        communityCards.emplace_back(350 + communityCards.size() * 100, 300, cardInfo, &suitTextures[cardInfo.suit], &cardFont, &gameImages);
+    }
+}
+
+void Game::clearCardsIfNecessary()
+{
+    if (myCards.size() > currentState.myCards.size() || opponentCards.size() > currentState.opponentCards.size() || communityCards.size() > currentState.communityCards.size())
+    {
+        myCards.clear();
+        opponentCards.clear();
+        communityCards.clear();
+        holeCardsDrownCount.clear();
     }
 }
 

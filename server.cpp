@@ -62,7 +62,8 @@ public:
         }
     }
 
-    void end()
+    void
+    end()
     {
         io.stop();
     }
@@ -85,7 +86,13 @@ public:
             cout << "Not all players are ready.\n";
             return;
         }
+        if (gameInProgress)
+        {
+            cout << "Game already in progress.\n";
+            return;
+        }
 
+        gameInProgress = true;
         state.pot = 0;
         state.gameState = GameState::PreFlop;
         state.currentBet = 50; // BB for now
@@ -190,7 +197,7 @@ public:
                 .type = MessageTypeServerToClient::Showdown,
                 .potAmount = state.pot,
                 .idWinners = {winnerId}}));
-
+            gameInProgress = false;
             return;
         }
 
@@ -198,6 +205,7 @@ public:
         {
             runOutToFive();
             doShowdown();
+            gameInProgress = false;
             return;
         }
 
@@ -224,8 +232,12 @@ public:
             else
             {
                 doShowdown();
+                gameInProgress = false;
                 return;
             }
+            state.broadcast_all(serialize_server(MessageServerToClient{
+                .type = MessageTypeServerToClient::GameState,
+                .gameState = state.gameState}));
 
             StartBettingRound();
             return;
@@ -371,6 +383,7 @@ private:
     boost::asio::io_context io;
     ServerState state;
     Deck deck;
+    bool gameInProgress = false;
 
     shared_ptr<Client> find_client_by_id(int id)
     {
@@ -454,6 +467,9 @@ private:
 
         auto winners = determine_winner(hands, community);
         state.gameState = GameState::Showdown;
+        state.broadcast_all(serialize_server(MessageServerToClient{
+            .type = MessageTypeServerToClient::GameState,
+            .gameState = state.gameState}));
         state.broadcast_all(serialize_server(MessageServerToClient{
             .type = MessageTypeServerToClient::Showdown,
             .potAmount = state.pot,

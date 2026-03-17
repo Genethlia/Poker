@@ -26,10 +26,10 @@ public:
     void sendAction(PlayerActionType action, int amount = 0);
     void startGame();
     void sendChat(const std::string &chat);
-    void Init(Images suitTextures[4], Images *gameImages, Font *cardFont);
 
     std::string nameOf(int id);
     std::string nameOfUnsafe(int id);
+    std::atomic<bool> running;
 
     struct ClientState
     {
@@ -58,7 +58,6 @@ private:
     ClientState state;
     std::mutex stateMutex;
 
-    std::atomic<bool> running;
     std::thread readerThread;
 
     void UpdateMoney(const MessageServerToClient &msg);
@@ -67,27 +66,23 @@ private:
     void readerLoop();
 
     void handle_line(const std::string &line);
+    void newGame();
 
     valRank find_valRank(const MessageServerToClient &msg);
 
     std::vector<pos> playerCardPositions = {
         {20, 400},
-        {200, 400},
-        {380, 400},
-        {560, 400},
-        {740, 400},
-        {920, 400}};
+        {230, 400},
+        {440, 400},
+        {650, 400},
+    };
 
     std::vector<pos> communityCardPositions = {
-        {200, 200},
-        {380, 200},
-        {560, 200},
-        {740, 200},
-        {920, 200}};
+        {200, 0},
+        {450, 0},
+        {600, 0},
+        {750, 0},
+        {900, 0}};
 
     void rebuildPlayerPositions();
-
-    Images *suitTextures[4];
-    Images *gameImages;
-    Font *cardFont;
 };

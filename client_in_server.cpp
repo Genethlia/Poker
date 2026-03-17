@@ -150,6 +150,31 @@ void Client::handle_line(const string &line)
     switch (msg.type)
     {
     case MessageTypeClientToServer::Join:
+    {
+        int joinedPlayers = 0;
+        for (auto &c : serverState->clients)
+            if (c->id >= 0)
+                joinedPlayers++;
+
+        if (joinedPlayers >= 4)
+        {
+            cout << "Rejected join from [" << msg.name << "]: max players reached.\n";
+            MessageServerToClient rejectMsg;
+            rejectMsg.type = MessageTypeServerToClient::Reject;
+            rejectMsg.rejectionReason = reason_for_rejection::TooManyPlayers;
+            send(make_shared<string>(serialize_server(rejectMsg)));
+            return;
+        }
+        else if (serverState->gameState != GameState::WaitingForPlayers)
+        {
+            cout << "Rejected join from [" << msg.name << "]: game in progress.\n";
+            MessageServerToClient rejectMsg;
+            rejectMsg.type = MessageTypeServerToClient::Reject;
+            rejectMsg.rejectionReason = reason_for_rejection::GameInProgress;
+            send(make_shared<string>(serialize_server(rejectMsg)));
+            return;
+        }
+
         name = msg.name;
         this->id = serverState->nextId++;
         serverState->idToName[id] = name;
@@ -169,6 +194,7 @@ void Client::handle_line(const string &line)
         response.playerId = id;
         response.name = name;
         break;
+    }
     case MessageTypeClientToServer::Ready:
         cout << "[" << display_name() << "] is ready\n";
         ready = true;
@@ -217,6 +243,15 @@ void Client::handle_line(const string &line)
             play_game_ptr();
         validMessage = false; // Don't broadcast this message to other clients
         break;
+    case MessageTypeClientToServer::RejectAck:
+    {
+        cout << "[" << display_name() << "] acknowledged rejection\n";
+        auto self = shared_from_this();
+        socket.close();
+        serverState->clients.erase(self);
+        break;
+        validMessage = false; // Don't broadcast this message to other clients
+    }
     default:
         validMessage = false;
         break;
