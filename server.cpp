@@ -42,6 +42,8 @@ public:
                             { this->play_game(); };
                             client->on_action_ptr = [this](int playerId, PlayerActionType action, int actionAmount)
                             { this->onPlayerAction(playerId, action, actionAmount); };
+                            client->on_disconnect_ptr = [this](int playerId)
+                            { this->handleDisconnect(playerId); };
 
                             state.clients.insert(client);
                             client->start();
@@ -71,12 +73,15 @@ public:
     {
         vector<shared_ptr<Client>> players;
         for (auto &client : state.clients)
-            players.push_back(client);
+            if (client->connected)
+            {
+                players.push_back(client);
+            }
 
         sort(players.begin(), players.end(), [](const shared_ptr<Client> &a, const shared_ptr<Client> &b)
              { return a->id < b->id; });
 
-        if (state.clients.size() < 2)
+        if (players.size() < 2)
         {
             cout << "Not enough players to start the game.\n";
             return;
@@ -155,6 +160,8 @@ public:
 
         for (auto &c : state.clients)
         {
+            if (!c->connected)
+                continue;
             c->betThisRound = 0;
             if (c->inHand && !c->allin)
                 state.needsAction.insert(c->id);
@@ -190,6 +197,7 @@ public:
                 {
                     winner->money += state.pot;
                     cout << "Player " << winner->display_name() << " wins the pot of " << state.pot << " by everyone else folding!\n";
+                    state.idToMoney[winner->id] = winner->money;
                 }
             }
             state.gameState = GameState::Showdown;
@@ -198,6 +206,8 @@ public:
                 .potAmount = state.pot,
                 .idWinners = {winnerId}}));
             gameInProgress = false;
+            cout << "Game ended. Waiting for players to be ready for the next game...\n";
+            removeDisconnectedClients();
             return;
         }
 
@@ -206,6 +216,8 @@ public:
             runOutToFive();
             doShowdown();
             gameInProgress = false;
+            cout << "Game ended. Waiting for players to be ready for the next game...\n";
+
             return;
         }
 
@@ -233,6 +245,7 @@ public:
             {
                 doShowdown();
                 gameInProgress = false;
+                cout << "Game ended. Waiting for players to be ready for the next game...\n";
                 return;
             }
             state.broadcast_all(serialize_server(MessageServerToClient{
@@ -240,6 +253,7 @@ public:
                 .gameState = state.gameState}));
 
             StartBettingRound();
+            removeDisconnectedClients();
             return;
         }
 
@@ -304,6 +318,7 @@ public:
             p->money -= act;
             p->betThisRound += act;
             state.pot += act;
+            state.idToMoney[p->id] = p->money;
             if (p->money == 0)
                 p->allin = true;
             return act;
@@ -462,10 +477,39 @@ private:
 
     void doShowdown()
     {
-        vector<hand> hands = state.handstate.hole;
+        vector<hand> hands;
+        vector<int> handOwnerIds;
+        for (size_t i = 0; i < state.handstate.playersOrderd.size(); i++)
+        {
+            int pid = state.handstate.playersOrderd[i];
+            auto p = find_client_by_id(pid);
+            if (p && p->inHand)
+            {
+                hands.push_back(state.handstate.hole[i]);
+                handOwnerIds.push_back(pid);
+            }
+        }
+
+        if (hands.empty())
+        {
+            cout << "No hands left for showdown.\n";
+            state.handstate.active = false;
+            gameInProgress = false;
+            removeDisconnectedClients();
+            return;
+        }
+
         vector<valRank> community = state.handstate.communityCards;
 
-        auto winners = determine_winner(hands, community);
+        auto winnerIndexes = determine_winner(hands, community);
+
+        vector<int> winners;
+        for (int idx : winnerIndexes)
+        {
+            if (idx >= 0 && idx < (int)handOwnerIds.size())
+                winners.push_back(handOwnerIds[idx]);
+        }
+
         state.gameState = GameState::Showdown;
         state.broadcast_all(serialize_server(MessageServerToClient{
             .type = MessageTypeServerToClient::GameState,
@@ -481,6 +525,7 @@ private:
             if (winner)
             {
                 winner->money += state.pot;
+                state.idToMoney[winner->id] = winner->money;
                 cout << "Player " << winner->display_name() << " wins the pot of " << state.pot << " with a showdown!\n";
             }
         }
@@ -493,17 +538,72 @@ private:
                 if (winner)
                 {
                     winner->money += state.pot / winners.size();
+                    state.idToMoney[winner->id] = winner->money;
                     cout << winner->display_name() << " (ID: " << winner->id << ") ";
                 }
             }
             cout << "split the pot of " << state.pot << " with a showdown!\n";
             auto remainder_winner = find_client_by_id(state.toAct);
             if (remainder_winner)
+            {
                 remainder_winner->money += state.pot % winners.size();
+                state.idToMoney[remainder_winner->id] = remainder_winner->money;
+            }
         }
 
         state.handstate.active = false;
+        gameInProgress = false;
+        removeDisconnectedClients();
     }
+    void handleDisconnect(int playerId)
+    {
+        auto p = find_client_by_id(playerId);
+        if (!p)
+            return;
+
+        p->connected = false;
+        p->ready = false;
+
+        cout << "Handling disconnect for " << p->display_name() << "\n";
+
+        if (p->inHand)
+        {
+            p->inHand = false;
+            p->allin = false;
+            state.needsAction.erase(playerId);
+        }
+
+        if (state.toAct == playerId)
+            state.toAct = -1;
+
+        state.idToMoney[playerId] = p->money;
+
+        MessageServerToClient msg;
+        msg.type = MessageTypeServerToClient::PlayerLeft;
+        msg.playerId = playerId;
+        msg.name = findNameById(playerId);
+        state.broadcast_all(serialize_server(msg));
+
+        AdvanceBetting();
+    }
+    void removeDisconnectedClients()
+    {
+        vector<shared_ptr<Client>> toRemove;
+        for (auto &c : state.clients)
+        {
+            if (!c->connected)
+                toRemove.push_back(c);
+        }
+        for (auto &c : toRemove)
+        {
+            state.needsAction.erase(c->id);
+            state.idToMoney.erase(c->id);
+            state.idToName.erase(c->id);
+            state.clients.erase(c);
+            cout << "Removed client " << c->display_name() << " from server.\n";
+        }
+    }
+
     shared_ptr<Client> findClientById(ServerState &st, int pid)
     {
         for (auto &c : st.clients)

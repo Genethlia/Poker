@@ -77,12 +77,5 @@ private:
         {650, 400},
     };
 
-    std::vector<pos> communityCardPositions = {
-        {200, 0},
-        {450, 0},
-        {600, 0},
-        {750, 0},
-        {900, 0}};
-
-    void rebuildPlayerPositions();
+        void rebuildPlayerPositions();
 };

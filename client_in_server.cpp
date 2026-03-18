@@ -6,18 +6,22 @@ void ServerState::send_to(const string &msg, int id)
     auto target = find_if(clients.begin(), clients.end(),
                           [id](const shared_ptr<Client> &c)
                           { return c->id == id; });
-    if (target != clients.end())
+    if (target != clients.end() && (*target)->connected)
         (*target)->send(make_shared<string>(msg));
 }
 
 bool ServerState::all_ready() const
 {
+    int counter = 0;
     for (const auto &client : clients)
     {
+        if (!client->connected)
+            continue; // skip disconnected clients
+        counter++;
         if (!client->ready)
             return false;
     }
-    return true;
+    return counter >= 2;
 }
 
 void ServerState::reset_game()
@@ -34,7 +38,8 @@ void ServerState::broadcast_all(const string &msg)
 {
     for (auto &client : clients)
     {
-        client->send(make_shared<string>(msg));
+        if (client->connected)
+            client->send(make_shared<string>(msg));
     }
 }
 
@@ -45,6 +50,8 @@ Client::Client(tcp::socket s, ServerState *state)
     inHand = false;
     allin = false;
     hasPendingAction = false;
+    connected = true;
+    disconnectedHandled = false;
     betThisRound = 0;
 }
 
@@ -73,7 +80,7 @@ void Client::read_line()
             if (ec)
             {
                 cout << "[" << display_name() << "]" << ec.message() << " disconnected\n";
-                serverState->clients.erase(self);
+                handleDisconnectOnce();
                 return;
             }
 
@@ -112,7 +119,7 @@ void Client::do_write()
             if (ec)
             {
                 cout << "[" << display_name() << "] write error:" << ec.message() << "\n";
-                serverState->clients.erase(self);
+                handleDisconnectOnce();
                 return;
             }
 
@@ -124,12 +131,27 @@ void Client::do_write()
         });
 }
 
+void Client::handleDisconnectOnce()
+{
+    if (disconnectedHandled)
+        return;
+    disconnectedHandled = true;
+    connected = false;
+
+    boost::system::error_code ec;
+    socket.close(ec);
+
+    if (on_disconnect_ptr)
+        on_disconnect_ptr(id);
+}
+
 void Client::broadcast(const string &msg)
 {
     auto buffer = make_shared<string>(msg);
     for (auto &c : serverState->clients)
     {
-        c->send(buffer);
+        if (c->connected)
+            c->send(buffer);
     }
 }
 
@@ -138,8 +160,10 @@ void Client::send_to(const std::string &msg, int id)
     auto target = find_if(serverState->clients.begin(), serverState->clients.end(),
                           [id](const shared_ptr<Client> &c)
                           { return c->id == id; });
-    if (target != serverState->clients.end())
+    if (target != serverState->clients.end() && (*target)->connected)
+    {
         (*target)->send(make_shared<string>(msg));
+    }
 }
 
 void Client::handle_line(const string &line)
@@ -234,8 +258,8 @@ void Client::handle_line(const string &line)
         break;
     case MessageTypeClientToServer::Leave:
         cout << "[" << display_name() << "] left\n";
-        response.type = MessageTypeServerToClient::PlayerLeft;
-        response.playerId = id;
+        handleDisconnectOnce();
+        validMessage = false;
         break;
     case MessageTypeClientToServer::AdminPlay:
         cout << "[" << display_name() << "] triggered admin play\n";
@@ -249,8 +273,8 @@ void Client::handle_line(const string &line)
         auto self = shared_from_this();
         socket.close();
         serverState->clients.erase(self);
-        break;
         validMessage = false; // Don't broadcast this message to other clients
+        break;
     }
     default:
         validMessage = false;

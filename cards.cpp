@@ -6,8 +6,8 @@ Card::Card(float x, float y, valRank card, Images *suitTextures, Font *font, Ima
     target = {x, y};
     pos = {700, 20};
 
-    width = 120;
-    height = 200;
+    width = 108;
+    height = 180;
     this->card = card;
 
     moving = true;

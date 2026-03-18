@@ -5,7 +5,7 @@
 		"commands" : [],
 		"files" : 
 		[
-			"raylib/CMakeLists.txt"
+			"CMakeLists.txt"
 		],
 		"nodes" : 
 		[
@@ -22,10 +22,16 @@
 	"dependencies" : 
 	[
 		{
-			"id" : "raylib::@52310b9926f245239ea7"
+			"id" : "glfw::@0007fcb0029cba81045f"
 		},
 		{
-			"id" : "glfw::@0007fcb0029cba81045f"
+			"id" : "server::@6890427a1f51a3e7e1df"
+		},
+		{
+			"id" : "client::@6890427a1f51a3e7e1df"
+		},
+		{
+			"id" : "raylib::@52310b9926f245239ea7"
 		},
 		{
 			"id" : "ZERO_CHECK::@6890427a1f51a3e7e1df"
@@ -35,22 +41,28 @@
 	{
 		"name" : "CMakePredefinedTargets"
 	},
-	"id" : "ALL_BUILD::@18eff071ff3fd9fe1150",
+	"id" : "ALL_BUILD::@6890427a1f51a3e7e1df",
 	"isGeneratorProvided" : true,
 	"name" : "ALL_BUILD",
 	"orderDependencies" : 
 	[
 		{
-			"id" : "raylib::@52310b9926f245239ea7"
+			"id" : "glfw::@0007fcb0029cba81045f"
 		},
 		{
-			"id" : "glfw::@0007fcb0029cba81045f"
+			"id" : "server::@6890427a1f51a3e7e1df"
+		},
+		{
+			"id" : "client::@6890427a1f51a3e7e1df"
+		},
+		{
+			"id" : "raylib::@52310b9926f245239ea7"
 		}
 	],
 	"paths" : 
 	{
-		"build" : "raylib_build",
-		"source" : "raylib"
+		"build" : ".",
+		"source" : "."
 	},
 	"sources" : [],
 	"type" : "UTILITY"

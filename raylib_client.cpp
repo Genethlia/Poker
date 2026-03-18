@@ -18,7 +18,7 @@ void Game::start()
     std::cout << "Enter your name: ";
     std::getline(std::cin, playerName);
 
-    InitWindow(1366, 768, "Poker Game");
+    InitWindow(1600, 900, "Poker Game");
     SetTargetFPS(60);
 
     client.connect_to("127.0.0.1", "6767");
@@ -70,7 +70,10 @@ void Game::input()
         raiseAmount = std::max(0, raiseAmount - 50);
 
     if (IsKeyPressed(KEY_ENTER))
+    {
         client.sendAction(PlayerActionType::Raise, raiseAmount);
+        raiseAmount = 0;
+    }
 }
 
 void Game::update()
@@ -156,7 +159,7 @@ void Game::shouldNewCardBeMade()
     while (currentState.communityCards.size() > communityCards.size())
     {
         valRank cardInfo = currentState.communityCards[communityCards.size()];
-        communityCards.emplace_back(350 + communityCards.size() * 100, 300, cardInfo, &suitTextures[cardInfo.suit], &cardFont, &gameImages);
+        communityCards.emplace_back(350 + communityCards.size() * 150, 20, cardInfo, &suitTextures[cardInfo.suit], &cardFont, &gameImages);
     }
 }
 

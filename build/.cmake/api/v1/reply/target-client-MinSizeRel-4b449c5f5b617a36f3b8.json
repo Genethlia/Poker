@@ -2,10 +2,10 @@
 	"artifacts" : 
 	[
 		{
-			"path" : "Release/client.exe"
+			"path" : "MinSizeRel/client.exe"
 		},
 		{
-			"path" : "Release/client.pdb"
+			"path" : "MinSizeRel/client.pdb"
 		}
 	],
 	"backtrace" : 1,
@@ -104,7 +104,7 @@
 			"compileCommandFragments" : 
 			[
 				{
-					"fragment" : "/DWIN32 /D_WINDOWS /GR /EHsc /O2 /Ob2 /DNDEBUG -std:c++20 -MD"
+					"fragment" : "/DWIN32 /D_WINDOWS /GR /EHsc /O1 /Ob1 /DNDEBUG -std:c++20 -MD"
 				},
 				{
 					"backtrace" : 7,
@@ -169,11 +169,11 @@
 	[
 		{
 			"backtrace" : 2,
-			"id" : "raylib::@52310b9926f245239ea7"
+			"id" : "glfw::@0007fcb0029cba81045f"
 		},
 		{
 			"backtrace" : 2,
-			"id" : "glfw::@0007fcb0029cba81045f"
+			"id" : "raylib::@52310b9926f245239ea7"
 		},
 		{
 			"id" : "ZERO_CHECK::@6890427a1f51a3e7e1df"
@@ -185,7 +185,7 @@
 		"commandFragments" : 
 		[
 			{
-				"fragment" : "/DWIN32 /D_WINDOWS /GR /EHsc /O2 /Ob2 /DNDEBUG -MD",
+				"fragment" : "/DWIN32 /D_WINDOWS /GR /EHsc /O1 /Ob1 /DNDEBUG -MD",
 				"role" : "flags"
 			},
 			{
@@ -198,7 +198,7 @@
 			},
 			{
 				"backtrace" : 2,
-				"fragment" : "raylib_build\\raylib\\Release\\raylib.lib",
+				"fragment" : "raylib_build\\raylib\\MinSizeRel\\raylib.lib",
 				"role" : "libraries"
 			},
 			{

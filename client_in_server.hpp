@@ -67,6 +67,8 @@ public:
     std::string display_name() const;
 
     bool ready;
+    bool connected;
+    bool disconnectedHandled;
 
     int id = -1;
     int money = 1000;
@@ -75,6 +77,7 @@ public:
     bool hasPendingAction;
     std::string PendingAction;
     std::function<void(int /*playerId*/, PlayerActionType, int /*actionAmount*/)> on_action_ptr;
+    std::function<void(int /*playerId*/)> on_disconnect_ptr;
     int betThisRound = 0;
 
 private:
@@ -89,6 +92,8 @@ private:
     void read_line();
 
     void do_write();
+
+    void handleDisconnectOnce();
 
     void handle_line(const std::string &line);
 };
