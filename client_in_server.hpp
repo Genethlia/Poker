@@ -69,6 +69,9 @@ public:
     bool ready;
     bool connected;
     bool disconnectedHandled;
+    bool spectator = false;
+    bool wantsToPlay = false;
+    bool seated = true;
 
     int id = -1;
     int money = 1000;

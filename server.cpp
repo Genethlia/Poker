@@ -73,10 +73,15 @@ public:
     {
         vector<shared_ptr<Client>> players;
         for (auto &client : state.clients)
-            if (client->connected)
+        {
+            client->inHand = false;
+            client->allin = false;
+            client->betThisRound = 0;
+            if (client->connected && client->ready && !client->spectator)
             {
                 players.push_back(client);
             }
+        }
 
         sort(players.begin(), players.end(), [](const shared_ptr<Client> &a, const shared_ptr<Client> &b)
              { return a->id < b->id; });
@@ -307,6 +312,11 @@ public:
             cout << "Received action from player " << playerId << " who is not in hand or already all-in.\n";
             return;
         }
+        if (p->spectator)
+        {
+            cout << "Received action from player " << playerId << " who is a spectator.\n";
+            return;
+        }
 
         int toCall = max(0, state.currentBet - p->betThisRound);
 
@@ -408,6 +418,72 @@ private:
                 return client;
         }
         return nullptr;
+    }
+
+    void promoteWaitingPlayers()
+    {
+        int activePlayers = 0;
+        for (auto &c : state.clients)
+        {
+            if (c->connected && !c->spectator)
+                activePlayers++;
+        }
+        for (auto &c : state.clients)
+        {
+            if (activePlayers >= 4)
+                break;
+
+            if (c->connected && c->spectator)
+            {
+                c->spectator = false;
+                c->wantsToPlay = false;
+                c->seated = true;
+                state.broadcast_all(serialize_server(MessageServerToClient{
+                    .type = MessageTypeServerToClient::SpectatingUpdate,
+                    .playerId = c->id,
+                    .isSpectator = c->spectator,
+                    .isSeated = c->seated}));
+            }
+        }
+    }
+
+    void gameEndedReset()
+    {
+        for (auto &c : state.clients)
+        {
+            c->inHand = false;
+            c->allin = false;
+            c->betThisRound = 0;
+        }
+        state.pot = 0;
+        state.currentBet = 0;
+        state.minRaise = 0;
+        state.toAct = -1;
+        state.needsAction.clear();
+        state.handstate.clear();
+
+        removeBrokePlayers();
+        promoteWaitingPlayers();
+
+        play_game();
+    }
+
+    void removeBrokePlayers()
+    {
+        for (auto &c : state.clients)
+        {
+            if (c->money <= 0)
+            {
+                c->spectator = true;
+                c->seated = false;
+                c->wantsToPlay = false;
+                state.broadcast_all(serialize_server(MessageServerToClient{
+                    .type = MessageTypeServerToClient::SpectatingUpdate,
+                    .playerId = c->id,
+                    .isSpectator = c->spectator,
+                    .isSeated = c->seated}));
+            }
+        }
     }
 
     vector<shared_ptr<Client>> activePlayers()

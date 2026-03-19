@@ -68,10 +68,10 @@ void Images::LoadMatHiddenCardAndHome()
         UnloadTexture(matTexture);
         UnloadTexture(hiddenCardTexture);
     }
-    Image mat = LoadImageFromMemory(".jpg", mat_jpg, mat_jpg_len);
+    Image mat = LoadImageFromMemory(".png", mat_png, mat_png_len);
     if (mat.data != nullptr)
     {
-        ImageResize(&mat, 1200, 950);
+        ImageResize(&mat, 1600, 900);
         matTexture = LoadTextureFromImage(mat);
         UnloadImage(mat);
     }

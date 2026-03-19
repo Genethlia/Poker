@@ -189,20 +189,41 @@ void Client::handle_line(const string &line)
             send(make_shared<string>(serialize_server(rejectMsg)));
             return;
         }
-        else if (serverState->gameState != GameState::WaitingForPlayers)
-        {
-            cout << "Rejected join from [" << msg.name << "]: game in progress.\n";
-            MessageServerToClient rejectMsg;
-            rejectMsg.type = MessageTypeServerToClient::Reject;
-            rejectMsg.rejectionReason = reason_for_rejection::GameInProgress;
-            send(make_shared<string>(serialize_server(rejectMsg)));
-            return;
-        }
 
         name = msg.name;
         this->id = serverState->nextId++;
         serverState->idToName[id] = name;
         serverState->idToMoney[id] = 1000; // Give each player 1000 money when they join
+
+        if (serverState->gameState != GameState::WaitingForPlayers)
+        {
+            spectator = true;
+            wantsToPlay = true;
+            seated = true;
+
+            cout << "[" << msg.name << "] joined as spectator \n";
+            MessageServerToClient welcomeMesg;
+            welcomeMesg.type = MessageTypeServerToClient::Welcome;
+            welcomeMesg.playerId = id;
+            welcomeMesg.playerSum = int(serverState->idToName.size());
+            welcomeMesg.name = name;
+            welcomeMesg.playerNames = serverState->idToName;
+            welcomeMesg.playerMoney = serverState->idToMoney;
+            welcomeMesg.isSpectator = true;
+            send(make_shared<string>(serialize_server(welcomeMesg)));
+
+            response.type = MessageTypeServerToClient::PlayerJoined;
+            response.playerId = id;
+            response.name = name;
+            response.isSpectator = spectator;
+
+            break;
+        }
+
+        spectator = false;
+        wantsToPlay = false;
+        seated = true;
+
         cout << "[" << display_name() << "] joined\n";
 
         send(make_shared<string>(serialize_server(
@@ -212,11 +233,13 @@ void Client::handle_line(const string &line)
                 .playerSum = int(serverState->idToName.size()),
                 .name = name,
                 .playerNames = serverState->idToName,
-                .playerMoney = serverState->idToMoney})));
+                .playerMoney = serverState->idToMoney,
+                .isSpectator = spectator})));
 
         response.type = MessageTypeServerToClient::PlayerJoined;
         response.playerId = id;
         response.name = name;
+        response.isSpectator = spectator;
         break;
     }
     case MessageTypeClientToServer::Ready:

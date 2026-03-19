@@ -111,6 +111,7 @@ void Game::update()
 
 void Game::draw()
 {
+    DrawTexture(gameImages.matTexture, 0, 0, WHITE);
     DrawText(TextFormat("My ID: %d", currentState.myId), 20, 20, 24, WHITE);
     DrawText(TextFormat("Pot: %d", currentState.potAmount), 20, 60, 24, WHITE);
     DrawText(TextFormat("To Call: %d", currentState.toCall), 20, 100, 24, WHITE);

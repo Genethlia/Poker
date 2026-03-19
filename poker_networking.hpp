@@ -53,7 +53,8 @@ enum class MessageTypeServerToClient
     CommunityCard,
     PlayerHand,
     PotUpdate,
-    Showdown
+    Showdown,
+    SpectatingUpdate
 };
 
 enum class PlayerActionType
@@ -107,6 +108,9 @@ struct MessageServerToClient
     std::string chatText = "";
 
     GameState gameState = GameState::WaitingForPlayers;
+
+    bool isSpectator = false; // For Welcome message
+    bool isSeated = true;     // For Welcome message
 
     PlayerActionType action = PlayerActionType::Failed;
     int actionAmount = 0;
@@ -229,9 +233,10 @@ inline std::string serialize_server(const MessageServerToClient &m)
         {
             out << " " << it->first << " " << it->second;
         }
+        out << " " << m.isSpectator << " " << m.isSeated;
         break;
     case MessageTypeServerToClient::PlayerJoined:
-        out << "PLAYER_JOINED " << m.playerId << " " << m.name;
+        out << "PLAYER_JOINED " << m.playerId << " " << m.name << " " << m.isSpectator << " " << m.isSeated;
         break;
     case MessageTypeServerToClient::PlayerLeft:
         out << "PLAYER_LEFT " << m.playerId;
@@ -273,6 +278,9 @@ inline std::string serialize_server(const MessageServerToClient &m)
     case MessageTypeServerToClient::Reject:
         out << "REJECT " << int(m.rejectionReason);
         break;
+    case MessageTypeServerToClient::SpectatingUpdate:
+        out << "SPECTATING_UPDATE " << m.playerId << " " << m.isSpectator << " " << m.isSeated;
+        break;
     default:
         out << "UNKNOWN_MESSAGE";
         break;
@@ -311,12 +319,13 @@ inline MessageServerToClient deserialize_server(const std::string &line)
             in >> id >> money;
             msg.playerMoney[id] = money;
         }
+        in >> msg.isSpectator >> msg.isSeated;
         break;
     case 'P': // PLAYER_JOINED or PLAYER_LEFT or PLAYER_READY or PLAYER_HAND or POT_UPDATE
         if (command == "PLAYER_JOINED")
         {
             msg.type = MessageTypeServerToClient::PlayerJoined;
-            in >> msg.playerId >> msg.name;
+            in >> msg.playerId >> msg.name >> msg.isSpectator >> msg.isSeated;
         }
         else if (command == "PLAYER_LEFT")
         {
@@ -366,6 +375,12 @@ inline MessageServerToClient deserialize_server(const std::string &line)
         msg.action = static_cast<PlayerActionType>(tempAction);
         break;
     case 'S': // SHOWDOWN
+        if (command == "SPECTATING_UPDATE")
+        {
+            msg.type = MessageTypeServerToClient::SpectatingUpdate;
+            in >> msg.playerId >> msg.isSpectator >> msg.isSeated;
+            break;
+        }
         msg.type = MessageTypeServerToClient::Showdown;
         int numWinners;
         in >> msg.potAmount >> numWinners;
