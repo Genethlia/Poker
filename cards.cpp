@@ -1,7 +1,7 @@
 #include "cards.h"
 
-Card::Card(float x, float y, valRank card, Images *suitTextures, Font *font, Images *gameimages)
-    : suitTextures(suitTextures), font(font), gameimages(gameimages)
+Card::Card(float x, float y, valRank card, Images *suitTextures, Font *font, Images *gameimages, int rotationAngle)
+    : suitTextures(suitTextures), font(font), gameimages(gameimages), rotationAngle(rotationAngle)
 {
     target = {x, y};
     pos = {700, 20};
@@ -54,7 +54,7 @@ void Card::Draw()
 
     if (shouldShowBack)
     {
-        DrawTexturePro(gameimages->hiddenCardTexture, source, destRec, origin, 0, WHITE);
+        DrawTexturePro(gameimages->hiddenCardTexture, source, destRec, origin, rotationAngle, WHITE);
         return;
     }
 
@@ -66,21 +66,21 @@ void Card::Draw()
 
     int PointerOfcolor = GetColorOfRank(card);
 
-    DrawRectanglePro(destRec, origin, 0, WHITE);
+    DrawRectanglePro(destRec, origin, rotationAngle, WHITE);
 
     float suitOffset = (1.0f - displayScaleX) * width / 3 + 5;
 
-    DrawTextEx(*font, cardnum(card).c_str(), {pos.x + 5 + suitOffset, pos.y + 5}, 30, 2, color[PointerOfcolor]);
-    DrawTextPro(*font, cardnum(card).c_str(), {pos.x + width - 5 - suitOffset, pos.y + height - 5}, {0, 0}, 180, 30, 2, color[PointerOfcolor]);
+    DrawTextPro(*font, cardnum(card).c_str(), {pos.x + 5 + suitOffset, pos.y + 5}, {0, 0}, rotationAngle, 30, 2, color[PointerOfcolor]);
+    DrawTextPro(*font, cardnum(card).c_str(), {pos.x + width - 5 - suitOffset, pos.y + height - 5}, {0, 0}, 180 + rotationAngle, 30, 2, color[PointerOfcolor]);
 
     if (suitTextures->filiTexture.id != 0)
     {
-        DrawTexture(suitTextures->filiTexture, pos.x + smalloffset + suitOffset, pos.y + 30, WHITE);
-        DrawTextureEx(suitTextures->filiTexture, {width + pos.x - smalloffset - suitOffset, height + pos.y - 30}, 180, 1, WHITE);
+        DrawTextureEx(suitTextures->filiTexture, {pos.x + smalloffset + suitOffset, pos.y + 30}, rotationAngle, 1, WHITE);
+        DrawTextureEx(suitTextures->filiTexture, {width + pos.x - smalloffset - suitOffset, height + pos.y - 30}, 180 + rotationAngle, 1, WHITE);
     }
     if (suitTextures->bigfiliTexture.id != 0)
     {
-        DrawTexture(suitTextures->bigfiliTexture, pos.x + width / 2 - bigoffset, pos.y + height / 2 - 40, WHITE);
+        DrawTextureEx(suitTextures->bigfiliTexture, {pos.x + width / 2 - bigoffset, pos.y + height / 2 - 40}, rotationAngle, 1, WHITE);
     }
 }
 

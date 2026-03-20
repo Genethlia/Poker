@@ -47,7 +47,7 @@ public:
         int toCall = 0;
         int currentBet = 0;
         int minRaise = 50;
-        std::map<int, pos> PlayerPosition = {};
+        std::map<int, std::pair<pos, int>> PlayerPosition = {};
     };
     ClientState getClientStateCopy();
 
@@ -70,12 +70,12 @@ private:
 
     valRank find_valRank(const MessageServerToClient &msg);
 
-    std::vector<pos> playerCardPositions = {
-        {20, 400},
-        {230, 400},
-        {440, 400},
-        {650, 400},
+    std::vector<std::pair<pos, int>> playerCardPositionsAndAngles = {
+        {{600, 20}, 0},     // position for player 0
+        {{200, 400}, 90},   // position for player 1
+        {{1400, 400}, 270}, // position for player 2
+        {{600, 680}, 0},    // position for self
     };
 
-        void rebuildPlayerPositions();
+    void rebuildPlayerPositions();
 };

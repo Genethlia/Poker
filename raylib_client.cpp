@@ -155,12 +155,16 @@ void Game::shouldNewCardBeMade()
     {
         auto &[id, cardInfo] = currentState.opponentCards[opponentCards.size()];
         holeCardsDrownCount[id]++;
-        opponentCards.emplace_back(getPlayerCardBasePos(id).x + holeCardsDrownCount[id] * 100, getPlayerCardBasePos(id).y, cardInfo, &suitTextures[cardInfo.suit], &cardFont, &gameImages);
+        pos basePos = getPlayerCardBasePos(id);
+        int rotationAngle = getPlayerCardRotationAngle(id);
+        int offsetX = (rotationAngle == 0) ? holeCardsDrownCount[id] * 100 : 0;
+        int offsetY = (rotationAngle == 0) ? 0 : holeCardsDrownCount[id] * 100;
+        opponentCards.emplace_back(basePos.x + offsetX, basePos.y + offsetY, cardInfo, &suitTextures[cardInfo.suit], &cardFont, &gameImages, rotationAngle);
     }
     while (currentState.communityCards.size() > communityCards.size())
     {
         valRank cardInfo = currentState.communityCards[communityCards.size()];
-        communityCards.emplace_back(350 + communityCards.size() * 150, 20, cardInfo, &suitTextures[cardInfo.suit], &cardFont, &gameImages);
+        communityCards.emplace_back(350 + communityCards.size() * 150, 398, cardInfo, &suitTextures[cardInfo.suit], &cardFont, &gameImages);
     }
 }
 
@@ -177,5 +181,10 @@ void Game::clearCardsIfNecessary()
 
 pos Game::getPlayerCardBasePos(int id)
 {
-    return currentState.PlayerPosition.at(id);
+    return currentState.PlayerPosition.at(id).first;
+}
+
+int Game::getPlayerCardRotationAngle(int id)
+{
+    return currentState.PlayerPosition.at(id).second;
 }

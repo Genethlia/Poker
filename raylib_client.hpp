@@ -34,5 +34,6 @@ private:
     int raiseAmount;
 
     pos getPlayerCardBasePos(int id);
+    int getPlayerCardRotationAngle(int id);
     std::unordered_map<int, int> holeCardsDrownCount = {};
 };

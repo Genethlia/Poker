@@ -72,17 +72,14 @@ public:
     void play_game()
     {
         vector<shared_ptr<Client>> players;
-        for (auto &client : state.clients)
+
+        for (auto &c : state.clients)
         {
-            client->inHand = false;
-            client->allin = false;
-            client->betThisRound = 0;
-            if (client->connected && client->ready && !client->spectator)
+            if (c->connected && c->ready && !c->spectator)
             {
-                players.push_back(client);
+                players.push_back(c);
             }
         }
-
         sort(players.begin(), players.end(), [](const shared_ptr<Client> &a, const shared_ptr<Client> &b)
              { return a->id < b->id; });
 
@@ -100,6 +97,13 @@ public:
         {
             cout << "Game already in progress.\n";
             return;
+        }
+
+        for (auto &client : state.clients)
+        {
+            client->inHand = false;
+            client->allin = false;
+            client->betThisRound = 0;
         }
 
         gameInProgress = true;
@@ -212,7 +216,7 @@ public:
                 .idWinners = {winnerId}}));
             gameInProgress = false;
             cout << "Game ended. Waiting for players to be ready for the next game...\n";
-            removeDisconnectedClients();
+            gameEndedReset();
             return;
         }
 
@@ -221,6 +225,7 @@ public:
             runOutToFive();
             doShowdown();
             gameInProgress = false;
+            gameEndedReset();
             cout << "Game ended. Waiting for players to be ready for the next game...\n";
 
             return;
@@ -250,6 +255,7 @@ public:
             {
                 doShowdown();
                 gameInProgress = false;
+                gameEndedReset();
                 cout << "Game ended. Waiting for players to be ready for the next game...\n";
                 return;
             }
@@ -258,7 +264,7 @@ public:
                 .gameState = state.gameState}));
 
             StartBettingRound();
-            removeDisconnectedClients();
+            removeDisconnectedClients(); // Remove disconnected clients between betting rounds
             return;
         }
 
@@ -465,7 +471,7 @@ private:
         removeBrokePlayers();
         promoteWaitingPlayers();
 
-        play_game();
+        // play_game();
     }
 
     void removeBrokePlayers()
