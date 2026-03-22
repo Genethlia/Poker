@@ -9,7 +9,7 @@ struct HandState
     bool active = false;
 
     std::vector<int> playersOrderd;
-    std::vector<hand> hole;
+    std::unordered_map<int, hand> hole;
     std::vector<valRank> communityCards;
 
     int street = 0; // 0: PreFlop, 1: Flop, 2: Turn, 3: River

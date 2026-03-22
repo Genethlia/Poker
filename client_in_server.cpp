@@ -180,7 +180,7 @@ void Client::handle_line(const string &line)
             if (c->id >= 0)
                 joinedPlayers++;
 
-        if (joinedPlayers >= 4)
+        if (joinedPlayers >= 8)
         {
             cout << "Rejected join from [" << msg.name << "]: max players reached.\n";
             MessageServerToClient rejectMsg;
@@ -195,11 +195,11 @@ void Client::handle_line(const string &line)
         serverState->idToName[id] = name;
         serverState->idToMoney[id] = 1000; // Give each player 1000 money when they join
 
-        if (serverState->gameState != GameState::WaitingForPlayers)
+        if (serverState->gameState != GameState::WaitingForPlayers || joinedPlayers >= 4)
         {
             spectator = true;
             wantsToPlay = true;
-            seated = true;
+            seated = false;
 
             cout << "[" << msg.name << "] joined as spectator \n";
             MessageServerToClient welcomeMesg;
@@ -216,6 +216,19 @@ void Client::handle_line(const string &line)
             response.playerId = id;
             response.name = name;
             response.isSpectator = spectator;
+
+            if (serverState->gameState != GameState::WaitingForPlayers)
+            {
+                MessageServerToClient graphicsUpdateMsg;
+                graphicsUpdateMsg.type = MessageTypeServerToClient::NewPlayerUpdateGraphics;
+                graphicsUpdateMsg.toAct = serverState->toAct;
+                graphicsUpdateMsg.toCall = serverState->toCall;
+                graphicsUpdateMsg.currentBet = serverState->currentBet;
+                graphicsUpdateMsg.minRaise = serverState->minRaise;
+                graphicsUpdateMsg.playerHands = serverState->handstate.hole;
+                graphicsUpdateMsg.communityCards = serverState->handstate.communityCards;
+                send(make_shared<string>(serialize_server(graphicsUpdateMsg)));
+            }
 
             break;
         }
@@ -278,6 +291,7 @@ void Client::handle_line(const string &line)
         cout << "[" << display_name() << "] requested game state\n";
         response.type = MessageTypeServerToClient::GameState;
         response.gameState = serverState->gameState;
+        response.potAmount = serverState->pot;
         break;
     case MessageTypeClientToServer::Leave:
         cout << "[" << display_name() << "] left\n";

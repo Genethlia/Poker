@@ -189,10 +189,13 @@ void PokerClient::handle_line(const string &line)
             if (msg.playerMoney.find(id) != msg.playerMoney.end())
                 state.playerMoney[id] = msg.playerMoney[id]; // Initialize player money, can be updated later with actual values from the server
             if (id == msg.playerId)
-                cout
-                    << " (You)";
+                cout << " (You)";
             if (msg.playerNames.find(id) != msg.playerNames.end())
                 state.playerNames[id] = msg.playerNames[id];
+            if (msg.isSpectatorMap.find(id) != msg.isSpectatorMap.end())
+                state.isSpectator[id] = msg.isSpectatorMap[id];
+            if (msg.isSeatedMap.find(id) != msg.isSeatedMap.end())
+                state.isSeated[id] = msg.isSeatedMap[id];
             cout << "\n";
         }
         rebuildPlayerPositions();
@@ -202,12 +205,18 @@ void PokerClient::handle_line(const string &line)
         cout << "Player joined: " << msg.name << " (ID: " << msg.playerId << ")\n";
         state.playerNames[msg.playerId] = msg.name;
         state.playerMoney[msg.playerId] = 1000; // Initialize player money for the new player
+        if (msg.isSpectatorMap.find(msg.playerId) != msg.isSpectatorMap.end())
+            state.isSpectator[msg.playerId] = msg.isSpectatorMap[msg.playerId];
+        if (msg.isSeatedMap.find(msg.playerId) != msg.isSeatedMap.end())
+            state.isSeated[msg.playerId] = msg.isSeatedMap[msg.playerId];
         rebuildPlayerPositions();
         break;
     case MessageTypeServerToClient::PlayerLeft:
         cout << "Player left: " << nameOfUnsafe(msg.playerId) << "\n";
         state.playerNames.erase(msg.playerId);
         state.playerMoney.erase(msg.playerId); // Remove player money for the player who left
+        state.isSpectator.erase(msg.playerId); // Remove spectator status for the player who left
+        state.isSeated.erase(msg.playerId);    // Remove seated status for the player who left
         rebuildPlayerPositions();
         break;
     case MessageTypeServerToClient::PlayerReady:
@@ -219,6 +228,7 @@ void PokerClient::handle_line(const string &line)
     case MessageTypeServerToClient::GameState:
         cout << "Game state changed: " << int(msg.gameState) << "\n";
         state.gameState = msg.gameState;
+        state.potAmount = msg.potAmount; // Update pot amount in the client state
         if (msg.gameState == GameState::PreFlop)
         {
             newGame();
@@ -286,6 +296,24 @@ void PokerClient::handle_line(const string &line)
         write_line(serialize_client(ack));
         break;
     }
+    case MessageTypeServerToClient::NewPlayerUpdateGraphics:
+        cout << "Graphics update for new player: To Act: " << nameOfUnsafe(msg.toAct) << " (ID: " << msg.toAct << "), To Call: $" << msg.toCall << ", Current Bet: $" << msg.currentBet << ", Min Raise: $" << msg.minRaise << "\n";
+        state.toAct = msg.toAct;           // Update the client state with the new player to act
+        state.toCall = msg.toCall;         // Update the client state with the new amount to call
+        state.currentBet = msg.currentBet; // Update the client state with the new current bet
+        state.minRaise = msg.minRaise;     // Update the client state with the new minimum raise
+        for (auto &[id, hand] : msg.playerHands)
+        {
+            cout << "Player " << nameOfUnsafe(id) << "'s hand updated.\n";
+            state.opponentCards.push_back({id, hand.first});
+            state.opponentCards.push_back({id, hand.second});
+        }
+        for (auto &card : msg.communityCards)
+        {
+            cout << "Community card updated: Value = " << card.value << ", Suit = " << card.suit << "\n";
+            state.communityCards.push_back(card);
+        }
+        break;
     default:
         cout << "Unknown message type received.\n";
         break;

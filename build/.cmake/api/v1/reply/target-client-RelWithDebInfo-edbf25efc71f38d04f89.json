@@ -2,10 +2,10 @@
 	"artifacts" : 
 	[
 		{
-			"path" : "Debug/client.exe"
+			"path" : "RelWithDebInfo/client.exe"
 		},
 		{
-			"path" : "Debug/client.pdb"
+			"path" : "RelWithDebInfo/client.pdb"
 		}
 	],
 	"backtrace" : 1,
@@ -104,7 +104,7 @@
 			"compileCommandFragments" : 
 			[
 				{
-					"fragment" : "/DWIN32 /D_WINDOWS /GR /EHsc /Zi /Ob0 /Od /RTC1 -std:c++20 -MDd"
+					"fragment" : "/DWIN32 /D_WINDOWS /GR /EHsc /Zi /O2 /Ob1 /DNDEBUG -std:c++20 -MD"
 				},
 				{
 					"backtrace" : 7,
@@ -168,11 +168,11 @@
 	"dependencies" : 
 	[
 		{
-			"backtrace" : 2,
-			"id" : "raylib::@52310b9926f245239ea7"
+			"id" : "ZERO_CHECK::@6890427a1f51a3e7e1df"
 		},
 		{
-			"id" : "ZERO_CHECK::@6890427a1f51a3e7e1df"
+			"backtrace" : 2,
+			"id" : "raylib::@52310b9926f245239ea7"
 		},
 		{
 			"backtrace" : 2,
@@ -185,7 +185,7 @@
 		"commandFragments" : 
 		[
 			{
-				"fragment" : "/DWIN32 /D_WINDOWS /GR /EHsc /Zi /Ob0 /Od /RTC1 -MDd",
+				"fragment" : "/DWIN32 /D_WINDOWS /GR /EHsc /Zi /O2 /Ob1 /DNDEBUG -MD",
 				"role" : "flags"
 			},
 			{
@@ -198,7 +198,7 @@
 			},
 			{
 				"backtrace" : 2,
-				"fragment" : "raylib_build\\raylib\\Debug\\raylib.lib",
+				"fragment" : "raylib_build\\raylib\\RelWithDebInfo\\raylib.lib",
 				"role" : "libraries"
 			},
 			{

@@ -71,6 +71,7 @@ public:
     }
     void play_game()
     {
+        promoteWaitingPlayers();
         vector<shared_ptr<Client>> players;
 
         for (auto &c : state.clients)
@@ -132,7 +133,7 @@ public:
             state.handstate.playersOrderd.push_back(client->id);
         }
 
-        state.handstate.hole.resize(players.size());
+        state.handstate.hole.clear();
 
         cout << "All players are ready. Starting game...\n";
 
@@ -145,11 +146,11 @@ public:
                 cout << "Dealt card " << card.value << " of suit " << card.suit << " to player " << players[j]->display_name() << endl;
                 if (round == 0)
                 {
-                    state.handstate.hole[j].first = card;
+                    state.handstate.hole[players[j]->id].first = card;
                 }
                 else
                 {
-                    state.handstate.hole[j].second = card;
+                    state.handstate.hole[players[j]->id].second = card;
                 }
                 state.broadcast_all(serialize_server(MessageServerToClient{
                     .type = MessageTypeServerToClient::PlayerHand,
@@ -261,6 +262,7 @@ public:
             }
             state.broadcast_all(serialize_server(MessageServerToClient{
                 .type = MessageTypeServerToClient::GameState,
+                .potAmount = state.pot,
                 .gameState = state.gameState}));
 
             StartBettingRound();

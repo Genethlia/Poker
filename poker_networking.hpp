@@ -54,7 +54,8 @@ enum class MessageTypeServerToClient
     PlayerHand,
     PotUpdate,
     Showdown,
-    SpectatingUpdate
+    SpectatingUpdate,
+    NewPlayerUpdateGraphics
 };
 
 enum class PlayerActionType
@@ -105,6 +106,10 @@ struct MessageServerToClient
 
     std::unordered_map<int, std::string> playerNames = {};
     std::unordered_map<int, int> playerMoney = {};
+    std::unordered_map<int, bool> isSpectatorMap = {};
+    std::unordered_map<int, bool> isSeatedMap = {};
+    std::unordered_map<int, hand> playerHands = {};
+
     std::string chatText = "";
 
     GameState gameState = GameState::WaitingForPlayers;
@@ -117,7 +122,8 @@ struct MessageServerToClient
 
     std::string cards; // later can be vector<Card>
 
-    std::vector<int> idWinners = {}; // For Showdown
+    std::vector<int> idWinners = {};          // For Showdown
+    std::vector<valRank> communityCards = {}; // For Showdown
 
     int toAct = -1;     // For GameState
     int toCall = 0;     // For GameState
@@ -233,7 +239,14 @@ inline std::string serialize_server(const MessageServerToClient &m)
         {
             out << " " << it->first << " " << it->second;
         }
-        out << " " << m.isSpectator << " " << m.isSeated;
+        for (auto it = m.isSpectatorMap.begin(); it != m.isSpectatorMap.end(); it++)
+        {
+            out << " " << it->first << " " << it->second;
+        }
+        for (auto it = m.isSeatedMap.begin(); it != m.isSeatedMap.end(); it++)
+        {
+            out << " " << it->first << " " << it->second;
+        }
         break;
     case MessageTypeServerToClient::PlayerJoined:
         out << "PLAYER_JOINED " << m.playerId << " " << m.name << " " << m.isSpectator << " " << m.isSeated;
@@ -281,6 +294,18 @@ inline std::string serialize_server(const MessageServerToClient &m)
     case MessageTypeServerToClient::SpectatingUpdate:
         out << "SPECTATING_UPDATE " << m.playerId << " " << m.isSpectator << " " << m.isSeated;
         break;
+    case MessageTypeServerToClient::NewPlayerUpdateGraphics:
+        out << "NEW_PLAYER_UPDATE_GRAPHICS ";
+        out << " " << m.toAct << " " << m.toCall << " " << m.currentBet << " " << m.minRaise << " " << m.playerHands.size() << " " << m.communityCards.size();
+        for (auto it = m.playerHands.begin(); it != m.playerHands.end(); it++)
+        {
+            out << " " << it->first << " " << it->second.first.value << " " << it->second.first.suit << " " << it->second.second.value << " " << it->second.second.suit;
+        }
+        for (const auto &card : m.communityCards)
+        {
+            out << " " << card.value << " " << card.suit;
+        }
+
     default:
         out << "UNKNOWN_MESSAGE";
         break;
@@ -400,6 +425,28 @@ inline MessageServerToClient deserialize_server(const std::string &line)
         int tempReason;
         in >> tempReason;
         msg.rejectionReason = static_cast<reason_for_rejection>(tempReason);
+        break;
+    case 'N': // NEW_PLAYER_UPDATE_GRAPHICS
+        msg.type = MessageTypeServerToClient::NewPlayerUpdateGraphics;
+        in >> msg.toAct >> msg.toCall >> msg.currentBet >> msg.minRaise;
+        int numPlayerHands, numCommunityCards;
+        in >> numPlayerHands >> numCommunityCards;
+        for (int i = 0; i < numPlayerHands; i++)
+        {
+            int id;
+            int value1, suit1, value2, suit2;
+            in >> id >> value1 >> suit1 >> value2 >> suit2;
+            valRank card1{value1, suit1};
+            valRank card2{value2, suit2};
+            msg.playerHands[id] = (hand{card1, card2});
+        }
+        for (int i = 0; i < numCommunityCards; i++)
+        {
+            int value, suit;
+            in >> value >> suit;
+            valRank card{value, suit};
+            msg.communityCards.push_back(card);
+        }
         break;
     default:
         break;
