@@ -5,7 +5,7 @@
 		"commands" : [],
 		"files" : 
 		[
-			"CMakeLists.txt"
+			"raylib/src/external/glfw/CMakeLists.txt"
 		],
 		"nodes" : 
 		[
@@ -22,47 +22,29 @@
 	"dependencies" : 
 	[
 		{
-			"id" : "server::@6890427a1f51a3e7e1df"
-		},
-		{
-			"id" : "client::@6890427a1f51a3e7e1df"
+			"id" : "glfw::@0007fcb0029cba81045f"
 		},
 		{
 			"id" : "ZERO_CHECK::@6890427a1f51a3e7e1df"
-		},
-		{
-			"id" : "raylib::@52310b9926f245239ea7"
-		},
-		{
-			"id" : "glfw::@0007fcb0029cba81045f"
 		}
 	],
 	"folder" : 
 	{
 		"name" : "CMakePredefinedTargets"
 	},
-	"id" : "ALL_BUILD::@6890427a1f51a3e7e1df",
+	"id" : "ALL_BUILD::@843777d5bb59419b5c48",
 	"isGeneratorProvided" : true,
 	"name" : "ALL_BUILD",
 	"orderDependencies" : 
 	[
-		{
-			"id" : "server::@6890427a1f51a3e7e1df"
-		},
-		{
-			"id" : "client::@6890427a1f51a3e7e1df"
-		},
-		{
-			"id" : "raylib::@52310b9926f245239ea7"
-		},
 		{
 			"id" : "glfw::@0007fcb0029cba81045f"
 		}
 	],
 	"paths" : 
 	{
-		"build" : ".",
-		"source" : "."
+		"build" : "raylib_build/raylib/external/glfw",
+		"source" : "raylib/src/external/glfw"
 	},
 	"sources" : [],
 	"type" : "UTILITY"

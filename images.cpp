@@ -61,7 +61,7 @@ void Images::LoadSuit(int rank)
 
     UnloadImage(image);
 }
-void Images::LoadMatHiddenCardAndHome()
+void Images::LoadMatHiddenCard()
 {
     if (matTexture.id != 0 || hiddenCardTexture.id != 0)
     {

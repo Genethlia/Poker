@@ -76,7 +76,7 @@ public:
 
         for (auto &c : state.clients)
         {
-            if (c->connected && c->ready && !c->spectator)
+            if (c->connected && c->ready && !c->spectator && c->seated)
             {
                 players.push_back(c);
             }

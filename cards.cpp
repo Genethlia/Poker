@@ -177,3 +177,8 @@ int Card::GetColorOfRank(valRank card)
     }
     return 1;
 }
+
+Vector2 Card::findCenterToRotate()
+{
+    return {0, 0};
+}
