@@ -151,7 +151,7 @@ static Score bestof7(const array<valRank, 7> &hand)
     return bestScore;
 }
 
-static vector<int> determine_winner(const vector<hand> &playerHand, const vector<valRank> &communityCards)
+static vector<int> determine_winner(const vector<hand> &playerHand, const vector<valRank> &communityCards, int &winPower)
 {
     vector<Score> bestScores(playerHand.size());
     for (size_t i = 0; i < playerHand.size(); i++)
@@ -183,7 +183,7 @@ static vector<int> determine_winner(const vector<hand> &playerHand, const vector
             winners.push_back(int(i));
         }
     }
-
+    winPower = best[0];
     if (winners.size() == 1)
     {
         cout << "Player " << winners[0] + 1 << " wins with score: " << best[0] << endl;

@@ -172,6 +172,14 @@ std::string PokerClient::nameOfUnsafe(int id)
     return "ID:  " + to_string(id);
 }
 
+std::deque<string> PokerClient::getAndClearPopUpMessages()
+{
+    lock_guard<std::mutex> lock(popUpMessagesMutex);
+    std::deque<string> messages = std::move(popUpMessages);
+    popUpMessages.clear();
+    return messages;
+}
+
 void PokerClient::handle_line(const string &line)
 {
     lock_guard<std::mutex> lock(stateMutex);
@@ -179,30 +187,33 @@ void PokerClient::handle_line(const string &line)
     switch (msg.type)
     {
     case MessageTypeServerToClient::Welcome:
+    {
         rebuildPlayerPositions();
         state.playerNames.clear();
         state.playerMoney.clear();
-        cout << "Welcome, " << msg.name << "! Your player ID is " << msg.playerId << ". There are " << msg.playerSum << " players in the game.\n";
+        auto temp = "Welcome, " + msg.name + "! Your player ID is " + to_string(msg.playerId) + ". There are " + to_string(msg.playerSum) + " players in the game.";
+        popUpMessages.push_back(temp);
         for (auto &[id, name] : msg.playerNames)
         {
-            cout << "Player " << name << " (ID: " << id << ") is in the game.";
             if (msg.playerMoney.find(id) != msg.playerMoney.end())
                 state.playerMoney[id] = msg.playerMoney[id]; // Initialize player money, can be updated later with actual values from the server
-            if (id == msg.playerId)
-                cout << " (You)";
             if (msg.playerNames.find(id) != msg.playerNames.end())
                 state.playerNames[id] = msg.playerNames[id];
             if (msg.isSpectatorMap.find(id) != msg.isSpectatorMap.end())
                 state.isSpectator[id] = msg.isSpectatorMap[id];
             if (msg.isSeatedMap.find(id) != msg.isSeatedMap.end())
                 state.isSeated[id] = msg.isSeatedMap[id];
-            cout << "\n";
+            auto temp = "Player " + name + " (ID: " + to_string(id) + ") is in the game." + (id == msg.playerId ? " (You)" : "");
+            popUpMessages.push_back(temp);
         }
         rebuildPlayerPositions();
         state.myId = msg.playerId;
         break;
+    }
     case MessageTypeServerToClient::PlayerJoined:
-        cout << "Player joined: " << msg.name << " (ID: " << msg.playerId << ")\n";
+    {
+        auto temp = "Player joined: " + msg.name + " (ID: " + to_string(msg.playerId) + ")";
+        popUpMessages.push_back(temp);
         state.playerNames[msg.playerId] = msg.name;
         state.playerMoney[msg.playerId] = 1000; // Initialize player money for the new player
         if (msg.isSpectatorMap.find(msg.playerId) != msg.isSpectatorMap.end())
@@ -211,74 +222,108 @@ void PokerClient::handle_line(const string &line)
             state.isSeated[msg.playerId] = msg.isSeatedMap[msg.playerId];
         rebuildPlayerPositions();
         break;
+    }
     case MessageTypeServerToClient::PlayerLeft:
-        cout << "Player left: " << nameOfUnsafe(msg.playerId) << "\n";
+    {
+        auto temp = "Player left: " + nameOfUnsafe(msg.playerId);
+        popUpMessages.push_back(temp);
         state.playerNames.erase(msg.playerId);
         state.playerMoney.erase(msg.playerId); // Remove player money for the player who left
         state.isSpectator.erase(msg.playerId); // Remove spectator status for the player who left
         state.isSeated.erase(msg.playerId);    // Remove seated status for the player who left
         rebuildPlayerPositions();
         break;
+    }
     case MessageTypeServerToClient::PlayerReady:
-        cout << "Player ready: " << nameOfUnsafe(msg.playerId) << "\n";
+    {
+        auto temp = "Player ready: " + nameOfUnsafe(msg.playerId);
+        popUpMessages.push_back(temp);
         break;
+    }
     case MessageTypeServerToClient::ChatFrom:
-        cout << nameOfUnsafe(msg.playerId) << ": " << msg.chatText << "\n";
+    {
+        auto temp = nameOfUnsafe(msg.playerId) + ": " + msg.chatText;
+        popUpMessages.push_back(temp);
         break;
+    }
     case MessageTypeServerToClient::GameState:
-        cout << "Game state changed: " << int(msg.gameState) << "\n";
+    {
+        auto temp = "Game state changed: " + to_string(int(msg.gameState));
+        popUpMessages.push_back(temp);
         state.gameState = msg.gameState;
         state.potAmount = msg.potAmount; // Update pot amount in the client state
-        if (msg.gameState == GameState::PreFlop)
+        if (msg.gameState == GameState::PreFlop && !gameRunning)
         {
             newGame();
         }
         break;
+    }
     case MessageTypeServerToClient::ActionResult:
-        cout << "Action result for player " << nameOfUnsafe(msg.playerId) << ": " << int(msg.action) << "\n";
+    {
+        auto temp = "Action result for player " + nameOfUnsafe(msg.playerId) + ": " + to_string(int(msg.action));
+        popUpMessages.push_back(temp);
         UpdateMoney(msg); // Update player money based on the action result
         break;
+    }
     case MessageTypeServerToClient::CommunityCard:
-        cout << "Community cards updated: " << msg.cards << "\n";
+    {
+        auto temp = "Community cards updated: " + msg.cards;
+        popUpMessages.push_back(temp);
         state.communityCards.push_back(find_valRank(msg));
         break;
+    }
     case MessageTypeServerToClient::PlayerHand:
     {
         auto temp = find_valRank(msg);
         if (msg.playerId == state.myId)
         {
-            cout << "Your hand: " << msg.cards << "\n";
+            auto tempMessage = "Your hand updated: " + msg.cards;
+            popUpMessages.push_back(tempMessage);
             state.myCards.push_back(temp);
         }
         else
         {
-            cout << nameOfUnsafe(msg.playerId) << "'s hand updated.\n";
+            auto tempMessage = nameOfUnsafe(msg.playerId) + "'s hand updated.";
+            popUpMessages.push_back(tempMessage);
 
             state.opponentCards.push_back({msg.playerId, temp});
         }
         break;
     }
     case MessageTypeServerToClient::PotUpdate:
-        cout << "Pot updated: $" << msg.potAmount << "\n";
+    {
+        auto tempMessage = "Pot updated: $" + to_string(msg.potAmount);
+        popUpMessages.push_back(tempMessage);
         state.potAmount = msg.potAmount; // Update the client state with the new pot amount
         break;
+    }
     case MessageTypeServerToClient::Showdown:
-        cout << "Showdown! Pot: $" << msg.potAmount << ". Winners: ";
+    {
+        auto tempMessage = "Showdown! Pot: $" + to_string(msg.potAmount) + ". Winners: ";
+        popUpMessages.push_back(tempMessage);
         for (int id : msg.idWinners)
         {
-            cout << nameOfUnsafe(id) << " (ID: " << id << ") \n";
+            auto temp1 = nameOfUnsafe(id) + " (ID: " + to_string(id) + ") ";
+            popUpMessages.push_back(temp1);
             state.playerMoney[id] += msg.potAmount / msg.idWinners.size(); // Distribute pot among winners
         }
-        state.playerMoney[state.toAct] += msg.potAmount % msg.idWinners.size();
+        auto temp2 = "Won with hand power: " + winPowerTranslation(msg.winPower);
+        popUpMessages.push_back(temp2);
+        state.playerMoney[msg.idWinners[0]] += msg.potAmount % msg.idWinners.size();
+        gameRunning = false;
         break;
+    }
     case MessageTypeServerToClient::BettingUpdate:
-        cout << "Betting update: To Act: " << nameOfUnsafe(msg.toAct) << " (ID: " << msg.toAct << "), To Call: $" << msg.toCall << ", Current Bet: $" << msg.currentBet << ", Min Raise: $" << msg.minRaise << ", Pot: $" << msg.potAmount << "\n";
+    {
+        auto tempMessage = "Betting update: To Act: " + nameOfUnsafe(msg.toAct) + " (ID: " + to_string(msg.toAct) + "), To Call: $" + to_string(msg.toCall) + ", Current Bet: $" + to_string(msg.currentBet) + ", Min Raise: $" + to_string(msg.minRaise) + ", Pot: $" + to_string(msg.potAmount);
+        popUpMessages.push_back(tempMessage);
         state.toAct = msg.toAct;           // Update the client state with the new player to act
         state.toCall = msg.toCall;         // Update the client state with the new amount to call
         state.currentBet = msg.currentBet; // Update the client state with the new current bet
         state.minRaise = msg.minRaise;     // Update the client state with the new minimum raise
         state.potAmount = msg.potAmount;   // Update the client state with the new pot amount
         break;
+    }
     case MessageTypeServerToClient::Reject:
     {
         if (msg.rejectionReason == reason_for_rejection::TooManyPlayers)
@@ -297,31 +342,41 @@ void PokerClient::handle_line(const string &line)
         break;
     }
     case MessageTypeServerToClient::NewPlayerUpdateGraphics:
-        cout << "Graphics update for new player: To Act: " << nameOfUnsafe(msg.toAct) << " (ID: " << msg.toAct << "), To Call: $" << msg.toCall << ", Current Bet: $" << msg.currentBet << ", Min Raise: $" << msg.minRaise << "\n";
+    {
+
+        auto tempMessage = "Graphics update for new player: To Act: " + nameOfUnsafe(msg.toAct) + " (ID: " + to_string(msg.toAct) + "), To Call: $" + to_string(msg.toCall) + ", Current Bet: $" + to_string(msg.currentBet) + ", Min Raise: $" + to_string(msg.minRaise);
+        popUpMessages.push_back(tempMessage);
         state.toAct = msg.toAct;           // Update the client state with the new player to act
         state.toCall = msg.toCall;         // Update the client state with the new amount to call
         state.currentBet = msg.currentBet; // Update the client state with the new current bet
         state.minRaise = msg.minRaise;     // Update the client state with the new minimum raise
         for (auto &[id, hand] : msg.playerHands)
         {
-            cout << "Player " << nameOfUnsafe(id) << "'s hand updated.\n";
+            auto tempMessage = "Player " + nameOfUnsafe(id) + "'s hand updated.";
+            popUpMessages.push_back(tempMessage);
             state.opponentCards.push_back({id, hand.first});
             state.opponentCards.push_back({id, hand.second});
         }
         for (auto &card : msg.communityCards)
         {
-            cout << "Community card updated: Value = " << card.value << ", Suit = " << card.suit << "\n";
+            auto tempMessage = "Community card updated: Value = " + to_string(card.value) + ", Suit = " + to_string(card.suit);
+            popUpMessages.push_back(tempMessage);
             state.communityCards.push_back(card);
         }
+        gameRunning = true;
+        requestState();
         break;
+    }
     default:
         cout << "Unknown message type received.\n";
+        cout << "Message content: " << line << "\n";
         break;
     }
 }
 
 void PokerClient::newGame()
 {
+    gameRunning = true;
 
     state.communityCards.clear();
     state.myCards.clear();
@@ -363,4 +418,46 @@ void PokerClient::rebuildPlayerPositions()
             state.PlayerPosition[ids[i]] = playerCardPositionsAndAngles[otherPlayerCount++]; // Positions for opponents
         }
     }
+}
+
+string PokerClient::winPowerTranslation(int winPower)
+{
+    string result = "";
+    switch (winPower)
+    {
+    case 1:
+        result = "High Card";
+        break;
+    case 2:
+        result = "One Pair";
+        break;
+    case 3:
+        result = "Two Pair";
+        break;
+    case 4:
+        result = "Three of a Kind";
+        break;
+    case 5:
+        result = "Straight";
+        break;
+    case 6:
+        result = "Flush";
+        break;
+    case 7:
+        result = "Full House";
+        break;
+    case 8:
+        result = "Four of a Kind";
+        break;
+    case 9:
+        result = "Straight Flush";
+        break;
+    case 10:
+        result = "Royal Flush";
+        break;
+    default:
+        result = "Unknown Hand Power";
+        break;
+    }
+    return result;
 }

@@ -27,7 +27,7 @@ void Game::start()
 
     for (int i = 0; i < 4; i++)
         suitTextures[i].LoadSuit(i);
-    gameImages.LoadMatHiddenCardAndHome();
+    gameImages.LoadMatHiddenCard();
     cardFont = LoadFontFromMemory(".ttf", cardfont_ttf, cardfont_ttf_len, 32, nullptr, 0);
 
     while (!WindowShouldClose() && client.running)
@@ -81,31 +81,18 @@ void Game::update()
     currentState = client.getClientStateCopy();
     clearCardsIfNecessary();
     shouldNewCardBeMade();
-
-    switch (currentState.gameState)
+    updatePopUpMessages();
+    for (auto &card : myCards)
     {
-    case GameState::WaitingForPlayers:
-        break;
-    case GameState::PreFlop:
-    case GameState::Flop:
-    case GameState::Turn:
-    case GameState::River:
-    case GameState::Showdown:
-        for (auto &card : myCards)
-        {
-            card.Update();
-        }
-        for (auto &card : opponentCards)
-        {
-            card.Update();
-        }
-        for (auto &card : communityCards)
-        {
-            card.Update();
-        }
-        break;
-    default:
-        break;
+        card.Update();
+    }
+    for (auto &card : opponentCards)
+    {
+        card.Update();
+    }
+    for (auto &card : communityCards)
+    {
+        card.Update();
     }
 }
 
@@ -141,6 +128,8 @@ void Game::draw()
     DrawText("ENTER = Raise", 20, 450, 20, YELLOW);
 
     DrawText(TextFormat("Raise Amount: %d", raiseAmount), 20, 500, 24, ORANGE);
+
+    drawPopUpMessages();
 }
 
 void Game::shouldNewCardBeMade()
@@ -148,23 +137,23 @@ void Game::shouldNewCardBeMade()
     while (currentState.myCards.size() > myCards.size())
     {
         valRank cardInfo = currentState.myCards[myCards.size()];
+        myCards.emplace_back(getPlayerCardBasePos(currentState.myId).x + holeCardsDrownCount[currentState.myId] * 120, getPlayerCardBasePos(currentState.myId).y, cardInfo, &suitTextures[cardInfo.suit], &cardFont, &gameImages);
         holeCardsDrownCount[currentState.myId]++;
-        myCards.emplace_back(getPlayerCardBasePos(currentState.myId).x + holeCardsDrownCount[currentState.myId] * 100, getPlayerCardBasePos(currentState.myId).y, cardInfo, &suitTextures[cardInfo.suit], &cardFont, &gameImages);
     }
     while (currentState.opponentCards.size() > opponentCards.size())
     {
         auto &[id, cardInfo] = currentState.opponentCards[opponentCards.size()];
-        holeCardsDrownCount[id]++;
         pos basePos = getPlayerCardBasePos(id);
         int rotationAngle = getPlayerCardRotationAngle(id);
-        int offsetX = (rotationAngle == 0) ? holeCardsDrownCount[id] * 100 : 0;
-        int offsetY = (rotationAngle == 0) ? 0 : holeCardsDrownCount[id] * 100;
+        int offsetX = (rotationAngle == 0) ? holeCardsDrownCount[id] * 120 : 0;
+        int offsetY = (rotationAngle == 0) ? 0 : holeCardsDrownCount[id] * 120;
         opponentCards.emplace_back(basePos.x + offsetX, basePos.y + offsetY, cardInfo, &suitTextures[cardInfo.suit], &cardFont, &gameImages, rotationAngle);
+        holeCardsDrownCount[id]++;
     }
     while (currentState.communityCards.size() > communityCards.size())
     {
         valRank cardInfo = currentState.communityCards[communityCards.size()];
-        communityCards.emplace_back(350 + communityCards.size() * 150, 398, cardInfo, &suitTextures[cardInfo.suit], &cardFont, &gameImages);
+        communityCards.emplace_back(446 + communityCards.size() * 150, 360, cardInfo, &suitTextures[cardInfo.suit], &cardFont, &gameImages);
     }
 }
 
@@ -179,6 +168,31 @@ void Game::clearCardsIfNecessary()
     }
 }
 
+void Game::drawPopUpMessages()
+{
+    int yOffset = 0;
+    for (auto &message : popUpMessages)
+    {
+        if (message.text.length() >= 30)
+        {
+            size_t splitIndex = message.text.find(' ', message.text.length() / 2);
+            DrawText(message.text.substr(0, splitIndex).c_str(), 400, 20 + yOffset, 64, RED);
+            yOffset += 30;
+            DrawText(message.text.substr(splitIndex).c_str(), 400, 20 + yOffset, 64, RED);
+        }
+        else
+        {
+            DrawText(message.text.c_str(), 400, 20 + yOffset, 20, LIGHTGRAY);
+        }
+        yOffset += 30;
+    }
+}
+
+bool Game::hasEnoughTimePassed(double &lastTime, double delay)
+{
+    return (GetTime() - lastTime) >= delay;
+}
+
 pos Game::getPlayerCardBasePos(int id)
 {
     return currentState.PlayerPosition.at(id).first;
@@ -187,4 +201,24 @@ pos Game::getPlayerCardBasePos(int id)
 int Game::getPlayerCardRotationAngle(int id)
 {
     return currentState.PlayerPosition.at(id).second;
+}
+
+void Game::updatePopUpMessages()
+{
+    auto newMessages = client.getAndClearPopUpMessages();
+    for (auto &message : newMessages)
+    {
+        popUpMessages.push_back(PokerClient::popUpMessage(message));
+    }
+    for (auto it = popUpMessages.begin(); it != popUpMessages.end();)
+    {
+        if (hasEnoughTimePassed(it->timer, 3.0))
+        {
+            it = popUpMessages.erase(it);
+        }
+        else
+        {
+            ++it;
+        }
+    }
 }

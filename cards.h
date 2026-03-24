@@ -35,7 +35,7 @@ private:
 	int bigoffset;					  // Offset for centering big rank image
 	int smalloffset;				  // Offset for centering small rank image
 	int rotationAngle;				  // Rotation angle for the card when drawing
-	Vector2 findCenterToRotate();
+	Vector2 findCenterToRotate(Vector2 point, Vector2 center, float angle);
 
 	Images *suitTextures;
 	Images *gameimages;

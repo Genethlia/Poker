@@ -53,6 +53,21 @@ public:
     };
     ClientState getClientStateCopy();
 
+    struct popUpMessage
+    {
+        std::string text;
+        double timer = 0.0;
+
+        popUpMessage(const std::string &t) : text(t), timer(GetTime())
+        {
+            cout << "Pop-up message created: " << text << "\n";
+        }
+    };
+
+    std::deque<string> popUpMessages;
+    std::mutex popUpMessagesMutex;
+    std::deque<string> getAndClearPopUpMessages();
+
 private:
     boost::asio::io_context io;
     tcp::socket socket;
@@ -72,12 +87,16 @@ private:
 
     valRank find_valRank(const MessageServerToClient &msg);
 
+    std::atomic<bool> gameRunning = false;
+
     std::vector<std::pair<pos, int>> playerCardPositionsAndAngles = {
-        {{600, 20}, 0},     // position for player 0
-        {{200, 400}, 90},   // position for player 1
-        {{1400, 400}, 270}, // position for player 2
-        {{600, 680}, 0},    // position for self
+        {{686, 20}, 0},     // position for player 0
+        {{56, 300}, 90},    // position for player 1
+        {{1446, 300}, 270}, // position for player 2
+        {{686, 700}, 0},    // position for self
     };
 
     void rebuildPlayerPositions();
+
+    string winPowerTranslation(int winPower);
 };

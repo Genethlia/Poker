@@ -17,6 +17,8 @@ private:
     void draw();
     void shouldNewCardBeMade();
     void clearCardsIfNecessary(); // Check if cards have been cleared in the client state and clear them in the game if that's the case
+    void updatePopUpMessages();
+    void drawPopUpMessages();
 
     PokerClient client = PokerClient();
     PokerClient::ClientState currentState;
@@ -30,6 +32,9 @@ private:
     std::vector<Card> myCards;
     std::vector<Card> opponentCards;
     std::vector<Card> communityCards;
+
+    std::deque<PokerClient::popUpMessage> popUpMessages;
+    bool hasEnoughTimePassed(double &lastTime, double delay);
 
     int raiseAmount;
 

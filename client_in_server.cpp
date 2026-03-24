@@ -205,7 +205,7 @@ void Client::handle_line(const string &line)
             MessageServerToClient welcomeMesg;
             welcomeMesg.type = MessageTypeServerToClient::Welcome;
             welcomeMesg.playerId = id;
-            welcomeMesg.playerSum = int(serverState->idToName.size());
+            welcomeMesg.playerSum = joinedPlayers + 1;
             welcomeMesg.name = name;
             welcomeMesg.playerNames = serverState->idToName;
             welcomeMesg.playerMoney = serverState->idToMoney;
@@ -243,7 +243,7 @@ void Client::handle_line(const string &line)
             MessageServerToClient{
                 .type = MessageTypeServerToClient::Welcome,
                 .playerId = id,
-                .playerSum = int(serverState->idToName.size()),
+                .playerSum = joinedPlayers + 1,
                 .name = name,
                 .playerNames = serverState->idToName,
                 .playerMoney = serverState->idToMoney,
@@ -292,6 +292,8 @@ void Client::handle_line(const string &line)
         response.type = MessageTypeServerToClient::GameState;
         response.gameState = serverState->gameState;
         response.potAmount = serverState->pot;
+        send(make_shared<string>(serialize_server(response)));
+        validMessage = false; // Don't broadcast the request state message to other clients
         break;
     case MessageTypeClientToServer::Leave:
         cout << "[" << display_name() << "] left\n";

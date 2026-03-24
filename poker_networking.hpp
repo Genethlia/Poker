@@ -130,6 +130,8 @@ struct MessageServerToClient
     int currentBet = 0; // For GameState
     int minRaise = 0;   // For GameState
 
+    int winPower = 0;
+
     reason_for_rejection rejectionReason = reason_for_rejection::TooManyPlayers; // For Reject
 };
 
@@ -278,7 +280,7 @@ inline std::string serialize_server(const MessageServerToClient &m)
         break;
     case MessageTypeServerToClient::Showdown:
         out << "SHOWDOWN ";
-        out << m.potAmount << " " << m.idWinners.size();
+        out << m.potAmount << " " << m.winPower << " " << m.idWinners.size();
         ;
         for (const auto &id : m.idWinners)
         {
@@ -295,7 +297,7 @@ inline std::string serialize_server(const MessageServerToClient &m)
         out << "SPECTATING_UPDATE " << m.playerId << " " << m.isSpectator << " " << m.isSeated;
         break;
     case MessageTypeServerToClient::NewPlayerUpdateGraphics:
-        out << "NEW_PLAYER_UPDATE_GRAPHICS ";
+        out << "NEW_PLAYER_UPDATE_GRAPHICS";
         out << " " << m.toAct << " " << m.toCall << " " << m.currentBet << " " << m.minRaise << " " << m.playerHands.size() << " " << m.communityCards.size();
         for (auto it = m.playerHands.begin(); it != m.playerHands.end(); it++)
         {
@@ -408,7 +410,7 @@ inline MessageServerToClient deserialize_server(const std::string &line)
         }
         msg.type = MessageTypeServerToClient::Showdown;
         int numWinners;
-        in >> msg.potAmount >> numWinners;
+        in >> msg.potAmount >> msg.winPower >> numWinners;
         for (int i = 0; i < numWinners; i++)
         {
             int id;

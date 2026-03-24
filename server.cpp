@@ -99,6 +99,7 @@ public:
             cout << "Game already in progress.\n";
             return;
         }
+        removeDisconnectedClients();
 
         for (auto &client : state.clients)
         {
@@ -181,6 +182,9 @@ public:
     }
     void AdvanceBetting()
     {
+        if (!gameInProgress)
+            return;
+
         for (auto &c : state.clients)
         {
             if (!c->inHand || c->allin)
@@ -214,7 +218,8 @@ public:
             state.broadcast_all(serialize_server(MessageServerToClient{
                 .type = MessageTypeServerToClient::Showdown,
                 .potAmount = state.pot,
-                .idWinners = {winnerId}}));
+                .idWinners = {winnerId},
+                .winPower = 0}));
             gameInProgress = false;
             cout << "Game ended. Waiting for players to be ready for the next game...\n";
             gameEndedReset();
@@ -585,7 +590,8 @@ private:
 
         vector<valRank> community = state.handstate.communityCards;
 
-        auto winnerIndexes = determine_winner(hands, community);
+        int winPower = 0;
+        auto winnerIndexes = determine_winner(hands, community, winPower);
 
         vector<int> winners;
         for (int idx : winnerIndexes)
@@ -601,7 +607,8 @@ private:
         state.broadcast_all(serialize_server(MessageServerToClient{
             .type = MessageTypeServerToClient::Showdown,
             .potAmount = state.pot,
-            .idWinners = winners}));
+            .idWinners = winners,
+            .winPower = winPower}));
 
         if (winners.size() == 1)
         {
@@ -667,6 +674,12 @@ private:
         msg.playerId = playerId;
         msg.name = findNameById(playerId);
         state.broadcast_all(serialize_server(msg));
+
+        if (!gameInProgress)
+        {
+            removeDisconnectedClients();
+            return;
+        }
 
         AdvanceBetting();
     }
