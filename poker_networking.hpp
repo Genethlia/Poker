@@ -74,7 +74,8 @@ enum class GameState
     Flop,
     Turn,
     River,
-    Showdown
+    Showdown,
+    GameOver
 };
 
 enum class reason_for_rejection

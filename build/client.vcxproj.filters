@@ -16,6 +16,9 @@
     <ClCompile Include="C:\Users\tgene\OneDrive - MOEC\Poker\images.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
+    <ClCompile Include="C:\Users\tgene\OneDrive - MOEC\Poker\buttons.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
     <ClCompile Include="C:\Users\tgene\OneDrive - MOEC\Poker\deck.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>

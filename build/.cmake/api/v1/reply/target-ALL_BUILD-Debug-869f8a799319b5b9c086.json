@@ -22,13 +22,13 @@
 	"dependencies" : 
 	[
 		{
+			"id" : "raylib::@52310b9926f245239ea7"
+		},
+		{
 			"id" : "glfw::@0007fcb0029cba81045f"
 		},
 		{
 			"id" : "server::@6890427a1f51a3e7e1df"
-		},
-		{
-			"id" : "raylib::@52310b9926f245239ea7"
 		},
 		{
 			"id" : "client::@6890427a1f51a3e7e1df"
@@ -47,13 +47,13 @@
 	"orderDependencies" : 
 	[
 		{
+			"id" : "raylib::@52310b9926f245239ea7"
+		},
+		{
 			"id" : "glfw::@0007fcb0029cba81045f"
 		},
 		{
 			"id" : "server::@6890427a1f51a3e7e1df"
-		},
-		{
-			"id" : "raylib::@52310b9926f245239ea7"
 		},
 		{
 			"id" : "client::@6890427a1f51a3e7e1df"

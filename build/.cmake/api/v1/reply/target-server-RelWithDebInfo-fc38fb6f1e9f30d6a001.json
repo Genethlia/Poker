@@ -2,10 +2,10 @@
 	"artifacts" : 
 	[
 		{
-			"path" : "Release/server.exe"
+			"path" : "RelWithDebInfo/server.exe"
 		},
 		{
-			"path" : "Release/server.pdb"
+			"path" : "RelWithDebInfo/server.pdb"
 		}
 	],
 	"backtrace" : 1,
@@ -37,13 +37,13 @@
 			{
 				"command" : 1,
 				"file" : 0,
-				"line" : 66,
+				"line" : 67,
 				"parent" : 0
 			},
 			{
 				"command" : 1,
 				"file" : 0,
-				"line" : 53,
+				"line" : 54,
 				"parent" : 0
 			},
 			{
@@ -55,13 +55,13 @@
 			{
 				"command" : 3,
 				"file" : 0,
-				"line" : 69,
+				"line" : 70,
 				"parent" : 0
 			},
 			{
 				"command" : 4,
 				"file" : 0,
-				"line" : 58,
+				"line" : 59,
 				"parent" : 0
 			}
 		]
@@ -84,7 +84,7 @@
 			"compileCommandFragments" : 
 			[
 				{
-					"fragment" : "/DWIN32 /D_WINDOWS /GR /EHsc /O2 /Ob2 /DNDEBUG -std:c++20 -MD"
+					"fragment" : "/DWIN32 /D_WINDOWS /GR /EHsc /Zi /O2 /Ob1 /DNDEBUG -std:c++20 -MD"
 				},
 				{
 					"backtrace" : 4,
@@ -142,11 +142,11 @@
 		"commandFragments" : 
 		[
 			{
-				"fragment" : "/DWIN32 /D_WINDOWS /GR /EHsc /O2 /Ob2 /DNDEBUG -MD",
+				"fragment" : "/DWIN32 /D_WINDOWS /GR /EHsc /Zi /O2 /Ob1 /DNDEBUG -MD",
 				"role" : "flags"
 			},
 			{
-				"fragment" : "/machine:x64 /INCREMENTAL:NO",
+				"fragment" : "/machine:x64 /debug /INCREMENTAL",
 				"role" : "flags"
 			},
 			{

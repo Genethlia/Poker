@@ -45,6 +45,7 @@ add_executable(client
   raylib_client.cpp
   cards.cpp
   images.cpp
+  buttons.cpp
   ${SHARED_SOURCES}
 )
 

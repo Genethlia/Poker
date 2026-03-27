@@ -377,6 +377,7 @@ if %errorlevel% neq 0 goto :VCEnd</Command>
     <ClCompile Include="C:\Users\tgene\OneDrive - MOEC\Poker\raylib_client.cpp" />
     <ClCompile Include="C:\Users\tgene\OneDrive - MOEC\Poker\cards.cpp" />
     <ClCompile Include="C:\Users\tgene\OneDrive - MOEC\Poker\images.cpp" />
+    <ClCompile Include="C:\Users\tgene\OneDrive - MOEC\Poker\buttons.cpp" />
     <ClCompile Include="C:\Users\tgene\OneDrive - MOEC\Poker\deck.cpp" />
   </ItemGroup>
   <ItemGroup />

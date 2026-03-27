@@ -71,7 +71,7 @@ void Images::LoadMatHiddenCard()
     Image mat = LoadImageFromMemory(".png", mat_png, mat_png_len);
     if (mat.data != nullptr)
     {
-        ImageResize(&mat, 1600, 900);
+        ImageResize(&mat, 2000, 1010);
         matTexture = LoadTextureFromImage(mat);
         UnloadImage(mat);
     }

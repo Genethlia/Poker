@@ -3,7 +3,7 @@
 Card::Card(float x, float y, valRank card, Images *suitTextures, Font *font, Images *gameimages, int rotationAngle)
     : suitTextures(suitTextures), font(font), gameimages(gameimages), rotationAngle(rotationAngle)
 {
-    target = {x, y};
+    target = {200 + x, y};
     pos = {700, 20};
 
     width = 108;
