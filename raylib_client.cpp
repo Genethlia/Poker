@@ -107,8 +107,8 @@ void Game::updateGameState()
     {
         onServerStateChange(newState.gameState);
     }
+    buildMoneyChips();
     currentState = newState;
-
     if (visualState.gameState == GameState::Showdown)
     {
         if (hasEnoughTimePassed(visualState.showdownTimerStartTime, 5.0))
@@ -151,6 +151,7 @@ void Game::draw()
 
     drawInput();
     drawPopUpMessages();
+    drawMoneyChips();
     DrawRectangleLines(0, 0, 1800, 1010, BLACK);
     DrawLine(200, 0, 200, 1010, BLACK);
 }
@@ -178,6 +179,22 @@ void Game::drawInput()
             button.Draw();
         }
     }
+}
+
+void Game::drawMoneyChips()
+{
+    for (auto &[id, chips] : playerMoneyChips)
+    {
+        if (!currentState.isSeated[id] || currentState.isSpectator[id])
+            continue; // Only draw chips for seated players who are not spectators
+        pos basePos = getPlayerCardBasePos(id);
+        int rotationAngle = getPlayerCardRotationAngle(id);
+        chips.drawChips({basePos.x, basePos.y}, rotationAngle);
+    }
+    DrawText(TextFormat("chip entries: %i", (int)playerMoneyChips.size()), 700, 20, 20, WHITE);
+    DrawText(TextFormat("players: %d", (int)currentState.playerMoney.size()), 700, 330, 20, WHITE);
+    DrawText(TextFormat("IsPlayerSeated entries: %d", (int)currentState.isSeated.size()), 700, 360, 20, WHITE);
+    DrawText(TextFormat("IsPlayerSpectator entries: %d", (int)currentState.isSpectator.size()), 700, 390, 20, WHITE);
 }
 
 void Game::VisualState::drawCards()
@@ -294,6 +311,48 @@ int Game::getPlayerCardRotationAngle(int id)
     return currentState.PlayerPosition.at(id).second;
 }
 
+void Game::drawSingleChip(int x, int y, int radius, Color color)
+{
+    DrawCircle(x, y, radius, color);
+    DrawCircleLines(x, y, radius, BLACK);
+    DrawCircleLines(x, y, radius - 4, BLACK);
+}
+
+void Game::drawStackOfChips(pos basePos, int amount, Color color, int rotationAngle)
+{
+    for (int i = 0; i < amount; i++)
+    {
+        drawSingleChip(basePos.x, basePos.y, 20, color);
+        if (rotationAngle == 90)
+            basePos.x -= 5;
+        else if (rotationAngle == 270)
+            basePos.x += 5;
+        else if (rotationAngle == 0)
+            basePos.y -= 5;
+        else
+            basePos.y += 5;
+    }
+}
+
+void Game::buildMoneyChips()
+{
+    // playerMoneyChips.clear();
+    // for (auto &[id, money] : currentState.playerMoney)
+    // {
+    //     if (!currentState.isSeated[id] || currentState.isSpectator[id])
+    //         continue; // Only build chips for players that are still in the hand
+    //     MoneyChips chips;
+    //     chips.buildChips(money);
+    //     playerMoneyChips[id] = chips;
+    // }
+    playerMoneyChips.clear();
+
+    for (auto &[id, money] : currentState.playerMoney)
+    {
+        playerMoneyChips[id].buildChips(money);
+    }
+}
+
 void Game::updatePopUpMessages()
 {
     auto newMessages = client.getAndClearPopUpMessages();
@@ -311,5 +370,53 @@ void Game::updatePopUpMessages()
         {
             ++it;
         }
+    }
+}
+
+void Game::MoneyChips::reset()
+{
+    amount10 = 0;
+    amount50 = 0;
+    amount100 = 0;
+    amount250 = 0;
+}
+
+void Game::MoneyChips::buildChips(int money)
+{
+    reset();
+
+    int stackSize = min(5, max(1, money / 200));
+
+    amount250 = stackSize;
+    amount100 = stackSize;
+    amount50 = stackSize;
+    amount10 = stackSize;
+}
+
+void Game::MoneyChips::drawChips(pos basePos, int rotationAngle)
+{
+    vector<ChipVisual> stacks;
+    if (amount250 > 0)
+        stacks.push_back({amount250, RED});
+    if (amount100 > 0)
+        stacks.push_back({amount100, BLUE});
+    if (amount50 > 0)
+        stacks.push_back({amount50, GREEN});
+    if (amount10 > 0)
+        stacks.push_back({amount10, YELLOW});
+    if (stacks.empty())
+        return;
+    int spacing = 50;
+    int totalWidth = (stacks.size() - 1) * spacing;
+
+    for (int i = 0; i < stacks.size(); i++)
+    {
+        pos stackPos = {basePos.x, basePos.y};
+        if (rotationAngle == 0 || rotationAngle == 180)
+            stackPos.x += i * spacing - totalWidth / 2;
+        else
+            stackPos.y += i * spacing - totalWidth / 2;
+
+        drawStackOfChips(stackPos, stacks[i].value, stacks[i].color, rotationAngle);
     }
 }

@@ -19,6 +19,7 @@ private:
 
     void draw();
     void drawInput();
+    void drawMoneyChips();
     void shouldNewCardBeMade();
     void clearCardsIfNecessary(); // Check if cards have been cleared in the client state and clear them in the game if that's the case
     void updatePopUpMessages();
@@ -91,4 +92,28 @@ private:
                                         popUpMessages.push_back(PokerClient::popUpMessage("You can only start the game when it's in the waiting for players state."));
                                     } });
     std::vector<Button> actionButtons;
+
+    struct ChipVisual
+    {
+        int value;
+        Color color;
+    };
+    static void drawSingleChip(int x, int y, int radius, Color color);
+    static void drawStackOfChips(pos basePos, int amount, Color color, int rotationAngle);
+
+    struct MoneyChips
+    {
+        int amount10 = 0;
+        int amount50 = 0;
+        int amount100 = 0;
+        int amount250 = 0;
+
+        void reset();
+        void buildChips(int money);
+        void drawChips(pos basePos, int rotationAngle);
+    };
+
+    unordered_map<int, MoneyChips> playerMoneyChips; // player id -> money chips
+
+    void buildMoneyChips();
 };

@@ -451,6 +451,8 @@ private:
                 c->spectator = false;
                 c->wantsToPlay = false;
                 c->seated = true;
+                state.idToisSpectator[c->id] = false;
+                state.idToisSeated[c->id] = true;
                 state.broadcast_all(serialize_server(MessageServerToClient{
                     .type = MessageTypeServerToClient::SpectatingUpdate,
                     .playerId = c->id,
@@ -489,6 +491,8 @@ private:
             {
                 c->spectator = true;
                 c->seated = false;
+                state.idToisSpectator[c->id] = true;
+                state.idToisSeated[c->id] = false;
                 c->wantsToPlay = false;
                 state.broadcast_all(serialize_server(MessageServerToClient{
                     .type = MessageTypeServerToClient::SpectatingUpdate,

@@ -70,6 +70,7 @@ void PokerClient::sendAction(PlayerActionType action, int amount)
     ClientState snapshot = getClientStateCopy();
     if (snapshot.toAct != snapshot.myId)
     {
+        popUpMessages.push_back("It's not your turn to act!");
         cout << "It's not your turn to act!\n";
         return;
     }
@@ -191,6 +192,8 @@ void PokerClient::handle_line(const string &line)
         rebuildPlayerPositions();
         state.playerNames.clear();
         state.playerMoney.clear();
+        state.isSpectator.clear();
+        state.isSeated.clear();
         auto temp = "Welcome, " + msg.name + "! Your player ID is " + to_string(msg.playerId) + ". There are " + to_string(msg.playerSum) + " players in the game.";
         popUpMessages.push_back(temp);
         for (auto &[id, name] : msg.playerNames)
@@ -217,9 +220,9 @@ void PokerClient::handle_line(const string &line)
         state.playerNames[msg.playerId] = msg.name;
         state.playerMoney[msg.playerId] = 1000; // Initialize player money for the new player
         if (msg.isSpectatorMap.find(msg.playerId) != msg.isSpectatorMap.end())
-            state.isSpectator[msg.playerId] = msg.isSpectatorMap[msg.playerId];
+            state.isSpectator[msg.playerId] = msg.isSpectator;
         if (msg.isSeatedMap.find(msg.playerId) != msg.isSeatedMap.end())
-            state.isSeated[msg.playerId] = msg.isSeatedMap[msg.playerId];
+            state.isSeated[msg.playerId] = msg.isSeated;
         rebuildPlayerPositions();
         break;
     }

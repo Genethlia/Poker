@@ -194,10 +194,13 @@ void Client::handle_line(const string &line)
         this->id = serverState->nextId++;
         serverState->idToName[id] = name;
         serverState->idToMoney[id] = 1000; // Give each player 1000 money when they join
+        serverState->idToisSpectator[id] = false;
+        serverState->idToisSeated[id] = true;
 
         if (serverState->gameState != GameState::WaitingForPlayers || joinedPlayers >= 4)
         {
-            spectator = true;
+            serverState->idToisSpectator[id] = true;
+            serverState->idToisSeated[id] = false;
             wantsToPlay = true;
             seated = false;
 
@@ -209,7 +212,8 @@ void Client::handle_line(const string &line)
             welcomeMesg.name = name;
             welcomeMesg.playerNames = serverState->idToName;
             welcomeMesg.playerMoney = serverState->idToMoney;
-            welcomeMesg.isSpectator = true;
+            welcomeMesg.isSpectatorMap = serverState->idToisSpectator;
+            welcomeMesg.isSeatedMap = serverState->idToisSeated;
             send(make_shared<string>(serialize_server(welcomeMesg)));
 
             response.type = MessageTypeServerToClient::PlayerJoined;
@@ -247,7 +251,8 @@ void Client::handle_line(const string &line)
                 .name = name,
                 .playerNames = serverState->idToName,
                 .playerMoney = serverState->idToMoney,
-                .isSpectator = spectator})));
+                .isSpectatorMap = serverState->idToisSpectator,
+                .isSeatedMap = serverState->idToisSeated})));
 
         response.type = MessageTypeServerToClient::PlayerJoined;
         response.playerId = id;

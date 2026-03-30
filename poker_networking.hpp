@@ -347,7 +347,20 @@ inline MessageServerToClient deserialize_server(const std::string &line)
             in >> id >> money;
             msg.playerMoney[id] = money;
         }
-        in >> msg.isSpectator >> msg.isSeated;
+        for (int i = 0; i < msg.playerSum; i++)
+        {
+            int id;
+            bool isSpectator;
+            in >> id >> isSpectator;
+            msg.isSpectatorMap[id] = isSpectator;
+        }
+        for (int i = 0; i < msg.playerSum; i++)
+        {
+            int id;
+            bool isSeated;
+            in >> id >> isSeated;
+            msg.isSeatedMap[id] = isSeated;
+        }
         break;
     case 'P': // PLAYER_JOINED or PLAYER_LEFT or PLAYER_READY or PLAYER_HAND or POT_UPDATE
         if (command == "PLAYER_JOINED")

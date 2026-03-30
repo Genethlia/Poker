@@ -41,6 +41,8 @@ struct ServerState
 
     std::unordered_map<int, std::string> idToName;
     std::unordered_map<int, int> idToMoney;
+    std::unordered_map<int, bool> idToisSpectator;
+    std::unordered_map<int, bool> idToisSeated;
 
     GameState gameState = GameState::WaitingForPlayers;
 
