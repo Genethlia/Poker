@@ -131,7 +131,7 @@ public:
             client->inHand = true;
             client->allin = false;
             client->betThisRound = 0;
-            state.handstate.playersOrderd.push_back(client->id);
+            state.handstate.orderedPlayerIds.push_back(client->id);
         }
 
         state.handstate.hole.clear();
@@ -211,7 +211,7 @@ public:
                 {
                     winner->money += state.pot;
                     cout << "Player " << winner->display_name() << " wins the pot of " << state.pot << " by everyone else folding!\n";
-                    state.idToMoney[winner->id] = winner->money;
+                    // state.idToMoney[winner->id] = winner->money;
                 }
             }
             state.gameState = GameState::Showdown;
@@ -304,8 +304,9 @@ public:
     {
         if (playerId != state.toAct)
         {
-            auto it = state.idToName.find(playerId);
-            cout << "Received action from player " << (it != state.idToName.end() ? it->second : "Unknown") << " but it's not their turn.\n";
+
+            auto it = find_client_by_id(playerId);
+            cout << "Received action from player " << (it ? it->display_name() : "Unknown") << " but it's not their turn.\n";
             state.send_to(serialize_server(MessageServerToClient{
                               .type = MessageTypeServerToClient::ActionResult,
                               .playerId = playerId,
@@ -341,7 +342,6 @@ public:
             p->money -= act;
             p->betThisRound += act;
             state.pot += act;
-            state.idToMoney[p->id] = p->money;
             if (p->money == 0)
                 p->allin = true;
             return act;
@@ -451,8 +451,7 @@ private:
                 c->spectator = false;
                 c->wantsToPlay = false;
                 c->seated = true;
-                state.idToisSpectator[c->id] = false;
-                state.idToisSeated[c->id] = true;
+                activePlayers++;
                 state.broadcast_all(serialize_server(MessageServerToClient{
                     .type = MessageTypeServerToClient::SpectatingUpdate,
                     .playerId = c->id,
@@ -491,8 +490,6 @@ private:
             {
                 c->spectator = true;
                 c->seated = false;
-                state.idToisSpectator[c->id] = true;
-                state.idToisSeated[c->id] = false;
                 c->wantsToPlay = false;
                 state.broadcast_all(serialize_server(MessageServerToClient{
                     .type = MessageTypeServerToClient::SpectatingUpdate,
@@ -572,13 +569,13 @@ private:
     {
         vector<hand> hands;
         vector<int> handOwnerIds;
-        for (size_t i = 0; i < state.handstate.playersOrderd.size(); i++)
+        for (size_t i = 0; i < state.handstate.orderedPlayerIds.size(); i++)
         {
-            int pid = state.handstate.playersOrderd[i];
+            int pid = state.handstate.orderedPlayerIds[i];
             auto p = find_client_by_id(pid);
             if (p && p->inHand)
             {
-                hands.push_back(state.handstate.hole[i]);
+                hands.push_back(state.handstate.hole[pid]);
                 handOwnerIds.push_back(pid);
             }
         }
@@ -620,7 +617,6 @@ private:
             if (winner)
             {
                 winner->money += state.pot;
-                state.idToMoney[winner->id] = winner->money;
                 cout << "Player " << winner->display_name() << " wins the pot of " << state.pot << " with a showdown!\n";
             }
         }
@@ -633,7 +629,6 @@ private:
                 if (winner)
                 {
                     winner->money += state.pot / winners.size();
-                    state.idToMoney[winner->id] = winner->money;
                     cout << winner->display_name() << " (ID: " << winner->id << ") ";
                 }
             }
@@ -642,7 +637,6 @@ private:
             if (remainder_winner)
             {
                 remainder_winner->money += state.pot % winners.size();
-                state.idToMoney[remainder_winner->id] = remainder_winner->money;
             }
         }
 
@@ -671,7 +665,7 @@ private:
         if (state.toAct == playerId)
             state.toAct = -1;
 
-        state.idToMoney[playerId] = p->money;
+        // state.idToMoney[playerId] = p->money;
 
         MessageServerToClient msg;
         msg.type = MessageTypeServerToClient::PlayerLeft;
@@ -698,19 +692,9 @@ private:
         for (auto &c : toRemove)
         {
             state.needsAction.erase(c->id);
-            state.idToMoney.erase(c->id);
-            state.idToName.erase(c->id);
             state.clients.erase(c);
             cout << "Removed client " << c->display_name() << " from server.\n";
         }
-    }
-
-    shared_ptr<Client> findClientById(ServerState &st, int pid)
-    {
-        for (auto &c : st.clients)
-            if (c->id == pid)
-                return c;
-        return nullptr;
     }
 
     int countInHand(ServerState &st)
@@ -757,9 +741,9 @@ private:
 
     string findNameById(int id)
     {
-        auto it = state.idToName.find(id);
-        if (it != state.idToName.end())
-            return it->second;
+        auto p = find_client_by_id(id);
+        if (p)
+            return p->display_name();
         return "Unknown";
     }
 };

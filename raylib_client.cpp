@@ -24,7 +24,6 @@ Game::Game()
 Game::~Game()
 {
     client.stop();
-    CloseWindow();
 }
 
 void Game::start()
@@ -218,18 +217,18 @@ void Game::shouldNewCardBeMade()
     while (currentState.myCards.size() > visualState.myCards.size())
     {
         valRank cardInfo = currentState.myCards[visualState.myCards.size()];
-        visualState.myCards.emplace_back(getPlayerCardBasePos(currentState.myId).x + holeCardsDrownCount[currentState.myId] * 120, getPlayerCardBasePos(currentState.myId).y, cardInfo, &suitTextures[cardInfo.suit], &cardFont, &gameImages);
-        holeCardsDrownCount[currentState.myId]++;
+        visualState.myCards.emplace_back(getPlayerCardBasePos(currentState.myId).x + DrawnCount[currentState.myId] * 120, getPlayerCardBasePos(currentState.myId).y, cardInfo, &suitTextures[cardInfo.suit], &cardFont, &gameImages);
+        DrawnCount[currentState.myId]++;
     }
     while (currentState.opponentCards.size() > visualState.opponentCards.size())
     {
         auto &[id, cardInfo] = currentState.opponentCards[visualState.opponentCards.size()];
         pos basePos = getPlayerCardBasePos(id);
         int rotationAngle = getPlayerCardRotationAngle(id);
-        int offsetX = (rotationAngle == 0) ? holeCardsDrownCount[id] * 120 : 0;
-        int offsetY = (rotationAngle == 0) ? 0 : holeCardsDrownCount[id] * 120;
+        int offsetX = (rotationAngle == 0) ? DrawnCount[id] * 120 : 0;
+        int offsetY = (rotationAngle == 0) ? 0 : DrawnCount[id] * 120;
         visualState.opponentCards.emplace_back(basePos.x + offsetX, basePos.y + offsetY, cardInfo, &suitTextures[cardInfo.suit], &cardFont, &gameImages, rotationAngle);
-        holeCardsDrownCount[id]++;
+        DrawnCount[id]++;
     }
     while (currentState.communityCards.size() > visualState.communityCards.size())
     {
@@ -245,7 +244,7 @@ void Game::clearCardsIfNecessary()
         visualState.myCards.clear();
         visualState.opponentCards.clear();
         visualState.communityCards.clear();
-        holeCardsDrownCount.clear();
+        DrawnCount.clear();
     }
 }
 
@@ -286,18 +285,27 @@ bool Game::hasEnoughTimePassed(double &lastTime, double delay)
 bool Game::authenticateIP(std::string ip)
 {
     int dotCount = std::count(ip.begin(), ip.end(), '.');
-    if (dotCount != 3)
+    if (dotCount != 3 || ip.size() < 7 || ip.size() > 15)
         return false;
-    int num1, num2, num3, num4;
-    num1 = stoi(ip.substr(0, ip.find('.')));
-    size_t pos1 = ip.find('.') + 1;
-    num2 = stoi(ip.substr(pos1, ip.find('.', pos1) - pos1));
-    size_t pos2 = ip.find('.', pos1) + 1;
-    num3 = stoi(ip.substr(pos2, ip.find('.', pos2) - pos2));
-    size_t pos3 = ip.find('.', pos2) + 1;
-    num4 = stoi(ip.substr(pos3));
-    if (num1 < 0 || num1 > 255 || num2 < 0 || num2 > 255 || num3 < 0 || num3 > 255 || num4 < 0 || num4 > 255)
+    if (ip.find_first_not_of("0123456789.") != std::string::npos)
         return false;
+
+    std::stringstream ss(ip);
+    std::string segment;
+    for (int i = 0; i < 4; i++)
+    {
+        if (!std::getline(ss, segment, '.'))
+            return false;
+        if (segment.empty())
+        {
+            return false;
+        }
+        int num = stoi(segment);
+        if (num < 0 || num > 255)
+        {
+            return false;
+        }
+    }
     return true;
 }
 
@@ -336,21 +344,21 @@ void Game::drawStackOfChips(pos basePos, int amount, Color color, int rotationAn
 
 void Game::buildMoneyChips()
 {
-    // playerMoneyChips.clear();
-    // for (auto &[id, money] : currentState.playerMoney)
-    // {
-    //     if (!currentState.isSeated[id] || currentState.isSpectator[id])
-    //         continue; // Only build chips for players that are still in the hand
-    //     MoneyChips chips;
-    //     chips.buildChips(money);
-    //     playerMoneyChips[id] = chips;
-    // }
     playerMoneyChips.clear();
-
     for (auto &[id, money] : currentState.playerMoney)
     {
-        playerMoneyChips[id].buildChips(money);
+        if (!currentState.isSeated[id] || currentState.isSpectator[id])
+            continue; // Only build chips for players that are still in the hand
+        MoneyChips chips;
+        chips.buildChips(money);
+        playerMoneyChips[id] = chips;
     }
+    // playerMoneyChips.clear();
+
+    // for (auto &[id, money] : currentState.playerMoney)
+    // {
+    //     playerMoneyChips[id].buildChips(money);
+    // }
 }
 
 void Game::updatePopUpMessages()

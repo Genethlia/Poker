@@ -85,7 +85,7 @@ private:
     void handle_line(const std::string &line);
     void newGame();
 
-    valRank find_valRank(const MessageServerToClient &msg);
+    valRank extractCardValueSuit(const MessageServerToClient &msg);
 
     std::atomic<bool> gameRunning = false;
 

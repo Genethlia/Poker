@@ -184,6 +184,7 @@ std::deque<string> PokerClient::getAndClearPopUpMessages()
 void PokerClient::handle_line(const string &line)
 {
     lock_guard<std::mutex> lock(stateMutex);
+    lock_guard<std::mutex> lock2(popUpMessagesMutex);
     MessageServerToClient msg = deserialize_server(line);
     switch (msg.type)
     {
@@ -219,10 +220,8 @@ void PokerClient::handle_line(const string &line)
         popUpMessages.push_back(temp);
         state.playerNames[msg.playerId] = msg.name;
         state.playerMoney[msg.playerId] = 1000; // Initialize player money for the new player
-        if (msg.isSpectatorMap.find(msg.playerId) != msg.isSpectatorMap.end())
-            state.isSpectator[msg.playerId] = msg.isSpectator;
-        if (msg.isSeatedMap.find(msg.playerId) != msg.isSeatedMap.end())
-            state.isSeated[msg.playerId] = msg.isSeated;
+        state.isSpectator[msg.playerId] = msg.isSpectator;
+        state.isSeated[msg.playerId] = msg.isSeated;
         rebuildPlayerPositions();
         break;
     }
@@ -272,12 +271,12 @@ void PokerClient::handle_line(const string &line)
     {
         auto temp = "Community cards updated: " + msg.cards;
         popUpMessages.push_back(temp);
-        state.communityCards.push_back(find_valRank(msg));
+        state.communityCards.push_back(extractCardValueSuit(msg));
         break;
     }
     case MessageTypeServerToClient::PlayerHand:
     {
-        auto temp = find_valRank(msg);
+        auto temp = extractCardValueSuit(msg);
         if (msg.playerId == state.myId)
         {
             auto tempMessage = "Your hand updated: " + msg.cards;
@@ -391,7 +390,7 @@ void PokerClient::newGame()
     state.potAmount = 0;
 }
 
-valRank PokerClient::find_valRank(const MessageServerToClient &msg)
+valRank PokerClient::extractCardValueSuit(const MessageServerToClient &msg)
 {
     cout << msg.cards << "\n";
     int value = stoi(msg.cards.substr(0, msg.cards.find(',')));

@@ -194,6 +194,8 @@ inline MessageClientToServer deserialize_client(const std::string &line)
     case 'R': // READY or REQUEST_STATE
         if (command == "READY")
             msg.type = MessageTypeClientToServer::Ready;
+        else if (command == "REJECT_ACK")
+            msg.type = MessageTypeClientToServer::RejectAck;
         else
             msg.type = MessageTypeClientToServer::RequestState;
         break;
@@ -205,11 +207,6 @@ inline MessageClientToServer deserialize_client(const std::string &line)
         if (command == "ADMIN_PLAY")
         {
             msg.type = MessageTypeClientToServer::AdminPlay;
-            break;
-        }
-        if (command == "REJECT_ACK")
-        {
-            msg.type = MessageTypeClientToServer::RejectAck;
             break;
         }
         msg.type = MessageTypeClientToServer::Action;
@@ -308,7 +305,7 @@ inline std::string serialize_server(const MessageServerToClient &m)
         {
             out << " " << card.value << " " << card.suit;
         }
-
+        break;
     default:
         out << "UNKNOWN_MESSAGE";
         break;

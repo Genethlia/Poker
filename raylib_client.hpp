@@ -59,7 +59,7 @@ private:
 
     pos getPlayerCardBasePos(int id);
     int getPlayerCardRotationAngle(int id);
-    std::unordered_map<int, int> holeCardsDrownCount = {};
+    std::unordered_map<int, int> DrawnCount = {};
     Button readyButton = Button(0, 550, 200, 50, "Ready", [this]()
                                 {
                                 if (!sendReady)

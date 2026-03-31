@@ -15,7 +15,7 @@ bool ServerState::all_ready() const
     int counter = 0;
     for (const auto &client : clients)
     {
-        if (!client->connected)
+        if (!client->connected || client->spectator || !client->seated)
             continue; // skip disconnected clients
         counter++;
         if (!client->ready)
@@ -190,19 +190,17 @@ void Client::handle_line(const string &line)
             return;
         }
 
-        name = msg.name;
+        this->name = msg.name;
         this->id = serverState->nextId++;
-        serverState->idToName[id] = name;
-        serverState->idToMoney[id] = 1000; // Give each player 1000 money when they join
-        serverState->idToisSpectator[id] = false;
-        serverState->idToisSeated[id] = true;
+        this->money = 1000;
+        this->spectator = false;
+        this->seated = true;
 
         if (serverState->gameState != GameState::WaitingForPlayers || joinedPlayers >= 4)
         {
-            serverState->idToisSpectator[id] = true;
-            serverState->idToisSeated[id] = false;
-            wantsToPlay = true;
-            seated = false;
+            this->spectator = true;
+            this->wantsToPlay = true;
+            this->seated = false;
 
             cout << "[" << msg.name << "] joined as spectator \n";
             MessageServerToClient welcomeMesg;
@@ -210,10 +208,10 @@ void Client::handle_line(const string &line)
             welcomeMesg.playerId = id;
             welcomeMesg.playerSum = joinedPlayers + 1;
             welcomeMesg.name = name;
-            welcomeMesg.playerNames = serverState->idToName;
-            welcomeMesg.playerMoney = serverState->idToMoney;
-            welcomeMesg.isSpectatorMap = serverState->idToisSpectator;
-            welcomeMesg.isSeatedMap = serverState->idToisSeated;
+            welcomeMesg.playerNames = serverState->buildNameSnapshot();
+            welcomeMesg.playerMoney = serverState->buildMoneySnapshot();
+            welcomeMesg.isSpectatorMap = serverState->buildSpectatorSnapshot();
+            welcomeMesg.isSeatedMap = serverState->buildSeatedSnapshot();
             send(make_shared<string>(serialize_server(welcomeMesg)));
 
             response.type = MessageTypeServerToClient::PlayerJoined;
@@ -243,16 +241,17 @@ void Client::handle_line(const string &line)
 
         cout << "[" << display_name() << "] joined\n";
 
+        auto names = serverState->buildNameSnapshot();
         send(make_shared<string>(serialize_server(
             MessageServerToClient{
                 .type = MessageTypeServerToClient::Welcome,
                 .playerId = id,
-                .playerSum = joinedPlayers + 1,
+                .playerSum = (int)names.size(),
                 .name = name,
-                .playerNames = serverState->idToName,
-                .playerMoney = serverState->idToMoney,
-                .isSpectatorMap = serverState->idToisSpectator,
-                .isSeatedMap = serverState->idToisSeated})));
+                .playerNames = names,
+                .playerMoney = serverState->buildMoneySnapshot(),
+                .isSpectatorMap = serverState->buildSpectatorSnapshot(),
+                .isSeatedMap = serverState->buildSeatedSnapshot()})));
 
         response.type = MessageTypeServerToClient::PlayerJoined;
         response.playerId = id;
@@ -326,4 +325,47 @@ void Client::handle_line(const string &line)
     }
     if (validMessage)
         broadcast(serialize_server(response));
+}
+
+std::unordered_map<int, int> ServerState::buildMoneySnapshot() const
+{
+    std::unordered_map<int, int> moneySnapshot;
+    for (const auto &client : clients)
+    {
+        if (client->id >= 0 && client->connected)
+            moneySnapshot[client->id] = client->money;
+    }
+    return moneySnapshot;
+}
+std::unordered_map<int, std::string> ServerState::buildNameSnapshot() const
+{
+    std::unordered_map<int, std::string> nameSnapshot;
+    for (const auto &client : clients)
+    {
+        if (client->id >= 0 && client->connected)
+            nameSnapshot[client->id] = client->getName();
+    }
+    return nameSnapshot;
+}
+
+std::unordered_map<int, bool> ServerState::buildSpectatorSnapshot() const
+{
+    std::unordered_map<int, bool> spectatorSnapshot;
+    for (const auto &client : clients)
+    {
+        if (client->id >= 0 && client->connected)
+            spectatorSnapshot[client->id] = client->spectator;
+    }
+    return spectatorSnapshot;
+}
+
+std::unordered_map<int, bool> ServerState::buildSeatedSnapshot() const
+{
+    std::unordered_map<int, bool> seatedSnapshot;
+    for (const auto &client : clients)
+    {
+        if (client->id >= 0 && client->connected)
+            seatedSnapshot[client->id] = client->seated;
+    }
+    return seatedSnapshot;
 }

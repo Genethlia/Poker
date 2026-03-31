@@ -1,5 +1,5 @@
 #pragma once
-#include "visual.hpp"
+#include "game_logic.hpp"
 using namespace std;
 
 class Deck

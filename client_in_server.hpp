@@ -1,6 +1,6 @@
 #pragma once
 #include "poker_networking.hpp"
-#include "visual.hpp"
+#include "game_logic.hpp"
 
 class Client;
 
@@ -8,7 +8,7 @@ struct HandState
 {
     bool active = false;
 
-    std::vector<int> playersOrderd;
+    std::vector<int> orderedPlayerIds;
     std::unordered_map<int, hand> hole;
     std::vector<valRank> communityCards;
 
@@ -17,7 +17,7 @@ struct HandState
     void clear()
     {
         active = false;
-        playersOrderd.clear();
+        orderedPlayerIds.clear();
         hole.clear();
         communityCards.clear();
     }
@@ -39,10 +39,10 @@ struct ServerState
 
     std::unordered_set<int> needsAction; // player ids that need to act in the current betting round
 
-    std::unordered_map<int, std::string> idToName;
-    std::unordered_map<int, int> idToMoney;
-    std::unordered_map<int, bool> idToisSpectator;
-    std::unordered_map<int, bool> idToisSeated;
+    std::unordered_map<int, std::string> buildNameSnapshot() const;
+    std::unordered_map<int, int> buildMoneySnapshot() const;
+    std::unordered_map<int, bool> buildSpectatorSnapshot() const;
+    std::unordered_map<int, bool> buildSeatedSnapshot() const;
 
     GameState gameState = GameState::WaitingForPlayers;
 
@@ -75,6 +75,7 @@ public:
     bool wantsToPlay = false;
     bool seated = true;
 
+    std::string getName() const { return name; }
     int id = -1;
     int money = 1000;
     bool inHand;
@@ -89,7 +90,6 @@ private:
     tcp::socket socket;
     boost::asio::streambuf inbuf;
     ServerState *serverState;
-
     std::string name;
 
     std::deque<std::shared_ptr<std::string>> outbox;
