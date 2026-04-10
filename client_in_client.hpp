@@ -76,9 +76,6 @@ private:
     std::mutex stateMutex;
 
     std::thread readerThread;
-
-    void UpdateMoney(const MessageServerToClient &msg);
-
     void write_line(const std::string &s);
     void readerLoop();
 
@@ -90,7 +87,7 @@ private:
     std::atomic<bool> gameRunning = false;
 
     std::vector<std::pair<pos, int>> playerCardPositionsAndAngles = {
-        {{686, 20}, 0},     // position for player 0
+        {{686, 20}, 180},   // position for player 0
         {{56, 300}, 90},    // position for player 1
         {{1446, 300}, 270}, // position for player 2
         {{686, 700}, 0},    // position for self

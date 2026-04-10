@@ -220,6 +220,9 @@ public:
                 .potAmount = state.pot,
                 .idWinners = {winnerId},
                 .winPower = 0}));
+            state.broadcast_all(serialize_server(MessageServerToClient{
+                .type = MessageTypeServerToClient::GameState,
+                .gameState = state.gameState}));
             gameInProgress = false;
             cout << "Game ended. Waiting for players to be ready for the next game...\n";
             gameEndedReset();

@@ -36,7 +36,8 @@ enum class MessageTypeClientToServer
     RequestState,
     Leave,
     AdminPlay,
-    RejectAck
+    RejectAck,
+    RequestUnorderedMapUpdates // For updates to the unordered maps like playerMoney, playerNames, etc.
 };
 
 enum class MessageTypeServerToClient
@@ -55,7 +56,8 @@ enum class MessageTypeServerToClient
     PotUpdate,
     Showdown,
     SpectatingUpdate,
-    NewPlayerUpdateGraphics
+    NewPlayerUpdateGraphics,
+    UnorderedMapUpdate
 };
 
 enum class PlayerActionType
@@ -166,6 +168,9 @@ inline std::string serialize_client(const MessageClientToServer &m)
     case MessageTypeClientToServer::RejectAck:
         out << "REJECT_ACK ";
         break;
+    case MessageTypeClientToServer::RequestUnorderedMapUpdates:
+        out << "REQUEST_UNORDERED_MAP_UPDATES ";
+        break;
     default:
         break;
     }
@@ -196,6 +201,8 @@ inline MessageClientToServer deserialize_client(const std::string &line)
             msg.type = MessageTypeClientToServer::Ready;
         else if (command == "REJECT_ACK")
             msg.type = MessageTypeClientToServer::RejectAck;
+        else if (command == "REQUEST_UNORDERED_MAP_UPDATES")
+            msg.type = MessageTypeClientToServer::RequestUnorderedMapUpdates;
         else
             msg.type = MessageTypeClientToServer::RequestState;
         break;
@@ -304,6 +311,28 @@ inline std::string serialize_server(const MessageServerToClient &m)
         for (const auto &card : m.communityCards)
         {
             out << " " << card.value << " " << card.suit;
+        }
+        break;
+    case MessageTypeServerToClient::UnorderedMapUpdate:
+        out << "UNORDERED_MAP_UPDATE " << m.playerMoney.size();
+        for (auto it = m.playerMoney.begin(); it != m.playerMoney.end(); it++)
+        {
+            out << " " << it->first << " " << it->second;
+        }
+        out << " " << m.playerNames.size();
+        for (auto it = m.playerNames.begin(); it != m.playerNames.end(); it++)
+        {
+            out << " " << it->first << " " << it->second;
+        }
+        out << " " << m.isSpectatorMap.size();
+        for (auto it = m.isSpectatorMap.begin(); it != m.isSpectatorMap.end(); it++)
+        {
+            out << " " << it->first << " " << it->second;
+        }
+        out << " " << m.isSeatedMap.size();
+        for (auto it = m.isSeatedMap.begin(); it != m.isSeatedMap.end(); it++)
+        {
+            out << " " << it->first << " " << it->second;
         }
         break;
     default:
@@ -459,6 +488,41 @@ inline MessageServerToClient deserialize_server(const std::string &line)
             in >> value >> suit;
             valRank card{value, suit};
             msg.communityCards.push_back(card);
+        }
+        break;
+    case 'U': // UNORDERED_MAP_UPDATE
+        msg.type = MessageTypeServerToClient::UnorderedMapUpdate;
+        int numPlayerMoney, numPlayerNames, numIsSpectator, numIsSeated;
+        in >> numPlayerMoney;
+        for (int i = 0; i < numPlayerMoney; i++)
+        {
+            int id, money;
+            in >> id >> money;
+            msg.playerMoney[id] = money;
+        }
+        in >> numPlayerNames;
+        for (int i = 0; i < numPlayerNames; i++)
+        {
+            int id;
+            std::string name;
+            in >> id >> name;
+            msg.playerNames[id] = name;
+        }
+        in >> numIsSpectator;
+        for (int i = 0; i < numIsSpectator; i++)
+        {
+            int id;
+            bool isSpectator;
+            in >> id >> isSpectator;
+            msg.isSpectatorMap[id] = isSpectator;
+        }
+        in >> numIsSeated;
+        for (int i = 0; i < numIsSeated; i++)
+        {
+            int id;
+            bool isSeated;
+            in >> id >> isSeated;
+            msg.isSeatedMap[id] = isSeated;
         }
         break;
     default:

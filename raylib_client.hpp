@@ -3,6 +3,8 @@
 #include "client_in_client.hpp"
 #include "buttons.h"
 #include "cards.h"
+#define VIRTUAL_WIDTH 1800
+#define VIRTUAL_HEIGHT 900
 
 class Game
 {
@@ -116,4 +118,5 @@ private:
     unordered_map<int, MoneyChips> playerMoneyChips; // player id -> money chips
 
     void buildMoneyChips();
+    string getPlayerName(int id);
 };

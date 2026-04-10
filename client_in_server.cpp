@@ -319,6 +319,16 @@ void Client::handle_line(const string &line)
         validMessage = false; // Don't broadcast this message to other clients
         break;
     }
+    case MessageTypeClientToServer::RequestUnorderedMapUpdates:
+        cout << "[" << display_name() << "] requested unordered map updates\n";
+        response.type = MessageTypeServerToClient::UnorderedMapUpdate;
+        response.playerMoney = serverState->buildMoneySnapshot();
+        response.playerNames = serverState->buildNameSnapshot();
+        response.isSpectatorMap = serverState->buildSpectatorSnapshot();
+        response.isSeatedMap = serverState->buildSeatedSnapshot();
+        send(make_shared<string>(serialize_server(response)));
+        validMessage = false; // Don't broadcast this message to other clients
+        break;
     default:
         validMessage = false;
         break;

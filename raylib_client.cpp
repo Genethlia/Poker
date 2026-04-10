@@ -12,12 +12,13 @@ Game::Game()
     actionButtons.push_back(Button(0, 730, 200, 50, "Call", [this]()
                                    { client.sendAction(PlayerActionType::Call); }));
     actionButtons.push_back(Button(0, 790, 200, 50, "Raise", [this]()
-                                   { client.sendAction(PlayerActionType::Raise, raiseAmount); }));
+                                   { client.sendAction(PlayerActionType::Raise, raiseAmount);
+                                raiseAmount = 0; }));
     actionButtons.push_back(Button(0, 550, 200, 50, "Raise +50", [this]()
                                    { raiseAmount += 50; }));
     actionButtons.push_back(Button(0, 490, 200, 50, "Raise +100", [this]()
                                    { raiseAmount += 100; }));
-    actionButtons.push_back(Button(0, 430, 200, 50, "Remove 50 from Raise", [this]()
+    actionButtons.push_back(Button(0, 430, 200, 50, "Raise -50", [this]()
                                    { raiseAmount = std::max(0, raiseAmount - 50); }));
 }
 
@@ -39,7 +40,7 @@ void Game::start()
         serverIP = "127.0.0.1";
     }
 
-    InitWindow(1800, 900, "Poker Game");
+    InitWindow(VIRTUAL_WIDTH, VIRTUAL_HEIGHT, "Poker Game");
     SetTargetFPS(60);
 
     client.connect_to(serverIP, "6767");
@@ -141,18 +142,18 @@ void Game::draw()
     DrawText(TextFormat("To Call: %d", currentState.toCall), 20, 100, 24, WHITE);
     DrawText(TextFormat("Current Bet: %d", currentState.currentBet), 20, 140, 24, WHITE);
     DrawText(TextFormat("Min Raise: %d", currentState.minRaise), 20, 180, 24, WHITE);
-    DrawText(TextFormat("To Act: %d", currentState.toAct), 20, 220, 24, WHITE);
+    DrawText(TextFormat("To Act: %s", getPlayerName(currentState.toAct).c_str()), 20, 220, 24, WHITE);
     DrawText(TextFormat("Money: %d", currentState.playerMoney[currentState.myId]), 20, 260, 24, WHITE);
 
     visualState.drawCards();
 
-    DrawText(TextFormat("Raise Amount: %d", raiseAmount), 20, 500, 24, ORANGE);
+    DrawText(TextFormat("Raise Amount: %d", raiseAmount), 20, 350, 24, ORANGE);
 
     drawInput();
     drawPopUpMessages();
     drawMoneyChips();
-    DrawRectangleLines(0, 0, 1800, 1010, BLACK);
-    DrawLine(200, 0, 200, 1010, BLACK);
+    DrawRectangleLines(0, 0, VIRTUAL_WIDTH, VIRTUAL_HEIGHT, BLACK);
+    DrawLine(200, 0, 200, VIRTUAL_HEIGHT, BLACK);
 }
 
 void Game::drawInput()
@@ -164,12 +165,16 @@ void Game::drawInput()
     if (visualState.gameState == GameState::WaitingForPlayers)
     {
         startGameButton.Draw();
-        DrawText("Waiting for players...", 800, 555, 24, YELLOW);
+        string waitingText = "Waiting for players...";
+        int textWidth = MeasureText(waitingText.c_str(), 24);
+        DrawText(waitingText.c_str(), VIRTUAL_WIDTH / 2 - textWidth / 2, VIRTUAL_HEIGHT / 2, 24, YELLOW);
     }
     else if (visualState.gameState == GameState::GameOver)
     {
         playAgainButton.Draw();
-        DrawText("Game Over!", 800, 555, 24, YELLOW);
+        string gameOverText = "Game Over!";
+        int textWidth = MeasureText(gameOverText.c_str(), 24);
+        DrawText(gameOverText.c_str(), VIRTUAL_WIDTH / 2 - textWidth / 2, VIRTUAL_HEIGHT / 2, 24, YELLOW);
     }
     else
     {
@@ -188,12 +193,8 @@ void Game::drawMoneyChips()
             continue; // Only draw chips for seated players who are not spectators
         pos basePos = getPlayerCardBasePos(id);
         int rotationAngle = getPlayerCardRotationAngle(id);
-        chips.drawChips({basePos.x, basePos.y}, rotationAngle);
+        chips.drawChips({200 + basePos.x, basePos.y}, rotationAngle);
     }
-    DrawText(TextFormat("chip entries: %i", (int)playerMoneyChips.size()), 700, 20, 20, WHITE);
-    DrawText(TextFormat("players: %d", (int)currentState.playerMoney.size()), 700, 330, 20, WHITE);
-    DrawText(TextFormat("IsPlayerSeated entries: %d", (int)currentState.isSeated.size()), 700, 360, 20, WHITE);
-    DrawText(TextFormat("IsPlayerSpectator entries: %d", (int)currentState.isSpectator.size()), 700, 390, 20, WHITE);
 }
 
 void Game::VisualState::drawCards()
@@ -225,6 +226,8 @@ void Game::shouldNewCardBeMade()
         auto &[id, cardInfo] = currentState.opponentCards[visualState.opponentCards.size()];
         pos basePos = getPlayerCardBasePos(id);
         int rotationAngle = getPlayerCardRotationAngle(id);
+        if (rotationAngle == 180)
+            rotationAngle = 0; // Show them normally
         int offsetX = (rotationAngle == 0) ? DrawnCount[id] * 120 : 0;
         int offsetY = (rotationAngle == 0) ? 0 : DrawnCount[id] * 120;
         visualState.opponentCards.emplace_back(basePos.x + offsetX, basePos.y + offsetY, cardInfo, &suitTextures[cardInfo.suit], &cardFont, &gameImages, rotationAngle);
@@ -256,13 +259,19 @@ void Game::drawPopUpMessages()
         if (message.text.length() >= 30)
         {
             size_t splitIndex = message.text.find(' ', message.text.length() / 2);
-            DrawText(message.text.substr(0, splitIndex).c_str(), 400, 20 + yOffset, 64, RED);
+            int textWidth1 = MeasureText(message.text.substr(0, splitIndex).c_str(), 20);
+            int textWidth2 = MeasureText(message.text.substr(splitIndex).c_str(), 20);
+            int textWidth = max(textWidth1, textWidth2); // find biggest width for the background rectangle
+            DrawRectangleRounded({400, 20.0f + yOffset, (float)textWidth + 20, 59}, 0.5f, 4, Fade(BLACK, 0.5f));
+            DrawText(message.text.substr(0, splitIndex).c_str(), 410, 20 + yOffset, 20, LIGHTGRAY);
             yOffset += 30;
-            DrawText(message.text.substr(splitIndex).c_str(), 400, 20 + yOffset, 64, RED);
+            DrawText(message.text.substr(splitIndex).c_str(), 410, 20 + yOffset, 20, LIGHTGRAY);
         }
         else
         {
-            DrawText(message.text.c_str(), 400, 20 + yOffset, 20, LIGHTGRAY);
+            int textWidth = MeasureText(message.text.c_str(), 20);
+            DrawRectangleRounded({400, 20.0f + yOffset, (float)textWidth + 20, 29}, 0.5f, 4, Fade(BLACK, 0.5f));
+            DrawText(message.text.c_str(), 410, 20 + yOffset, 20, LIGHTGRAY);
         }
         yOffset += 30;
     }
@@ -332,9 +341,9 @@ void Game::drawStackOfChips(pos basePos, int amount, Color color, int rotationAn
     {
         drawSingleChip(basePos.x, basePos.y, 20, color);
         if (rotationAngle == 90)
-            basePos.x -= 5;
-        else if (rotationAngle == 270)
             basePos.x += 5;
+        else if (rotationAngle == 270)
+            basePos.x -= 5;
         else if (rotationAngle == 0)
             basePos.y -= 5;
         else
@@ -359,6 +368,11 @@ void Game::buildMoneyChips()
     // {
     //     playerMoneyChips[id].buildChips(money);
     // }
+}
+
+string Game::getPlayerName(int id)
+{
+    return playerName = (currentState.playerNames.count(id) > 0) ? currentState.playerNames.at(id) : ("Player " + to_string(id));
 }
 
 void Game::updatePopUpMessages()

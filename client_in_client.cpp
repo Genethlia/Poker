@@ -115,21 +115,6 @@ void PokerClient::stop()
     }
 }
 
-void PokerClient::UpdateMoney(const MessageServerToClient &msg)
-{
-    switch (msg.action)
-    {
-    case PlayerActionType::Call:
-        state.playerMoney[msg.playerId] -= state.toCall;
-        break;
-    case PlayerActionType::Raise:
-        state.playerMoney[msg.playerId] -= msg.actionAmount;
-        break;
-    default:
-        break;
-    }
-}
-
 void PokerClient::write_line(const string &s)
 {
     boost::asio::write(socket, boost::asio::buffer(s));
@@ -264,7 +249,6 @@ void PokerClient::handle_line(const string &line)
     {
         auto temp = "Action result for player " + nameOfUnsafe(msg.playerId) + ": " + to_string(int(msg.action));
         popUpMessages.push_back(temp);
-        UpdateMoney(msg); // Update player money based on the action result
         break;
     }
     case MessageTypeServerToClient::CommunityCard:
@@ -307,12 +291,13 @@ void PokerClient::handle_line(const string &line)
         {
             auto temp1 = nameOfUnsafe(id) + " (ID: " + to_string(id) + ") ";
             popUpMessages.push_back(temp1);
-            state.playerMoney[id] += msg.potAmount / msg.idWinners.size(); // Distribute pot among winners
         }
         auto temp2 = "Won with hand power: " + winPowerTranslation(msg.winPower);
         popUpMessages.push_back(temp2);
-        state.playerMoney[msg.idWinners[0]] += msg.potAmount % msg.idWinners.size();
         gameRunning = false;
+        MessageClientToServer requestUpdate;
+        requestUpdate.type = MessageTypeClientToServer::RequestUnorderedMapUpdates;
+        write_line(serialize_client(requestUpdate)); // Request unordered map updates after showdown
         break;
     }
     case MessageTypeServerToClient::BettingUpdate:
@@ -324,6 +309,9 @@ void PokerClient::handle_line(const string &line)
         state.currentBet = msg.currentBet; // Update the client state with the new current bet
         state.minRaise = msg.minRaise;     // Update the client state with the new minimum raise
         state.potAmount = msg.potAmount;   // Update the client state with the new pot amount
+        MessageClientToServer requestUpdate;
+        requestUpdate.type = MessageTypeClientToServer::RequestUnorderedMapUpdates;
+        write_line(serialize_client(requestUpdate)); // Request unordered map updates after betting update
         break;
     }
     case MessageTypeServerToClient::Reject:
@@ -367,6 +355,16 @@ void PokerClient::handle_line(const string &line)
         }
         gameRunning = true;
         requestState();
+        break;
+    }
+    case MessageTypeServerToClient::UnorderedMapUpdate:
+    {
+        auto tempMessage = "Received unordered map updates.";
+        popUpMessages.push_back(tempMessage);
+        state.playerMoney = msg.playerMoney;
+        state.playerNames = msg.playerNames;
+        state.isSpectator = msg.isSpectatorMap;
+        state.isSeated = msg.isSeatedMap;
         break;
     }
     default:
