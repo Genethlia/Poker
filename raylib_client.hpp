@@ -5,6 +5,7 @@
 #include "cards.h"
 #define VIRTUAL_WIDTH 1800
 #define VIRTUAL_HEIGHT 900
+const pos center = {VIRTUAL_WIDTH / 2, VIRTUAL_HEIGHT / 2};
 
 class Game
 {
@@ -18,9 +19,10 @@ private:
     void updateActionButtons();
     void update();
     void updateGameState();
-
+    void drawShades();
     void draw();
     void drawInput();
+    void drawBackground();
     void drawMoneyChips();
     void shouldNewCardBeMade();
     void clearCardsIfNecessary(); // Check if cards have been cleared in the client state and clear them in the game if that's the case
@@ -100,7 +102,7 @@ private:
         int value;
         Color color;
     };
-    static void drawSingleChip(int x, int y, int radius, Color color);
+    static void drawSingleChip(int x, int y, int radius, Color color, bool isLastChip = false);
     static void drawStackOfChips(pos basePos, int amount, Color color, int rotationAngle);
 
     struct MoneyChips
@@ -119,4 +121,9 @@ private:
 
     void buildMoneyChips();
     string getPlayerName(int id);
+
+    unordered_map<string, Color> all_Colors = {
+        {"woodColor", {60, 30, 10, 255}},
+        {"tableRed", {200, 33, 42, 255}},
+        {"background", {82, 36, 0, 255}}};
 };

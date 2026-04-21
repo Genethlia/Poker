@@ -1161,8 +1161,8 @@ RLAPI int MakeDirectory(const char *dirPath);                       // Create di
 RLAPI bool ChangeDirectory(const char *dirPath);                    // Change working directory, return true on success
 RLAPI bool IsPathFile(const char *path);                            // Check if a given path is a file or a directory
 RLAPI bool IsFileNameValid(const char *fileName);                   // Check if fileName is valid for the platform/OS
-RLAPI FilePathList LoadDirectoryFiles(const char *dirPath);         // Load directory filepaths
-RLAPI FilePathList LoadDirectoryFilesEx(const char *basePath, const char *filter, bool scanSubdirs); // Load directory filepaths with extension filtering and recursive directory scan. Use 'DIR' in the filter string to include directories in the result
+RLAPI FilePathList LoadDirectoryFiles(const char *dirPath);         // Load directory filepaths, files and directories, no subdirs scan
+RLAPI FilePathList LoadDirectoryFilesEx(const char *basePath, const char *filter, bool scanSubdirs); // Load directory filepaths with extension filtering and subdir scan; some filters available: "*.*", "FILES*", "DIRS*"
 RLAPI void UnloadDirectoryFiles(FilePathList files);                // Unload filepaths
 RLAPI bool IsFileDropped(void);                                     // Check if a file has been dropped into window
 RLAPI FilePathList LoadDroppedFiles(void);                          // Load dropped filepaths
@@ -1279,10 +1279,10 @@ RLAPI void DrawLineStrip(const Vector2 *points, int pointCount, Color color);   
 RLAPI void DrawLineBezier(Vector2 startPos, Vector2 endPos, float thick, Color color);                   // Draw line segment cubic-bezier in-out interpolation
 RLAPI void DrawLineDashed(Vector2 startPos, Vector2 endPos, int dashSize, int spaceSize, Color color);   // Draw a dashed line
 RLAPI void DrawCircle(int centerX, int centerY, float radius, Color color);                              // Draw a color-filled circle
+RLAPI void DrawCircleV(Vector2 center, float radius, Color color);                                       // Draw a color-filled circle (Vector version)
+RLAPI void DrawCircleGradient(Vector2 center, float radius, Color inner, Color outer);                   // Draw a gradient-filled circle
 RLAPI void DrawCircleSector(Vector2 center, float radius, float startAngle, float endAngle, int segments, Color color);      // Draw a piece of a circle
 RLAPI void DrawCircleSectorLines(Vector2 center, float radius, float startAngle, float endAngle, int segments, Color color); // Draw circle sector outline
-RLAPI void DrawCircleGradient(int centerX, int centerY, float radius, Color inner, Color outer);         // Draw a gradient-filled circle
-RLAPI void DrawCircleV(Vector2 center, float radius, Color color);                                       // Draw a color-filled circle (Vector version)
 RLAPI void DrawCircleLines(int centerX, int centerY, float radius, Color color);                         // Draw circle outline
 RLAPI void DrawCircleLinesV(Vector2 center, float radius, Color color);                                  // Draw circle outline (Vector version)
 RLAPI void DrawEllipse(int centerX, int centerY, float radiusH, float radiusV, Color color);             // Draw ellipse
@@ -1539,11 +1539,11 @@ RLAPI const char *TextSubtext(const char *text, int position, int length);      
 RLAPI const char *TextRemoveSpaces(const char *text);                                       // Remove text spaces, concat words
 RLAPI char *GetTextBetween(const char *text, const char *begin, const char *end);           // Get text between two strings
 RLAPI char *TextReplace(const char *text, const char *search, const char *replacement);     // Replace text string with new string
-RLAPI char *TextReplaceAlloc(const char *text, const char *search, const char *replacement);   // Replace text string with new string, memory must be MemFree()
+RLAPI char *TextReplaceAlloc(const char *text, const char *search, const char *replacement); // Replace text string with new string, memory must be MemFree()
 RLAPI char *TextReplaceBetween(const char *text, const char *begin, const char *end, const char *replacement); // Replace text between two specific strings
 RLAPI char *TextReplaceBetweenAlloc(const char *text, const char *begin, const char *end, const char *replacement); // Replace text between two specific strings, memory must be MemFree()
 RLAPI char *TextInsert(const char *text, const char *insert, int position);                 // Insert text in a defined byte position
-RLAPI char *TextInsertAlloc(const char *text, const char *insert, int position);               // Insert text in a defined byte position, memory must be MemFree()
+RLAPI char *TextInsertAlloc(const char *text, const char *insert, int position);            // Insert text in a defined byte position, memory must be MemFree()
 RLAPI char *TextJoin(char **textList, int count, const char *delimiter);                    // Join text strings with delimiter
 RLAPI char **TextSplit(const char *text, char delimiter, int *count);                       // Split text into multiple strings, using MAX_TEXTSPLIT_COUNT static strings
 RLAPI void TextAppend(char *text, const char *append, int *position);                       // Append text at specific position and move cursor

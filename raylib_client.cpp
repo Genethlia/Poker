@@ -58,7 +58,7 @@ void Game::start()
         update();
 
         BeginDrawing();
-        ClearBackground(DARKGREEN);
+        ClearBackground(all_Colors["background"]);
 
         draw();
 
@@ -118,6 +118,15 @@ void Game::updateGameState()
     }
 }
 
+void Game::drawShades()
+{
+    int shadeWidth = VIRTUAL_WIDTH / 200; // 1800
+    for (int i = 0; i < VIRTUAL_WIDTH; i += shadeWidth)
+    {
+        DrawRectangle(i, 0, shadeWidth, VIRTUAL_HEIGHT, Fade(WHITE, i / float(VIRTUAL_WIDTH) / 5.0f));
+    }
+}
+
 void Game::VisualState::updateCards()
 {
     for (auto &card : myCards)
@@ -136,24 +145,13 @@ void Game::VisualState::updateCards()
 
 void Game::draw()
 {
-    DrawTexture(gameImages.matTexture, 0, 0, WHITE);
-    DrawText(TextFormat("My ID: %d", currentState.myId), 20, 20, 24, WHITE);
-    DrawText(TextFormat("Pot: %d", currentState.potAmount), 20, 60, 24, WHITE);
-    DrawText(TextFormat("To Call: %d", currentState.toCall), 20, 100, 24, WHITE);
-    DrawText(TextFormat("Current Bet: %d", currentState.currentBet), 20, 140, 24, WHITE);
-    DrawText(TextFormat("Min Raise: %d", currentState.minRaise), 20, 180, 24, WHITE);
-    DrawText(TextFormat("To Act: %s", getPlayerName(currentState.toAct).c_str()), 20, 220, 24, WHITE);
-    DrawText(TextFormat("Money: %d", currentState.playerMoney[currentState.myId]), 20, 260, 24, WHITE);
+    drawBackground();
 
     visualState.drawCards();
-
-    DrawText(TextFormat("Raise Amount: %d", raiseAmount), 20, 350, 24, ORANGE);
 
     drawInput();
     drawPopUpMessages();
     drawMoneyChips();
-    DrawRectangleLines(0, 0, VIRTUAL_WIDTH, VIRTUAL_HEIGHT, BLACK);
-    DrawLine(200, 0, 200, VIRTUAL_HEIGHT, BLACK);
 }
 
 void Game::drawInput()
@@ -183,6 +181,15 @@ void Game::drawInput()
             button.Draw();
         }
     }
+}
+
+void Game::drawBackground()
+{
+    float rx = VIRTUAL_WIDTH * 0.85;
+    float ry = VIRTUAL_HEIGHT * 0.85;
+    DrawRectangleRounded({(VIRTUAL_WIDTH - rx) / 2, (VIRTUAL_HEIGHT - ry) / 2, rx, ry}, 1.0f, 16, all_Colors["woodColor"]);
+    DrawRectangleRounded({(VIRTUAL_WIDTH - rx + 80) / 2, (VIRTUAL_HEIGHT - ry + 80) / 2, rx - 80, ry - 80}, 1.0f, 16, all_Colors["tableRed"]);
+    drawShades();
 }
 
 void Game::drawMoneyChips()
@@ -328,18 +335,34 @@ int Game::getPlayerCardRotationAngle(int id)
     return currentState.PlayerPosition.at(id).second;
 }
 
-void Game::drawSingleChip(int x, int y, int radius, Color color)
+void Game::drawSingleChip(int x, int y, int radius, Color color, bool isLastChip)
 {
     DrawCircle(x, y, radius, color);
     DrawCircleLines(x, y, radius, BLACK);
-    DrawCircleLines(x, y, radius - 4, BLACK);
+    if (isLastChip)
+    {
+        DrawCircle(x, y, radius - 5, WHITE);
+    }
+    for (int i = 0; i < 360; i += 60)
+    {
+        float angle = i * DEG2RAD;
+        int lineLength = 5;
+
+        float px = x + cos(angle) * (radius - lineLength);
+        float py = y + sin(angle) * (radius - lineLength);
+
+        float ex = x + cos(angle) * (radius);
+        float ey = y + sin(angle) * (radius);
+
+        DrawLineEx({px, py}, {ex, ey}, 5, Fade(BLACK, 0.3f));
+    }
 }
 
 void Game::drawStackOfChips(pos basePos, int amount, Color color, int rotationAngle)
 {
     for (int i = 0; i < amount; i++)
     {
-        drawSingleChip(basePos.x, basePos.y, 20, color);
+        drawSingleChip(basePos.x, basePos.y, 20, color, i == amount - 1);
         if (rotationAngle == 90)
             basePos.x += 5;
         else if (rotationAngle == 270)
