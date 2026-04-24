@@ -2,6 +2,8 @@
 #include "assets.h"
 using namespace std;
 
+Font Game::cardFontStatic{}; // Definition of the static card font variable
+
 Game::Game()
 {
     raiseAmount = 0;
@@ -25,6 +27,7 @@ Game::Game()
 Game::~Game()
 {
     client.stop();
+    UnloadRenderTexture(target);
 }
 
 void Game::start()
@@ -40,8 +43,13 @@ void Game::start()
         serverIP = "127.0.0.1";
     }
 
+    SetConfigFlags(FLAG_WINDOW_RESIZABLE);
     InitWindow(VIRTUAL_WIDTH, VIRTUAL_HEIGHT, "Poker Game");
     SetTargetFPS(60);
+
+    target = LoadRenderTexture(VIRTUAL_WIDTH, VIRTUAL_HEIGHT);
+
+    // ToggleFullscreen();
 
     client.connect_to(serverIP, "6767");
     client.join_us(playerName);
@@ -51,16 +59,47 @@ void Game::start()
         suitTextures[i].LoadSuit(i);
     gameImages.LoadMatHiddenCard();
     cardFont = LoadFontFromMemory(".ttf", cardfont_ttf, cardfont_ttf_len, 32, nullptr, 0);
+    Game::cardFontStatic = cardFont; // Initialize the static card font variable
+
+    /*
+    for (int i = 2; i <= 14; i++)
+    {
+        vector<Card> suitCards;
+        for (int j = 0; j < 4; j++)
+        {
+            Card tempCard(200 + i * 75, 100 + j * 150, {i, j}, &suitTextures[j], &cardFont, &gameImages);
+            suitCards.push_back(tempCard);
+        }
+        allCards.push_back(suitCards);
+    }
+    */
 
     while (!WindowShouldClose() && client.running)
     {
 
         update();
 
-        BeginDrawing();
+        BeginTextureMode(target);
         ClearBackground(all_Colors["background"]);
-
         draw();
+        EndTextureMode();
+
+        BeginDrawing();
+        ClearBackground(BLACK);
+
+        float scale = std::min(
+            (float)GetScreenWidth() / VIRTUAL_WIDTH,
+            (float)GetScreenHeight() / VIRTUAL_HEIGHT);
+
+        float destWidth = VIRTUAL_WIDTH * scale;
+        float destHeight = VIRTUAL_HEIGHT * scale;
+        float offsetX = (GetScreenWidth() - destWidth) / 2.0f;
+        float offsetY = (GetScreenHeight() - destHeight) / 2.0f;
+
+        Rectangle source = {0, 0, (float)VIRTUAL_WIDTH, -(float)VIRTUAL_HEIGHT};
+        Rectangle dest = {offsetX, offsetY, destWidth, destHeight};
+
+        DrawTexturePro(target.texture, source, dest, {0, 0}, 0.0f, WHITE);
 
         EndDrawing();
     }
@@ -77,10 +116,24 @@ void Game::updateActionButtons()
 
 void Game::update()
 {
+
+    /*
+    for (int i = 0; i <= 12; i++)
+    {
+        for (int j = 0; j < 4; j++)
+        {
+
+            allCards[i][j].Update();
+        }
+    }
+    */
+
     clearCardsIfNecessary();
     shouldNewCardBeMade();
     updatePopUpMessages();
     updateGameState();
+    updateFullScreen();
+    updateDimensions();
     if (!sendReady || visualState.gameState == GameState::WaitingForPlayers)
     {
         readyButton.Update();
@@ -115,6 +168,26 @@ void Game::updateGameState()
         {
             visualState.gameState = GameState::GameOver;
         }
+    }
+}
+
+void Game::updateFullScreen()
+{
+    if (IsKeyPressed(KEY_F11) || IsKeyPressed(KEY_KP_ENTER) && IsKeyDown(KEY_LEFT_ALT))
+    {
+        ToggleFullscreen();
+    }
+}
+
+void Game::updateDimensions()
+{
+    if (IsWindowResized() && !IsWindowFullscreen())
+    {
+        int screenWidth = GetScreenWidth();
+        int screenHeight = min(GetMonitorHeight(GetCurrentMonitor()) + 0.0f, screenWidth * (9 / 16.0f));
+        screenWidth = screenHeight * (16 / 9.0f);
+        if (GetScreenHeight() != screenHeight)
+            SetWindowSize(screenWidth, screenHeight);
     }
 }
 
@@ -181,12 +254,22 @@ void Game::drawInput()
             button.Draw();
         }
     }
+    /*
+    for (int i = 0; i <= 12; i++)
+    {
+        for (int j = 0; j < 4; j++)
+        {
+
+            allCards[i][j].Draw();
+        }
+    }
+    */
 }
 
 void Game::drawBackground()
 {
-    float rx = VIRTUAL_WIDTH * 0.85;
-    float ry = VIRTUAL_HEIGHT * 0.85;
+    float rx = VIRTUAL_WIDTH * 0.75;
+    float ry = VIRTUAL_HEIGHT * 0.75;
     DrawRectangleRounded({(VIRTUAL_WIDTH - rx) / 2, (VIRTUAL_HEIGHT - ry) / 2, rx, ry}, 1.0f, 16, all_Colors["woodColor"]);
     DrawRectangleRounded({(VIRTUAL_WIDTH - rx + 80) / 2, (VIRTUAL_HEIGHT - ry + 80) / 2, rx - 80, ry - 80}, 1.0f, 16, all_Colors["tableRed"]);
     drawShades();
@@ -338,10 +421,31 @@ int Game::getPlayerCardRotationAngle(int id)
 void Game::drawSingleChip(int x, int y, int radius, Color color, bool isLastChip)
 {
     DrawCircle(x, y, radius, color);
-    DrawCircleLines(x, y, radius, BLACK);
+    DrawCircleLines(x, y, radius, Fade(WHITE, 0.25f));
     if (isLastChip)
     {
         DrawCircle(x, y, radius - 5, WHITE);
+        string chipValue;
+        switch (color.b)
+        {
+        case 55: // Red chip
+            chipValue = "250";
+            break;
+        case 241: // Blue chip
+            chipValue = "100";
+            break;
+        case 48: // Green chip
+            chipValue = "50";
+            break;
+        case 0: // Yellow chip
+            chipValue = "10";
+            break;
+        }
+        Vector2 TextSize = MeasureTextEx(cardFontStatic, chipValue.c_str(), 20, 1);
+        float xoffset = TextSize.x / 2;
+        float yoffset = TextSize.y / 2;
+
+        DrawTextEx(cardFontStatic, chipValue.c_str(), {x - xoffset, y - yoffset}, 20, 1, BLACK);
     }
     for (int i = 0; i < 360; i += 60)
     {
@@ -364,13 +468,13 @@ void Game::drawStackOfChips(pos basePos, int amount, Color color, int rotationAn
     {
         drawSingleChip(basePos.x, basePos.y, 20, color, i == amount - 1);
         if (rotationAngle == 90)
-            basePos.x += 5;
+            basePos.x += 2;
         else if (rotationAngle == 270)
-            basePos.x -= 5;
+            basePos.x -= 2;
         else if (rotationAngle == 0)
-            basePos.y -= 5;
+            basePos.y -= 2;
         else
-            basePos.y += 5;
+            basePos.y += 2;
     }
 }
 

@@ -10,7 +10,7 @@ void Images::LoadSuit(int rank)
         UnloadTexture(bigfiliTexture);
     }
 
-    int x = 60, y = 90;
+    int x = 54, y = 60;
 
     const unsigned char *suitData = nullptr;
     int suitDataLen = 0;
@@ -25,17 +25,14 @@ void Images::LoadSuit(int rank)
     case 1:
         suitData = spades_png;
         suitDataLen = spades_png_len;
-        x = 70;
         break;
     case 2:
         suitData = hearts_png;
         suitDataLen = hearts_png_len;
-        x = 50;
         break;
     case 3:
         suitData = clubs_png;
         suitDataLen = clubs_png_len;
-        x = 80;
         break;
     default:
         std::cout << "Invalid rank: " << rank << std::endl;
@@ -55,7 +52,7 @@ void Images::LoadSuit(int rank)
     UnloadImage(big);
 
     Image small = ImageCopy(image);
-    ImageResize(&small, x / 3, y / 3);
+    ImageResize(&small, x / 2.5, y / 2.5);
     filiTexture = LoadTextureFromImage(small);
     UnloadImage(small);
 
@@ -79,7 +76,7 @@ void Images::LoadMatHiddenCard()
     Image card = LoadImageFromMemory(".png", card_png, card_png_len);
     if (card.data != nullptr)
     {
-        ImageResize(&card, 120, 200);
+        ImageResize(&card, 72, 120);
         hiddenCardTexture = LoadTextureFromImage(card);
         UnloadImage(card);
     }

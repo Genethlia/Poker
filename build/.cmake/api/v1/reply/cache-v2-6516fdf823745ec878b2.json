@@ -1795,7 +1795,7 @@
 				},
 				{
 					"name" : "STRINGS",
-					"value" : "Desktop;Web;WebRGFW;Android;Raspberry Pi;DRM;SDL;RGFW"
+					"value" : "Desktop;Web;WebRGFW;Android;Raspberry Pi;DRM;SDL;RGFW;Memory"
 				}
 			],
 			"type" : "STRING",

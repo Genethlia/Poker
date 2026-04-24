@@ -3,9 +3,9 @@
 #include "client_in_client.hpp"
 #include "buttons.h"
 #include "cards.h"
-#define VIRTUAL_WIDTH 1800
-#define VIRTUAL_HEIGHT 900
-const pos center = {VIRTUAL_WIDTH / 2, VIRTUAL_HEIGHT / 2};
+static constexpr int VIRTUAL_WIDTH = 1600;
+static constexpr int VIRTUAL_HEIGHT = 900;
+static pos center = {VIRTUAL_WIDTH / 2, VIRTUAL_HEIGHT / 2};
 
 class Game
 {
@@ -19,6 +19,8 @@ private:
     void updateActionButtons();
     void update();
     void updateGameState();
+    void updateFullScreen();
+    void updateDimensions();
     void drawShades();
     void draw();
     void drawInput();
@@ -38,6 +40,7 @@ private:
     Images gameImages;
 
     Font cardFont;
+    static Font cardFontStatic; // Static variable to hold the card font for use in static functions
     struct VisualState
     {
         std::vector<Card> myCards;
@@ -121,6 +124,9 @@ private:
 
     void buildMoneyChips();
     string getPlayerName(int id);
+
+    RenderTexture2D target;
+    vector<vector<Card>> allCards = {}; // for testing
 
     unordered_map<string, Color> all_Colors = {
         {"woodColor", {60, 30, 10, 255}},
