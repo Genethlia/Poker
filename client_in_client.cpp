@@ -175,7 +175,6 @@ void PokerClient::handle_line(const string &line)
     {
     case MessageTypeServerToClient::Welcome:
     {
-        rebuildPlayerPositions();
         state.playerNames.clear();
         state.playerMoney.clear();
         state.isSpectator.clear();
@@ -195,8 +194,8 @@ void PokerClient::handle_line(const string &line)
             auto temp = "Player " + name + " (ID: " + to_string(id) + ") is in the game." + (id == msg.playerId ? " (You)" : "");
             popUpMessages.push_back(temp);
         }
-        rebuildPlayerPositions();
         state.myId = msg.playerId;
+        rebuildPlayerPositions();
         break;
     }
     case MessageTypeServerToClient::PlayerJoined:

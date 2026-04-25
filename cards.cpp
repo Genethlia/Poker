@@ -1,7 +1,7 @@
 #include "cards.h"
 
-Card::Card(float x, float y, valRank card, Images *suitTextures, Font *font, Images *gameimages, int rotationAngle)
-    : suitTextures(suitTextures), font(font), gameimages(gameimages), rotationAngle(rotationAngle)
+Card::Card(float x, float y, valRank card, Images *suitTextures, Font *font, Images *gameimages)
+    : suitTextures(suitTextures), font(font), gameimages(gameimages)
 {
     target = {x, y};
     pos = {700, 20};
@@ -52,22 +52,22 @@ void Card::Draw()
 
     Vector2 center = {pos.x + width / 2.0f, pos.y + height / 2.0f};
 
-    Rectangle destRec = {center.x, center.y, visibleWidth, height};
-
     Vector2 origin = {visibleWidth / 2.0f, height / 2.0f};
+
+    Rectangle destRec = {center.x, center.y, visibleWidth, height};
 
     Rectangle source = {0, 0, (float)gameimages->hiddenCardTexture.width, (float)gameimages->hiddenCardTexture.height};
 
     if (shouldShowBack)
     {
-        DrawTexturePro(gameimages->hiddenCardTexture, source, destRec, origin, rotationAngle, WHITE);
+        DrawTexturePro(gameimages->hiddenCardTexture, source, destRec, origin, 0, WHITE);
         return;
     }
 
     int PointerOfcolor = GetColorOfRank(card);
     string rankStr = cardnum(card);
 
-    DrawRectanglePro(destRec, origin, rotationAngle, WHITE);
+    DrawRectangleRounded({pos.x, pos.y}, 1.0f, 2, WHITE);
     float suitOffset = (1.0f - displayScaleX) * width / 3 + 5;
 
     Vector2 rankTopLeft = {leftX + suitOffset, pos.y - 2};
@@ -76,13 +76,13 @@ void Card::Draw()
 
     Vector2 bigSuitPos = {leftX + visibleWidth / 2.0f + 8, pos.y + height - 35};
 
-    rankTopLeft = findCenterToRotate(rankTopLeft, center, rotationAngle);
+    rankTopLeft = findCenterToRotate(rankTopLeft, center, 0);
 
-    smallSuitTopLeft = findCenterToRotate(smallSuitTopLeft, center, rotationAngle);
+    smallSuitTopLeft = findCenterToRotate(smallSuitTopLeft, center, 0);
 
-    bigSuitPos = findCenterToRotate(bigSuitPos, center, rotationAngle);
+    bigSuitPos = findCenterToRotate(bigSuitPos, center, 0);
 
-    DrawTextPro(*font, rankStr.c_str(), rankTopLeft, {0, 0}, rotationAngle, 40, 2, color[PointerOfcolor]);
+    DrawTextPro(*font, rankStr.c_str(), rankTopLeft, {0, 0}, 0, 40, 2, color[PointerOfcolor]);
 
     if (suitTextures->filiTexture.id != 0)
     {
@@ -92,7 +92,7 @@ void Card::Draw()
 
         Rectangle dst1 = {smallSuitTopLeft.x, smallSuitTopLeft.y, (float)tex.width, (float)tex.height};
 
-        DrawTexturePro(suitTextures->filiTexture, src, dst1, origin, rotationAngle, WHITE);
+        DrawTexturePro(suitTextures->filiTexture, src, dst1, origin, 0, WHITE);
     }
     if (suitTextures->bigfiliTexture.id != 0)
     {
@@ -101,7 +101,7 @@ void Card::Draw()
         Vector2 origin = {float(tex.width) / 2.0f, float(tex.height) / 2.0f};
         Rectangle dst = {bigSuitPos.x, bigSuitPos.y, (float)tex.width, (float)tex.height};
 
-        DrawTexturePro(suitTextures->bigfiliTexture, src, dst, origin, rotationAngle, WHITE);
+        DrawTexturePro(suitTextures->bigfiliTexture, src, dst, origin, 0, WHITE);
     }
     // DrawCircle((int)pos.x, (int)pos.y, 5, RED);        // top-left
     // DrawCircle((int)center.x, (int)center.y, 5, BLUE); // center

@@ -200,6 +200,73 @@ void Game::drawShades()
     }
 }
 
+void Game::drawPlayers()
+{
+    for (auto &[id, name] : currentState.playerNames)
+    {
+        if (currentState.isSpectator[id])
+            continue;
+        if (!currentState.isSeated[id])
+            continue;
+        if (!currentState.PlayerPosition.count(id))
+            continue;
+        drawSinglePlayer(id);
+    }
+}
+
+void Game::drawSinglePlayer(int id)
+{
+    pos basePos = getPlayerCardBasePos(id);
+    int rotationAngle = getPlayerCardRotationAngle(id);
+
+    std::string name = getPlayerName(id);
+    int money = currentState.playerMoney.count(id) ? currentState.playerMoney[id] : 0;
+
+    Vector2 boxPos = {(float)basePos.x, (float)basePos.y};
+
+    if (rotationAngle == 0)
+    {
+        boxPos.y += 130;
+    }
+    else if (rotationAngle == 180)
+    {
+        boxPos.y -= 70;
+    }
+    else if (rotationAngle == 90)
+    {
+        boxPos.x -= 20;
+        boxPos.y += 200;
+    }
+    else if (rotationAngle == 270)
+    {
+        boxPos.x -= 40;
+        boxPos.y += 200;
+    }
+
+    Color bgColor = Fade(BLACK, 0.55f);
+
+    if (id == currentState.toAct)
+        bgColor = Fade(YELLOW, 0.35f);
+
+    DrawRectangleRounded(
+        {boxPos.x - 20, boxPos.y - 10, 180, 65},
+        0.25f,
+        8,
+        bgColor);
+
+    DrawText(name.c_str(), boxPos.x, boxPos.y, 22, WHITE);
+    DrawText(TextFormat("$%d", money), boxPos.x, boxPos.y + 28, 20, GOLD);
+
+    if (id == currentState.myId)
+    {
+        DrawText("YOU", boxPos.x + 120, boxPos.y, 18, SKYBLUE);
+        for (auto &card : visualState.myCards)
+        {
+            card.Draw();
+        }
+    }
+}
+
 void Game::VisualState::updateCards()
 {
     for (auto &card : myCards)
@@ -208,7 +275,7 @@ void Game::VisualState::updateCards()
     }
     for (auto &card : opponentCards)
     {
-        card.Update();
+        card.second.Update();
     }
     for (auto &card : communityCards)
     {
@@ -220,11 +287,13 @@ void Game::draw()
 {
     drawBackground();
 
+    drawPlayers();
+    drawMoneyChips();
+
     visualState.drawCards();
 
     drawInput();
     drawPopUpMessages();
-    drawMoneyChips();
 }
 
 void Game::drawInput()
@@ -289,13 +358,13 @@ void Game::drawMoneyChips()
 
 void Game::VisualState::drawCards()
 {
-    for (auto &card : myCards)
-    {
-        card.Draw();
-    }
+    // for (auto &card : myCards)
+    // {
+    //     card.Draw();
+    // }
     for (auto &card : opponentCards)
     {
-        card.Draw();
+        card.second.Draw();
     }
     for (auto &card : communityCards)
     {
@@ -308,19 +377,16 @@ void Game::shouldNewCardBeMade()
     while (currentState.myCards.size() > visualState.myCards.size())
     {
         valRank cardInfo = currentState.myCards[visualState.myCards.size()];
-        visualState.myCards.emplace_back(getPlayerCardBasePos(currentState.myId).x + DrawnCount[currentState.myId] * 120, getPlayerCardBasePos(currentState.myId).y, cardInfo, &suitTextures[cardInfo.suit], &cardFont, &gameImages);
+        visualState.myCards.emplace_back(getPlayerCardBasePos(currentState.myId).x + DrawnCount[currentState.myId] * 25, getPlayerCardBasePos(currentState.myId).y + DrawnCount[currentState.myId] * 5, cardInfo, &suitTextures[cardInfo.suit], &cardFont, &gameImages);
         DrawnCount[currentState.myId]++;
     }
     while (currentState.opponentCards.size() > visualState.opponentCards.size())
     {
         auto &[id, cardInfo] = currentState.opponentCards[visualState.opponentCards.size()];
         pos basePos = getPlayerCardBasePos(id);
-        int rotationAngle = getPlayerCardRotationAngle(id);
-        if (rotationAngle == 180)
-            rotationAngle = 0; // Show them normally
-        int offsetX = (rotationAngle == 0) ? DrawnCount[id] * 120 : 0;
-        int offsetY = (rotationAngle == 0) ? 0 : DrawnCount[id] * 120;
-        visualState.opponentCards.emplace_back(basePos.x + offsetX, basePos.y + offsetY, cardInfo, &suitTextures[cardInfo.suit], &cardFont, &gameImages, rotationAngle);
+        int rotationAngle = 0; // Show them normally
+        int offsetX = DrawnCount[id] * 120;
+        visualState.opponentCards.emplace_back(id, Card(basePos.x + offsetX, basePos.y, cardInfo, &suitTextures[cardInfo.suit], &cardFont, &gameImages));
         DrawnCount[id]++;
     }
     while (currentState.communityCards.size() > visualState.communityCards.size())

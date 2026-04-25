@@ -22,6 +22,8 @@ private:
     void updateFullScreen();
     void updateDimensions();
     void drawShades();
+    void drawPlayers();
+    void drawSinglePlayer(int id);
     void draw();
     void drawInput();
     void drawBackground();
@@ -44,7 +46,7 @@ private:
     struct VisualState
     {
         std::vector<Card> myCards;
-        std::vector<Card> opponentCards;
+        std::vector<std::pair<int, Card>> opponentCards;
         std::vector<Card> communityCards;
 
         GameState gameState = GameState::WaitingForPlayers;
@@ -126,7 +128,7 @@ private:
     string getPlayerName(int id);
 
     RenderTexture2D target;
-    vector<vector<Card>> allCards = {}; // for testing
+    std::vector<std::vector<Card>> allCards = {}; // for testing
 
     unordered_map<string, Color> all_Colors = {
         {"woodColor", {60, 30, 10, 255}},
