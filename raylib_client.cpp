@@ -216,50 +216,54 @@ void Game::drawPlayers()
 
 void Game::drawSinglePlayer(int id)
 {
-    pos basePos = getPlayerCardBasePos(id);
     int rotationAngle = getPlayerCardRotationAngle(id);
 
     std::string name = getPlayerName(id);
     int money = currentState.playerMoney.count(id) ? currentState.playerMoney[id] : 0;
 
-    Vector2 boxPos = {(float)basePos.x, (float)basePos.y};
+    pos boxPos = getPlayerPosition(id);
+    Seat seat = getPlayerSeat(id);
 
-    if (rotationAngle == 0)
+    int offsetX = 0, offsetY = 0;
+
+    switch (seat)
     {
-        boxPos.y += 130;
-    }
-    else if (rotationAngle == 180)
-    {
-        boxPos.y -= 70;
-    }
-    else if (rotationAngle == 90)
-    {
-        boxPos.x -= 20;
-        boxPos.y += 200;
-    }
-    else if (rotationAngle == 270)
-    {
-        boxPos.x -= 40;
-        boxPos.y += 200;
+    case Seat::Top:
+        offsetX = -100;
+        offsetY = -30;
+        break;
+    case Seat::Left:
+        offsetX = 30;
+        offsetY = 100;
+        break;
+    case Seat::Right:
+        offsetX = -30;
+        offsetY = 100;
+        break;
+    case Seat::Bottom:
+        offsetX = 100;
+        offsetY = 30;
+        break;
     }
 
-    Color bgColor = Fade(BLACK, 0.55f);
+    Color bgColor = BLACK;
 
     if (id == currentState.toAct)
-        bgColor = Fade(YELLOW, 0.35f);
+        bgColor = SKYBLUE;
 
     DrawRectangleRounded(
-        {boxPos.x - 20, boxPos.y - 10, 180, 65},
+        {boxPos.x + offsetX, boxPos.y + offsetY, 200, 65},
         0.25f,
         8,
         bgColor);
 
-    DrawText(name.c_str(), boxPos.x, boxPos.y, 22, WHITE);
-    DrawText(TextFormat("$%d", money), boxPos.x, boxPos.y + 28, 20, GOLD);
+    offsetX += 10;
+    DrawText(name.c_str(), boxPos.x + offsetX, boxPos.y + offsetY, 22, WHITE);
+    DrawText(TextFormat("$%d", money), boxPos.x + offsetX, boxPos.y + offsetY + 28, 20, GOLD);
 
     if (id == currentState.myId)
     {
-        DrawText("YOU", boxPos.x + 120, boxPos.y, 18, SKYBLUE);
+        DrawText("YOU", boxPos.x + offsetX + 130, boxPos.y + offsetY, 18, DARKBLUE);
         for (auto &card : visualState.myCards)
         {
             card.Draw();
@@ -287,10 +291,9 @@ void Game::draw()
 {
     drawBackground();
 
+    visualState.drawCards();
     drawPlayers();
     drawMoneyChips();
-
-    visualState.drawCards();
 
     drawInput();
     drawPopUpMessages();
@@ -324,14 +327,14 @@ void Game::drawInput()
         }
     }
     /*
-    for (int i = 0; i <= 12; i++)
-    {
-        for (int j = 0; j < 4; j++)
-        {
+   for (int i = 0; i <= 12; i++)
+   {
+       for (int j = 0; j < 4; j++)
+       {
 
-            allCards[i][j].Draw();
-        }
-    }
+           allCards[i][j].Draw();
+       }
+   }
     */
 }
 
@@ -350,7 +353,7 @@ void Game::drawMoneyChips()
     {
         if (!currentState.isSeated[id] || currentState.isSpectator[id])
             continue; // Only draw chips for seated players who are not spectators
-        pos basePos = getPlayerCardBasePos(id);
+        pos basePos = getPlayerPosition(id);
         int rotationAngle = getPlayerCardRotationAngle(id);
         chips.drawChips({200 + basePos.x, basePos.y}, rotationAngle);
     }
@@ -377,15 +380,15 @@ void Game::shouldNewCardBeMade()
     while (currentState.myCards.size() > visualState.myCards.size())
     {
         valRank cardInfo = currentState.myCards[visualState.myCards.size()];
-        visualState.myCards.emplace_back(getPlayerCardBasePos(currentState.myId).x + DrawnCount[currentState.myId] * 25, getPlayerCardBasePos(currentState.myId).y + DrawnCount[currentState.myId] * 5, cardInfo, &suitTextures[cardInfo.suit], &cardFont, &gameImages);
+        visualState.myCards.emplace_back(getPlayerCardPosition(currentState.myId).x + DrawnCount[currentState.myId] * 25, getPlayerCardPosition(currentState.myId).y + DrawnCount[currentState.myId] * 5, cardInfo, &suitTextures[cardInfo.suit], &cardFont, &gameImages);
         DrawnCount[currentState.myId]++;
     }
     while (currentState.opponentCards.size() > visualState.opponentCards.size())
     {
         auto &[id, cardInfo] = currentState.opponentCards[visualState.opponentCards.size()];
-        pos basePos = getPlayerCardBasePos(id);
+        pos basePos = getPlayerCardPosition(id);
         int rotationAngle = 0; // Show them normally
-        int offsetX = DrawnCount[id] * 120;
+        int offsetX = DrawnCount[id] * 80;
         visualState.opponentCards.emplace_back(id, Card(basePos.x + offsetX, basePos.y, cardInfo, &suitTextures[cardInfo.suit], &cardFont, &gameImages));
         DrawnCount[id]++;
     }
@@ -474,9 +477,21 @@ bool Game::authenticateIP(std::string ip)
     return true;
 }
 
-pos Game::getPlayerCardBasePos(int id)
+Seat Game::getPlayerSeat(int id)
 {
     return currentState.PlayerPosition.at(id).first;
+}
+
+pos Game::getPlayerPosition(int id)
+{
+    Seat seat = getPlayerSeat(id);
+    return seatPositions[seat];
+}
+
+pos Game::getPlayerCardPosition(int id)
+{
+    Seat seat = getPlayerSeat(id);
+    return seatCardPositions[seat];
 }
 
 int Game::getPlayerCardRotationAngle(int id)
@@ -484,7 +499,7 @@ int Game::getPlayerCardRotationAngle(int id)
     return currentState.PlayerPosition.at(id).second;
 }
 
-void Game::drawSingleChip(int x, int y, int radius, Color color, bool isLastChip)
+void Game::drawSingleChip(int x, int y, int radius, Color color, bool isLastChip, int rotationAngle)
 {
     DrawCircle(x, y, radius, color);
     DrawCircleLines(x, y, radius, Fade(WHITE, 0.25f));
@@ -511,7 +526,7 @@ void Game::drawSingleChip(int x, int y, int radius, Color color, bool isLastChip
         float xoffset = TextSize.x / 2;
         float yoffset = TextSize.y / 2;
 
-        DrawTextEx(cardFontStatic, chipValue.c_str(), {x - xoffset, y - yoffset}, 20, 1, BLACK);
+        DrawTextPro(cardFontStatic, chipValue.c_str(), {x - 0.0f, y - 0.0f}, {xoffset, yoffset}, rotationAngle, 20, 1, BLACK);
     }
     for (int i = 0; i < 360; i += 60)
     {
@@ -532,15 +547,20 @@ void Game::drawStackOfChips(pos basePos, int amount, Color color, int rotationAn
 {
     for (int i = 0; i < amount; i++)
     {
-        drawSingleChip(basePos.x, basePos.y, 20, color, i == amount - 1);
+        if (i == amount - 1)
+        {
+            drawSingleChip(basePos.x, basePos.y, 20, color, true, rotationAngle);
+        }
+        else
+        {
+            drawSingleChip(basePos.x, basePos.y, 20, color); // (false,0) because not last chip
+        }
         if (rotationAngle == 90)
             basePos.x += 2;
         else if (rotationAngle == 270)
             basePos.x -= 2;
         else if (rotationAngle == 0)
             basePos.y -= 2;
-        else
-            basePos.y += 2;
     }
 }
 

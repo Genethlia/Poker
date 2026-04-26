@@ -66,7 +66,20 @@ private:
 
     bool authenticateIP(std::string ip);
 
-    pos getPlayerCardBasePos(int id);
+    Seat getPlayerSeat(int id);
+    pos getPlayerPosition(int id);
+    pos getPlayerCardPosition(int id);
+    unordered_map<Seat, pos> seatPositions = {
+        {Seat::Top, {VIRTUAL_WIDTH / 2 - 100, 200}},
+        {Seat::Left, {50, VIRTUAL_HEIGHT / 2 - 100}},
+        {Seat::Right, {VIRTUAL_WIDTH - 250, VIRTUAL_HEIGHT / 2 - 100}},
+        {Seat::Bottom, {VIRTUAL_WIDTH / 2 - 150, VIRTUAL_HEIGHT - 200}}};
+    unordered_map<Seat, pos> seatCardPositions = {
+        {Seat::Top, {VIRTUAL_WIDTH / 2 - 182, 100}},
+        {Seat::Left, {150, VIRTUAL_HEIGHT / 2 - 100}},
+        {Seat::Right, {VIRTUAL_WIDTH - 350, VIRTUAL_HEIGHT / 2 - 100}},
+        {Seat::Bottom, {VIRTUAL_WIDTH / 2 - 150, VIRTUAL_HEIGHT - 250}}};
+
     int getPlayerCardRotationAngle(int id);
     std::unordered_map<int, int> DrawnCount = {};
     Button readyButton = Button(0, 550, 200, 50, "Ready", [this]()
@@ -107,7 +120,7 @@ private:
         int value;
         Color color;
     };
-    static void drawSingleChip(int x, int y, int radius, Color color, bool isLastChip = false);
+    static void drawSingleChip(int x, int y, int radius, Color color, bool isLastChip = false, int rotationAngle = 0);
     static void drawStackOfChips(pos basePos, int amount, Color color, int rotationAngle);
 
     struct MoneyChips

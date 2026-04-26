@@ -67,7 +67,7 @@ void Card::Draw()
     int PointerOfcolor = GetColorOfRank(card);
     string rankStr = cardnum(card);
 
-    DrawRectangleRounded({pos.x, pos.y}, 1.0f, 2, WHITE);
+    DrawRectangleRounded({pos.x, pos.y, width, height}, 0.2f, 16, WHITE);
     float suitOffset = (1.0f - displayScaleX) * width / 3 + 5;
 
     Vector2 rankTopLeft = {leftX + suitOffset, pos.y - 2};
