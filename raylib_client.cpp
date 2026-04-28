@@ -34,6 +34,11 @@ void Game::start()
 {
     std::cout << "Enter your name: ";
     std::getline(std::cin, playerName);
+    while (playerName.empty())
+    {
+        std::cout << "Name cannot be empty. Please enter your name: ";
+        std::getline(std::cin, playerName);
+    }
 
     std::cout << "Enter server IP (default: 127.0.0.1): ";
     std::string serverIP;
@@ -229,19 +234,18 @@ void Game::drawSinglePlayer(int id)
     switch (seat)
     {
     case Seat::Top:
-        offsetX = -100;
+        offsetX = -300;
         offsetY = -30;
         break;
     case Seat::Left:
-        offsetX = 30;
-        offsetY = 100;
+        offsetX = -280;
         break;
     case Seat::Right:
-        offsetX = -30;
-        offsetY = 100;
+        offsetX = 100;
+        offsetY = 110;
         break;
     case Seat::Bottom:
-        offsetX = 100;
+        offsetX = -100;
         offsetY = 30;
         break;
     }
@@ -263,7 +267,7 @@ void Game::drawSinglePlayer(int id)
 
     if (id == currentState.myId)
     {
-        DrawText("YOU", boxPos.x + offsetX + 130, boxPos.y + offsetY, 18, DARKBLUE);
+        DrawText("YOU", boxPos.x + offsetX + 150, boxPos.y + offsetY, 18, DARKBLUE);
         for (auto &card : visualState.myCards)
         {
             card.Draw();
@@ -355,7 +359,7 @@ void Game::drawMoneyChips()
             continue; // Only draw chips for seated players who are not spectators
         pos basePos = getPlayerPosition(id);
         int rotationAngle = getPlayerCardRotationAngle(id);
-        chips.drawChips({200 + basePos.x, basePos.y}, rotationAngle);
+        chips.drawChips(basePos, rotationAngle);
     }
 }
 
