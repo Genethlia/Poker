@@ -35,6 +35,7 @@ set(SHARED_SOURCES
 add_executable(server
   server.cpp
   client_in_server.cpp
+  server_helpers.cpp
   ${SHARED_SOURCES}
 )
 

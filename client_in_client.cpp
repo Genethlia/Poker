@@ -303,11 +303,14 @@ void PokerClient::handle_line(const string &line)
     {
         auto tempMessage = "Betting update: To Act: " + nameOfUnsafe(msg.toAct) + " (ID: " + to_string(msg.toAct) + "), To Call: $" + to_string(msg.toCall) + ", Current Bet: $" + to_string(msg.currentBet) + ", Min Raise: $" + to_string(msg.minRaise) + ", Pot: $" + to_string(msg.potAmount);
         popUpMessages.push_back(tempMessage);
-        state.toAct = msg.toAct;           // Update the client state with the new player to act
-        state.toCall = msg.toCall;         // Update the client state with the new amount to call
-        state.currentBet = msg.currentBet; // Update the client state with the new current bet
-        state.minRaise = msg.minRaise;     // Update the client state with the new minimum raise
-        state.potAmount = msg.potAmount;   // Update the client state with the new pot amount
+        state.toAct = msg.toAct;               // Update the client state with the new player to act
+        state.toCall = msg.toCall;             // Update the client state with the new amount to call
+        state.currentBet = msg.currentBet;     // Update the client state with the new current bet
+        state.minRaise = msg.minRaise;         // Update the client state with the new minimum raise
+        state.potAmount = msg.potAmount;       // Update the client state with the new pot amount
+        state.dealerId = msg.dealerId;         // Update the client state with the new dealer ID
+        state.smallBlindId = msg.smallBlindId; // Update the client state with the new small blind ID
+        state.bigBlindId = msg.bigBlindId;     // Update the client state with the new big blind ID
         MessageClientToServer requestUpdate;
         requestUpdate.type = MessageTypeClientToServer::RequestUnorderedMapUpdates;
         write_line(serialize_client(requestUpdate)); // Request unordered map updates after betting update
@@ -335,10 +338,13 @@ void PokerClient::handle_line(const string &line)
 
         auto tempMessage = "Graphics update for new player: To Act: " + nameOfUnsafe(msg.toAct) + " (ID: " + to_string(msg.toAct) + "), To Call: $" + to_string(msg.toCall) + ", Current Bet: $" + to_string(msg.currentBet) + ", Min Raise: $" + to_string(msg.minRaise);
         popUpMessages.push_back(tempMessage);
-        state.toAct = msg.toAct;           // Update the client state with the new player to act
-        state.toCall = msg.toCall;         // Update the client state with the new amount to call
-        state.currentBet = msg.currentBet; // Update the client state with the new current bet
-        state.minRaise = msg.minRaise;     // Update the client state with the new minimum raise
+        state.toAct = msg.toAct;               // Update the client state with the new player to act
+        state.toCall = msg.toCall;             // Update the client state with the new amount to call
+        state.currentBet = msg.currentBet;     // Update the client state with the new current bet
+        state.minRaise = msg.minRaise;         // Update the client state with the new minimum raise
+        state.dealerId = msg.dealerId;         // Update the client state with the new dealer ID
+        state.smallBlindId = msg.smallBlindId; // Update the client state with the new small blind ID
+        state.bigBlindId = msg.bigBlindId;     // Update the client state with the new big blind ID
         for (auto &[id, hand] : msg.playerHands)
         {
             auto tempMessage = "Player " + nameOfUnsafe(id) + "'s hand updated.";

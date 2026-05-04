@@ -29,6 +29,13 @@ struct ServerState
 
     HandState handstate;
 
+    int smallBlind = 25;
+    int bigBlind = 50;
+
+    int dealerId = -1;
+    int smallBlindId = -1;
+    int bigBlindId = -1;
+
     int nextId = 0;
     int pot = 0;
     int currentBet = 0;

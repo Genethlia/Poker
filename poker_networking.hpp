@@ -133,6 +133,10 @@ struct MessageServerToClient
     int currentBet = 0; // For GameState
     int minRaise = 0;   // For GameState
 
+    int dealerId = -1;
+    int smallBlindId = -1;
+    int bigBlindId = -1;
+
     int winPower = 0;
 
     reason_for_rejection rejectionReason = reason_for_rejection::TooManyPlayers; // For Reject
@@ -293,7 +297,7 @@ inline std::string serialize_server(const MessageServerToClient &m)
         }
         break;
     case MessageTypeServerToClient::BettingUpdate:
-        out << "BETTING_UPDATE " << m.toAct << " " << m.toCall << " " << m.currentBet << " " << m.minRaise << " " << m.potAmount;
+        out << "BETTING_UPDATE " << m.toAct << " " << m.toCall << " " << m.currentBet << " " << m.minRaise << " " << m.potAmount << " " << m.dealerId << " " << m.smallBlindId << " " << m.bigBlindId;
         break;
     case MessageTypeServerToClient::Reject:
         out << "REJECT " << int(m.rejectionReason);
@@ -303,7 +307,7 @@ inline std::string serialize_server(const MessageServerToClient &m)
         break;
     case MessageTypeServerToClient::NewPlayerUpdateGraphics:
         out << "NEW_PLAYER_UPDATE_GRAPHICS";
-        out << " " << m.toAct << " " << m.toCall << " " << m.currentBet << " " << m.minRaise << " " << m.playerHands.size() << " " << m.communityCards.size();
+        out << " " << m.toAct << " " << m.toCall << " " << m.currentBet << " " << m.minRaise << " " << m.playerHands.size() << " " << m.communityCards.size() << " " << m.dealerId << " " << m.smallBlindId << " " << m.bigBlindId;
         for (auto it = m.playerHands.begin(); it != m.playerHands.end(); it++)
         {
             out << " " << it->first << " " << it->second.first.value << " " << it->second.first.suit << " " << it->second.second.value << " " << it->second.second.suit;
@@ -460,7 +464,7 @@ inline MessageServerToClient deserialize_server(const std::string &line)
         break;
     case 'B': // BETTING_UPDATE
         msg.type = MessageTypeServerToClient::BettingUpdate;
-        in >> msg.toAct >> msg.toCall >> msg.currentBet >> msg.minRaise >> msg.potAmount;
+        in >> msg.toAct >> msg.toCall >> msg.currentBet >> msg.minRaise >> msg.potAmount >> msg.dealerId >> msg.smallBlindId >> msg.bigBlindId;
         break;
     case 'R': // REJECT
         msg.type = MessageTypeServerToClient::Reject;
@@ -470,7 +474,7 @@ inline MessageServerToClient deserialize_server(const std::string &line)
         break;
     case 'N': // NEW_PLAYER_UPDATE_GRAPHICS
         msg.type = MessageTypeServerToClient::NewPlayerUpdateGraphics;
-        in >> msg.toAct >> msg.toCall >> msg.currentBet >> msg.minRaise;
+        in >> msg.toAct >> msg.toCall >> msg.currentBet >> msg.minRaise >> msg.dealerId >> msg.smallBlindId >> msg.bigBlindId;
         int numPlayerHands, numCommunityCards;
         in >> numPlayerHands >> numCommunityCards;
         for (int i = 0; i < numPlayerHands; i++)

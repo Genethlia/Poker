@@ -273,6 +273,19 @@ void Game::drawSinglePlayer(int id)
             card.Draw();
         }
     }
+    bgColor = (bgColor.r == SKYBLUE.r) ? BLACK : DARKGREEN;
+    if (id == currentState.dealerId)
+    {
+        DrawText("D", boxPos.x + offsetX + 140, boxPos.y + offsetY + 40, 18, bgColor);
+    }
+    if (id == currentState.smallBlindId)
+    {
+        DrawText("SB", boxPos.x + offsetX + 160, boxPos.y + offsetY + 40, 18, bgColor);
+    }
+    if (id == currentState.bigBlindId)
+    {
+        DrawText("BB", boxPos.x + offsetX + 160, boxPos.y + offsetY + 40, 18, bgColor);
+    }
 }
 
 void Game::VisualState::updateCards()
@@ -601,7 +614,7 @@ void Game::updatePopUpMessages()
     }
     for (auto it = popUpMessages.begin(); it != popUpMessages.end();)
     {
-        if (hasEnoughTimePassed(it->timer, 3.0))
+        if (hasEnoughTimePassed(it->timer, 5.0))
         {
             it = popUpMessages.erase(it);
         }

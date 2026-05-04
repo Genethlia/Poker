@@ -77,7 +77,7 @@ private:
     unordered_map<Seat, pos> seatCardPositions = {
         {Seat::Top, {VIRTUAL_WIDTH / 2 - 160, 100}},
         {Seat::Left, {30, VIRTUAL_HEIGHT / 2 - 110}},
-        {Seat::Right, {VIRTUAL_WIDTH - 150, VIRTUAL_HEIGHT / 2 - 100}},
+        {Seat::Right, {VIRTUAL_WIDTH - 200, VIRTUAL_HEIGHT / 2 - 40}},
         {Seat::Bottom, {VIRTUAL_WIDTH / 2 - 150, VIRTUAL_HEIGHT - 250}}};
 
     int getPlayerCardRotationAngle(int id);

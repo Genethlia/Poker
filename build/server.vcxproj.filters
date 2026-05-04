@@ -7,6 +7,9 @@
     <ClCompile Include="C:\Users\tgene\OneDrive - MOEC\Poker\client_in_server.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
+    <ClCompile Include="C:\Users\tgene\OneDrive - MOEC\Poker\server_helpers.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
     <ClCompile Include="C:\Users\tgene\OneDrive - MOEC\Poker\deck.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>

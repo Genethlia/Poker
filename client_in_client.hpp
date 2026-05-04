@@ -57,6 +57,9 @@ public:
         int toCall = 0;
         int currentBet = 0;
         int minRaise = 50;
+        int dealerId = -1;
+        int smallBlindId = -1;
+        int bigBlindId = -1;
         std::map<int, std::pair<Seat, int>> PlayerPosition = {};
     };
     ClientState getClientStateCopy();

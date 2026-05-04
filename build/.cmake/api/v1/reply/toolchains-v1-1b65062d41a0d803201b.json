@@ -20,8 +20,8 @@
 					"linkFrameworkDirectories" : [],
 					"linkLibraries" : []
 				},
-				"path" : "C:/Program Files/Microsoft Visual Studio/18/Insiders/VC/Tools/MSVC/14.50.35717/bin/Hostx64/x64/cl.exe",
-				"version" : "19.50.35724.0"
+				"path" : "C:/Program Files/Microsoft Visual Studio/18/Insiders/VC/Tools/MSVC/14.51.36231/bin/Hostx64/x64/cl.exe",
+				"version" : "19.51.36241.0"
 			},
 			"language" : "CXX",
 			"sourceFileExtensions" : 

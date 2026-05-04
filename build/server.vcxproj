@@ -374,6 +374,7 @@ if %errorlevel% neq 0 goto :VCEnd</Command>
   <ItemGroup>
     <ClCompile Include="C:\Users\tgene\OneDrive - MOEC\Poker\server.cpp" />
     <ClCompile Include="C:\Users\tgene\OneDrive - MOEC\Poker\client_in_server.cpp" />
+    <ClCompile Include="C:\Users\tgene\OneDrive - MOEC\Poker\server_helpers.cpp" />
     <ClCompile Include="C:\Users\tgene\OneDrive - MOEC\Poker\deck.cpp" />
   </ItemGroup>
   <ItemGroup />
