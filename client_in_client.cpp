@@ -411,16 +411,42 @@ void PokerClient::rebuildPlayerPositions()
         ids.push_back(id);
     }
     std::sort(ids.begin(), ids.end());
-    int otherPlayerCount = 0;
-    for (int i = 0; i < ids.size() && i < playerCardPositionsAndAngles.size(); i++)
+
+    if (ids.empty())
+        return;
+
+    int selfIndex = -1;
+
+    for (int i = 0; i < ids.size(); i++)
     {
         if (ids[i] == state.myId)
         {
-            state.PlayerPosition[ids[i]] = playerCardPositionsAndAngles.back(); // Position for self
+            selfIndex = i;
+            break;
+        }
+    }
+
+    vector<int> visualOrder{};
+
+    for (int i = 0; i < ids.size(); i++)
+    {
+        int index = (selfIndex + i) % ids.size();
+        visualOrder.push_back(ids[index]);
+    }
+
+    int otherPlayerCount = 0;
+
+    for (int id : visualOrder)
+    {
+        if (id == state.myId)
+        {
+            state.PlayerPosition[id] = playerCardPositionsAndAngles.back(); // Position for self
         }
         else
         {
-            state.PlayerPosition[ids[i]] = playerCardPositionsAndAngles[otherPlayerCount++]; // Positions for opponents
+            if (otherPlayerCount >= (int)playerCardPositionsAndAngles.size() - 1)
+                break;
+            state.PlayerPosition[id] = playerCardPositionsAndAngles[otherPlayerCount++]; // Positions for opponents
         }
     }
 }

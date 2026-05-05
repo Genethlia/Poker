@@ -623,11 +623,11 @@ void Server::handleDisconnect(int playerId)
 
     // state.idToMoney[playerId] = p->money;
 
-    MessageServerToClient msg;
-    msg.type = MessageTypeServerToClient::PlayerLeft;
-    msg.playerId = playerId;
-    msg.name = findNameById(playerId);
-    state.broadcast_all(serialize_server(msg));
+    // MessageServerToClient msg;
+    // msg.type = MessageTypeServerToClient::PlayerLeft;
+    // msg.playerId = playerId;
+    // msg.name = findNameById(playerId);
+    // state.broadcast_all(serialize_server(msg));
 
     if (!gameInProgress)
     {
@@ -647,6 +647,11 @@ void Server::removeDisconnectedClients()
     }
     for (auto &c : toRemove)
     {
+        MessageServerToClient msg;
+        msg.type = MessageTypeServerToClient::PlayerLeft;
+        msg.playerId = c->id;
+        msg.name = findNameById(c->id);
+        state.broadcast_all(serialize_server(msg));
         state.needsAction.erase(c->id);
         state.clients.erase(c);
         cout << "Removed client " << c->display_name() << " from server.\n";

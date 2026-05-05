@@ -10,6 +10,7 @@ struct pos
 
 enum class Seat
 {
+    Unassigned,
     Top,
     Left,
     Right,
@@ -99,9 +100,9 @@ private:
 
     std::vector<std::pair<Seat, int>>
         playerCardPositionsAndAngles = {
+            {Seat::Right, 270}, // position for player 2
             {Seat::Top, 0},     // position for player 0
             {Seat::Left, 90},   // position for player 1
-            {Seat::Right, 270}, // position for player 2
             {Seat::Bottom, 0},  // position for self
     };
 

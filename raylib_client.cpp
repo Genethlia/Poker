@@ -273,7 +273,7 @@ void Game::drawSinglePlayer(int id)
             card.Draw();
         }
     }
-    bgColor = (bgColor.r == SKYBLUE.r) ? BLACK : DARKGREEN;
+    bgColor = (bgColor.r == SKYBLUE.r) ? BLACK : WHITE;
     if (id == currentState.dealerId)
     {
         DrawText("D", boxPos.x + offsetX + 140, boxPos.y + offsetY + 40, 18, bgColor);
@@ -496,24 +496,54 @@ bool Game::authenticateIP(std::string ip)
 
 Seat Game::getPlayerSeat(int id)
 {
-    return currentState.PlayerPosition.at(id).first;
+    auto it = currentState.PlayerPosition.find(id);
+    if (it == currentState.PlayerPosition.end())
+    {
+        std::cout << "ERROR: Missing PlayerPosition for id: " << id << std::endl;
+        return Seat::Unassigned;
+    }
+    return it->second.first;
 }
 
 pos Game::getPlayerPosition(int id)
 {
     Seat seat = getPlayerSeat(id);
-    return seatPositions[seat];
+
+    auto it = seatPositions.find(seat);
+    if (it == seatPositions.end())
+    {
+        std::cout << "ERROR: Invalid seat for player id: " << id << std::endl;
+        return {0, 0};
+    }
+
+    return it->second;
 }
 
 pos Game::getPlayerCardPosition(int id)
 {
     Seat seat = getPlayerSeat(id);
-    return seatCardPositions[seat];
+
+    auto it = seatCardPositions.find(seat);
+    if (it == seatCardPositions.end())
+    {
+        std::cout << "ERROR: Invalid card seat for player id: " << id << std::endl;
+        return {0, 0};
+    }
+
+    return it->second;
 }
 
 int Game::getPlayerCardRotationAngle(int id)
 {
-    return currentState.PlayerPosition.at(id).second;
+    auto it = currentState.PlayerPosition.find(id);
+
+    if (it == currentState.PlayerPosition.end())
+    {
+        std::cout << "ERROR: Missing PlayerPosition for id: " << id << std::endl;
+        return 0;
+    }
+
+    return it->second.second;
 }
 
 void Game::drawSingleChip(int x, int y, int radius, Color color, bool isLastChip, int rotationAngle)
