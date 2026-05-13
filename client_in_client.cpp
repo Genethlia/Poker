@@ -7,6 +7,94 @@ PokerClient::ClientState PokerClient::getClientStateCopy()
     return state;
 }
 
+pop PokerClient::createPopUpMessage(MessageServerToClient msg)
+{
+    switch (msg.type)
+    {
+    case MessageTypeServerToClient::PlayerJoined:
+        return pop(nameOfUnsafe(msg.playerId) + " joined the game.", popUpMessageType::PlayerJoined);
+    case MessageTypeServerToClient::PlayerLeft:
+        return pop(nameOfUnsafe(msg.playerId) + " left the game.", popUpMessageType::PlayerLeft);
+    case MessageTypeServerToClient::PlayerReady:
+        return pop(nameOfUnsafe(msg.playerId) + " is ready.", popUpMessageType::PlayerReady);
+    case MessageTypeServerToClient::ChatFrom:
+        return pop("You have a new chat message from " + nameOfUnsafe(msg.playerId) + ": ", popUpMessageType::ChatMessage);
+    case MessageTypeServerToClient::ActionResult:
+    {
+        string actionStr;
+        switch (msg.action)
+        {
+        case PlayerActionType::Fold:
+            actionStr = "folded";
+            break;
+        case PlayerActionType::Check:
+            actionStr = "checked";
+            break;
+        case PlayerActionType::Call:
+            actionStr = "called";
+            break;
+        case PlayerActionType::Raise:
+            actionStr = "raised to " + to_string(msg.actionAmount);
+            break;
+        default:
+            actionStr = "performed an unknown action";
+            break;
+        }
+        return pop(nameOfUnsafe(msg.playerId) + " " + actionStr + ".", popUpMessageType::ActionResult);
+        break;
+    }
+    case MessageTypeServerToClient::BettingUpdate:
+    {
+        if (state.myId == msg.toAct)
+        {
+            string t = (msg.toCall == 0) ? "" : "You need to call " + to_string(msg.toCall) + " to stay in the hand.";
+            return pop("It's your turn to act! " + t, popUpMessageType::BettingUpdate);
+        }
+        break;
+    }
+    case MessageTypeServerToClient::Showdown:
+    {
+        if (msg.idWinners.size() == 1 && msg.idWinners[0] == state.myId)
+            return pop("Congratulations! You won the game with a " + winPowerTranslation(msg.winPower) + "!", popUpMessageType::GameWon);
+        else if (find(msg.idWinners.begin(), msg.idWinners.end(), state.myId) != msg.idWinners.end())
+        {
+            string winnerNames;
+            for (int id : msg.idWinners)
+            {
+                if (id != state.myId)
+                    winnerNames += nameOfUnsafe(id) + ", ";
+            }
+            if (!winnerNames.empty())
+            {
+                winnerNames.pop_back(); // Remove trailing space
+                winnerNames.pop_back(); // Remove trailing comma
+            }
+            return pop("You tied for the win with a " + winPowerTranslation(msg.winPower) + " with players: " + winnerNames, popUpMessageType::GameWon);
+        }
+        else
+        {
+            string winnerNames;
+            for (int id : msg.idWinners)
+            {
+                winnerNames += nameOfUnsafe(id) + ", ";
+            }
+            if (!winnerNames.empty())
+            {
+                winnerNames.pop_back(); // Remove trailing space
+                winnerNames.pop_back(); // Remove trailing comma
+            }
+            if (msg.idWinners.size() == 1)
+                return pop("Player " + winnerNames + " won the game with a " + winPowerTranslation(msg.winPower) + ". Better luck next time!", popUpMessageType::GameWon);
+            else
+                return pop("Players " + winnerNames + " tied for the win with a " + winPowerTranslation(msg.winPower) + ". Better luck next time!", popUpMessageType::GameWon);
+        }
+        break;
+    }
+    default:
+        return pop("", popUpMessageType::Error);
+    }
+}
+
 PokerClient::PokerClient() : socket(io), running(false)
 {
 }
@@ -70,7 +158,7 @@ void PokerClient::sendAction(PlayerActionType action, int amount)
     ClientState snapshot = getClientStateCopy();
     if (snapshot.toAct != snapshot.myId)
     {
-        popUpMessages.push_back("It's not your turn to act!");
+        popUpMessages.push_back(pop("It's not your turn to act!", popUpMessageType::Error));
         cout << "It's not your turn to act!\n";
         return;
     }
@@ -158,10 +246,10 @@ std::string PokerClient::nameOfUnsafe(int id)
     return "ID:  " + to_string(id);
 }
 
-std::deque<string> PokerClient::getAndClearPopUpMessages()
+std::deque<pop> PokerClient::getAndClearPopUpMessages()
 {
     lock_guard<std::mutex> lock(popUpMessagesMutex);
-    std::deque<string> messages = std::move(popUpMessages);
+    std::deque<pop> messages = std::move(popUpMessages);
     popUpMessages.clear();
     return messages;
 }
@@ -171,6 +259,7 @@ void PokerClient::handle_line(const string &line)
     lock_guard<std::mutex> lock(stateMutex);
     lock_guard<std::mutex> lock2(popUpMessagesMutex);
     MessageServerToClient msg = deserialize_server(line);
+    bool createPopUp = true;
     switch (msg.type)
     {
     case MessageTypeServerToClient::Welcome:
@@ -179,8 +268,8 @@ void PokerClient::handle_line(const string &line)
         state.playerMoney.clear();
         state.isSpectator.clear();
         state.isSeated.clear();
-        auto temp = "Welcome, " + msg.name + "! Your player ID is " + to_string(msg.playerId) + ". There are " + to_string(msg.playerSum) + " players in the game.";
-        popUpMessages.push_back(temp);
+        // auto temp = "Welcome, " + msg.name + "! Your player ID is " + to_string(msg.playerId) + ". There are " + to_string(msg.playerSum) + " players in the game.";
+        // popUpMessages.push_back(temp, popUpMessageType::PlayerJoined);
         for (auto &[id, name] : msg.playerNames)
         {
             if (msg.playerMoney.find(id) != msg.playerMoney.end())
@@ -191,17 +280,16 @@ void PokerClient::handle_line(const string &line)
                 state.isSpectator[id] = msg.isSpectatorMap[id];
             if (msg.isSeatedMap.find(id) != msg.isSeatedMap.end())
                 state.isSeated[id] = msg.isSeatedMap[id];
-            auto temp = "Player " + name + " (ID: " + to_string(id) + ") is in the game." + (id == msg.playerId ? " (You)" : "");
-            popUpMessages.push_back(temp);
+            // auto temp1 = "Player " + name + " (ID: " + to_string(id) + ") is in the game." + (id == msg.playerId ? " (You)" : "");
+            // popUpMessages.push_back(temp1);
         }
         state.myId = msg.playerId;
         rebuildPlayerPositions();
+        createPopUp = false;
         break;
     }
     case MessageTypeServerToClient::PlayerJoined:
     {
-        auto temp = "Player joined: " + msg.name + " (ID: " + to_string(msg.playerId) + ")";
-        popUpMessages.push_back(temp);
         state.playerNames[msg.playerId] = msg.name;
         state.playerMoney[msg.playerId] = 1000; // Initialize player money for the new player
         state.isSpectator[msg.playerId] = msg.isSpectator;
@@ -211,8 +299,6 @@ void PokerClient::handle_line(const string &line)
     }
     case MessageTypeServerToClient::PlayerLeft:
     {
-        auto temp = "Player left: " + nameOfUnsafe(msg.playerId);
-        popUpMessages.push_back(temp);
         state.playerNames.erase(msg.playerId);
         state.playerMoney.erase(msg.playerId); // Remove player money for the player who left
         state.isSpectator.erase(msg.playerId); // Remove spectator status for the player who left
@@ -222,39 +308,34 @@ void PokerClient::handle_line(const string &line)
     }
     case MessageTypeServerToClient::PlayerReady:
     {
-        auto temp = "Player ready: " + nameOfUnsafe(msg.playerId);
-        popUpMessages.push_back(temp);
         break;
     }
     case MessageTypeServerToClient::ChatFrom:
     {
-        auto temp = nameOfUnsafe(msg.playerId) + ": " + msg.chatText;
-        popUpMessages.push_back(temp);
         break;
     }
     case MessageTypeServerToClient::GameState:
     {
-        auto temp = "Game state changed: " + to_string(int(msg.gameState));
-        popUpMessages.push_back(temp);
+        // auto temp = "Game state changed: " + to_string(int(msg.gameState));
+        // popUpMessages.push_back(temp);
         state.gameState = msg.gameState;
         state.potAmount = msg.potAmount; // Update pot amount in the client state
         if (msg.gameState == GameState::PreFlop && !gameRunning)
         {
             newGame();
         }
+        createPopUp = false;
+        break;
         break;
     }
     case MessageTypeServerToClient::ActionResult:
     {
-        auto temp = "Action result for player " + nameOfUnsafe(msg.playerId) + ": " + to_string(int(msg.action));
-        popUpMessages.push_back(temp);
         break;
     }
     case MessageTypeServerToClient::CommunityCard:
     {
-        auto temp = "Community cards updated: " + msg.cards;
-        popUpMessages.push_back(temp);
         state.communityCards.push_back(extractCardValueSuit(msg));
+        createPopUp = false;
         break;
     }
     case MessageTypeServerToClient::PlayerHand:
@@ -262,37 +343,23 @@ void PokerClient::handle_line(const string &line)
         auto temp = extractCardValueSuit(msg);
         if (msg.playerId == state.myId)
         {
-            auto tempMessage = "Your hand updated: " + msg.cards;
-            popUpMessages.push_back(tempMessage);
             state.myCards.push_back(temp);
         }
         else
         {
-            auto tempMessage = nameOfUnsafe(msg.playerId) + "'s hand updated.";
-            popUpMessages.push_back(tempMessage);
-
             state.opponentCards.push_back({msg.playerId, temp});
         }
+        createPopUp = false;
         break;
     }
     case MessageTypeServerToClient::PotUpdate:
     {
-        auto tempMessage = "Pot updated: $" + to_string(msg.potAmount);
-        popUpMessages.push_back(tempMessage);
         state.potAmount = msg.potAmount; // Update the client state with the new pot amount
+        createPopUp = false;
         break;
     }
     case MessageTypeServerToClient::Showdown:
     {
-        auto tempMessage = "Showdown! Pot: $" + to_string(msg.potAmount) + ". Winners: ";
-        popUpMessages.push_back(tempMessage);
-        for (int id : msg.idWinners)
-        {
-            auto temp1 = nameOfUnsafe(id) + " (ID: " + to_string(id) + ") ";
-            popUpMessages.push_back(temp1);
-        }
-        auto temp2 = "Won with hand power: " + winPowerTranslation(msg.winPower);
-        popUpMessages.push_back(temp2);
         gameRunning = false;
         MessageClientToServer requestUpdate;
         requestUpdate.type = MessageTypeClientToServer::RequestUnorderedMapUpdates;
@@ -301,9 +368,9 @@ void PokerClient::handle_line(const string &line)
     }
     case MessageTypeServerToClient::BettingUpdate:
     {
-        auto tempMessage = "Betting update: To Act: " + nameOfUnsafe(msg.toAct) + " (ID: " + to_string(msg.toAct) + "), To Call: $" + to_string(msg.toCall) + ", Current Bet: $" + to_string(msg.currentBet) + ", Min Raise: $" + to_string(msg.minRaise) + ", Pot: $" + to_string(msg.potAmount);
-        popUpMessages.push_back(tempMessage);
-        state.toAct = msg.toAct;               // Update the client state with the new player to act
+        state.toAct = msg.toAct; // Update the client state with the new player to act
+        if (state.myId != msg.toAct)
+            createPopUp = false;
         state.toCall = msg.toCall;             // Update the client state with the new amount to call
         state.currentBet = msg.currentBet;     // Update the client state with the new current bet
         state.minRaise = msg.minRaise;         // Update the client state with the new minimum raise
@@ -331,13 +398,14 @@ void PokerClient::handle_line(const string &line)
         MessageClientToServer ack;
         ack.type = MessageTypeClientToServer::RejectAck;
         write_line(serialize_client(ack));
+        createPopUp = false;
         break;
     }
     case MessageTypeServerToClient::NewPlayerUpdateGraphics:
     {
 
-        auto tempMessage = "Graphics update for new player: To Act: " + nameOfUnsafe(msg.toAct) + " (ID: " + to_string(msg.toAct) + "), To Call: $" + to_string(msg.toCall) + ", Current Bet: $" + to_string(msg.currentBet) + ", Min Raise: $" + to_string(msg.minRaise);
-        popUpMessages.push_back(tempMessage);
+        // auto tempMessage = "Graphics update for new player: To Act: " + nameOfUnsafe(msg.toAct) + " (ID: " + to_string(msg.toAct) + "), To Call: $" + to_string(msg.toCall) + ", Current Bet: $" + to_string(msg.currentBet) + ", Min Raise: $" + to_string(msg.minRaise);
+        // popUpMessages.push_back(tempMessage);
         state.toAct = msg.toAct;               // Update the client state with the new player to act
         state.toCall = msg.toCall;             // Update the client state with the new amount to call
         state.currentBet = msg.currentBet;     // Update the client state with the new current bet
@@ -347,35 +415,47 @@ void PokerClient::handle_line(const string &line)
         state.bigBlindId = msg.bigBlindId;     // Update the client state with the new big blind ID
         for (auto &[id, hand] : msg.playerHands)
         {
-            auto tempMessage = "Player " + nameOfUnsafe(id) + "'s hand updated.";
-            popUpMessages.push_back(tempMessage);
+            // auto tempMessage1 = "Player " + nameOfUnsafe(id) + "'s hand updated.";
+            // popUpMessages.push_back(tempMessage1);
             state.opponentCards.push_back({id, hand.first});
             state.opponentCards.push_back({id, hand.second});
         }
         for (auto &card : msg.communityCards)
         {
-            auto tempMessage = "Community card updated: Value = " + to_string(card.value) + ", Suit = " + to_string(card.suit);
-            popUpMessages.push_back(tempMessage);
+            // auto tempMessage = "Community card updated: Value = " + to_string(card.value) + ", Suit = " + to_string(card.suit);
+            // popUpMessages.push_back(tempMessage);
             state.communityCards.push_back(card);
         }
         gameRunning = true;
+        createPopUp = false;
         requestState();
         break;
     }
     case MessageTypeServerToClient::UnorderedMapUpdate:
     {
-        auto tempMessage = "Received unordered map updates.";
-        popUpMessages.push_back(tempMessage);
+        createPopUp = false;
         state.playerMoney = msg.playerMoney;
         state.playerNames = msg.playerNames;
         state.isSpectator = msg.isSpectatorMap;
         state.isSeated = msg.isSeatedMap;
         break;
     }
+    case MessageTypeServerToClient::ShowCardsOf:
+    {
+        createPopUp = false;
+        state.idToShowCardsOf.push_back(msg.playerId);
+        break;
+    }
     default:
+        createPopUp = false;
         cout << "Unknown message type received.\n";
         cout << "Message content: " << line << "\n";
         break;
+    }
+    if (createPopUp)
+    {
+        auto temp = createPopUpMessage(msg);
+        popUpMessages.push_back(temp);
     }
 }
 

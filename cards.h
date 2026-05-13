@@ -8,13 +8,12 @@ using namespace std;
 class Card
 {
 public:
-	Card(float x, float y, valRank card, Images *suitTextures, Font *font, Images *gameimages);
-	;
+	Card(float x, float y, valRank card, Images *suitTextures, Font *font, Images *gameimages, bool secret = false);
 	~Card() = default;
 	void Draw();
 	void Update();
 	bool IsMoving();
-	void SetFaceDown(bool v);
+	void SetHidden(bool v);
 	void GoImmediatelyToTarget();
 	void StartFlip();
 	Vector2 pos;

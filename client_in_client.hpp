@@ -2,6 +2,21 @@
 #include "poker_networking.hpp"
 #include "cards.h"
 
+enum class popUpMessageType
+{
+    PlayerJoined,
+    PlayerLeft,
+    PlayerReady,
+    ChatMessage,
+    ActionResult,
+    BettingUpdate,
+    GameWon,
+    GameLost,
+    Error
+};
+
+using pop = std::pair<std::string, popUpMessageType>;
+
 struct pos
 {
     float x;
@@ -53,6 +68,7 @@ public:
         std::vector<valRank> communityCards;
         std::vector<valRank> myCards;
         std::vector<std::pair<int, valRank>> opponentCards;
+        std::vector<int> idToShowCardsOf;
         hand myHand;
         int toAct = -1;
         int toCall = 0;
@@ -65,20 +81,23 @@ public:
     };
     ClientState getClientStateCopy();
 
+    pop createPopUpMessage(MessageServerToClient msg);
+
     struct popUpMessage
     {
         std::string text;
         double timer = 0.0;
+        popUpMessageType type;
 
-        popUpMessage(const std::string &t) : text(t), timer(GetTime())
+        popUpMessage(const std::string &t, popUpMessageType tpe) : text(t), timer(GetTime()), type(tpe)
         {
-            cout << "Pop-up message created: " << text << "\n";
+            std::cout << "Pop-up message created: " << text << "\n";
         }
     };
 
-    std::deque<string> popUpMessages;
+    std::deque<pop> popUpMessages;
     std::mutex popUpMessagesMutex;
-    std::deque<string> getAndClearPopUpMessages();
+    std::deque<pop> getAndClearPopUpMessages();
 
 private:
     boost::asio::io_context io;

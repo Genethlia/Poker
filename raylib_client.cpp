@@ -134,7 +134,7 @@ void Game::update()
     */
 
     clearCardsIfNecessary();
-    shouldNewCardBeMade();
+    updateVisualState();
     updatePopUpMessages();
     updateGameState();
     updateFullScreen();
@@ -392,7 +392,7 @@ void Game::VisualState::drawCards()
     }
 }
 
-void Game::shouldNewCardBeMade()
+void Game::updateVisualState()
 {
     while (currentState.myCards.size() > visualState.myCards.size())
     {
@@ -406,13 +406,27 @@ void Game::shouldNewCardBeMade()
         pos basePos = getPlayerCardPosition(id);
         int rotationAngle = 0; // Show them normally
         int offsetX = DrawnCount[id] * 80;
-        visualState.opponentCards.emplace_back(id, Card(basePos.x + offsetX, basePos.y, cardInfo, &suitTextures[cardInfo.suit], &cardFont, &gameImages));
+        visualState.opponentCards.emplace_back(id, Card(basePos.x + offsetX, basePos.y, cardInfo, &suitTextures[cardInfo.suit], &cardFont, &gameImages, true));
         DrawnCount[id]++;
     }
     while (currentState.communityCards.size() > visualState.communityCards.size())
     {
         valRank cardInfo = currentState.communityCards[visualState.communityCards.size()];
         visualState.communityCards.emplace_back(446 + visualState.communityCards.size() * 150, 360, cardInfo, &suitTextures[cardInfo.suit], &cardFont, &gameImages);
+    }
+    while (currentState.idToShowCardsOf.size() > visualState.idToShowCardsOf.size())
+    {
+        int id = currentState.idToShowCardsOf[visualState.idToShowCardsOf.size()];
+        visualState.idToShowCardsOf.push_back(id);
+        if (id == currentState.myId)
+            continue;
+        for (auto &[opponentId, card] : visualState.opponentCards)
+        {
+            if (opponentId == id)
+            {
+                card.SetHidden(false);
+            }
+        }
     }
 }
 
@@ -430,8 +444,10 @@ void Game::clearCardsIfNecessary()
 void Game::drawPopUpMessages()
 {
     int yOffset = 0;
+    Color bgColor;
     for (auto &message : popUpMessages)
     {
+        bgColor = getColorForPopUpMessageType(message.type);
         if (message.text.length() >= 30)
         {
             size_t splitIndex = message.text.find(' ', message.text.length() / 2);
@@ -439,15 +455,15 @@ void Game::drawPopUpMessages()
             int textWidth2 = MeasureText(message.text.substr(splitIndex).c_str(), 20);
             int textWidth = max(textWidth1, textWidth2); // find biggest width for the background rectangle
             DrawRectangleRounded({400, 20.0f + yOffset, (float)textWidth + 20, 59}, 0.5f, 4, Fade(BLACK, 0.5f));
-            DrawText(message.text.substr(0, splitIndex).c_str(), 410, 20 + yOffset, 20, LIGHTGRAY);
+            DrawText(message.text.substr(0, splitIndex).c_str(), 410, 20 + yOffset, 20, bgColor);
             yOffset += 30;
-            DrawText(message.text.substr(splitIndex).c_str(), 410, 20 + yOffset, 20, LIGHTGRAY);
+            DrawText(message.text.substr(splitIndex).c_str(), 410, 20 + yOffset, 20, bgColor);
         }
         else
         {
             int textWidth = MeasureText(message.text.c_str(), 20);
             DrawRectangleRounded({400, 20.0f + yOffset, (float)textWidth + 20, 29}, 0.5f, 4, Fade(BLACK, 0.5f));
-            DrawText(message.text.c_str(), 410, 20 + yOffset, 20, LIGHTGRAY);
+            DrawText(message.text.c_str(), 410, 20 + yOffset, 20, bgColor);
         }
         yOffset += 30;
     }
@@ -459,6 +475,26 @@ void Game::onServerStateChange(GameState newState)
     if (newState == GameState::Showdown)
     {
         visualState.showdownTimerStartTime = GetTime();
+    }
+}
+
+Color Game::getColorForPopUpMessageType(popUpMessageType type)
+{
+    switch (type)
+    {
+    case popUpMessageType::ChatMessage:
+        return SKYBLUE;
+    case popUpMessageType::ActionResult:
+    case popUpMessageType::BettingUpdate:
+        return YELLOW;
+    case popUpMessageType::GameWon:
+        return GREEN;
+    case popUpMessageType::GameLost:
+        return RED;
+    case popUpMessageType::Error:
+        return RED;
+    default:
+        return LIGHTGRAY;
     }
 }
 
@@ -640,7 +676,7 @@ void Game::updatePopUpMessages()
     auto newMessages = client.getAndClearPopUpMessages();
     for (auto &message : newMessages)
     {
-        popUpMessages.push_back(PokerClient::popUpMessage(message));
+        popUpMessages.push_back(PokerClient::popUpMessage(message.first, message.second));
     }
     for (auto it = popUpMessages.begin(); it != popUpMessages.end();)
     {

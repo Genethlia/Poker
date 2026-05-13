@@ -18,6 +18,7 @@
 #include <mutex>
 #include <atomic>
 #include <sstream>
+#include <queue>
 using boost::asio::ip::tcp;
 
 struct valRank
@@ -57,7 +58,8 @@ enum class MessageTypeServerToClient
     Showdown,
     SpectatingUpdate,
     NewPlayerUpdateGraphics,
-    UnorderedMapUpdate
+    UnorderedMapUpdate,
+    ShowCardsOf
 };
 
 enum class PlayerActionType
@@ -339,6 +341,9 @@ inline std::string serialize_server(const MessageServerToClient &m)
             out << " " << it->first << " " << it->second;
         }
         break;
+    case MessageTypeServerToClient::ShowCardsOf:
+        out << "SHOW_CARDS_OF " << m.playerId;
+        break;
     default:
         out << "UNKNOWN_MESSAGE";
         break;
@@ -450,6 +455,12 @@ inline MessageServerToClient deserialize_server(const std::string &line)
         {
             msg.type = MessageTypeServerToClient::SpectatingUpdate;
             in >> msg.playerId >> msg.isSpectator >> msg.isSeated;
+            break;
+        }
+        if (command == "SHOW_CARDS_OF")
+        {
+            msg.type = MessageTypeServerToClient::ShowCardsOf;
+            in >> msg.playerId;
             break;
         }
         msg.type = MessageTypeServerToClient::Showdown;

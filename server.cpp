@@ -547,6 +547,13 @@ void Server::doShowdown()
         return;
     }
 
+    for (auto player : handOwnerIds)
+    {
+        state.broadcast_all(serialize_server(MessageServerToClient{
+            .type = MessageTypeServerToClient::ShowCardsOf,
+            .playerId = player}));
+    }
+
     vector<valRank> community = state.handstate.communityCards;
 
     int winPower = 0;

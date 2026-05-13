@@ -1,7 +1,7 @@
 #include "cards.h"
 
-Card::Card(float x, float y, valRank card, Images *suitTextures, Font *font, Images *gameimages)
-    : suitTextures(suitTextures), font(font), gameimages(gameimages)
+Card::Card(float x, float y, valRank card, Images *suitTextures, Font *font, Images *gameimages, bool secret)
+    : suitTextures(suitTextures), font(font), gameimages(gameimages), secret(secret)
 {
     target = {x, y};
     pos = {700, 20};
@@ -12,7 +12,6 @@ Card::Card(float x, float y, valRank card, Images *suitTextures, Font *font, Ima
 
     moving = true;
     facedown = true;
-    secret = false;
     firstsecret = true;
     flipping = false;
     flipProgress = 0.0f;
@@ -153,7 +152,7 @@ bool Card::IsMoving()
     return moving || flipping;
 }
 
-void Card::SetFaceDown(bool v)
+void Card::SetHidden(bool v)
 {
     secret = v;
 }

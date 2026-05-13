@@ -28,7 +28,8 @@ private:
     void drawInput();
     void drawBackground();
     void drawMoneyChips();
-    void shouldNewCardBeMade();
+    void updateVisualState();
+    void showCard(int id);
     void clearCardsIfNecessary(); // Check if cards have been cleared in the client state and clear them in the game if that's the case
     void updatePopUpMessages();
     void drawPopUpMessages();
@@ -48,6 +49,7 @@ private:
         std::vector<Card> myCards;
         std::vector<std::pair<int, Card>> opponentCards;
         std::vector<Card> communityCards;
+        std::vector<int> idToShowCardsOf;
 
         GameState gameState = GameState::WaitingForPlayers;
         double showdownTimerStartTime = 0.0;
@@ -59,6 +61,7 @@ private:
     VisualState visualState;
 
     std::deque<PokerClient::popUpMessage> popUpMessages;
+    Color getColorForPopUpMessageType(popUpMessageType type);
     bool hasEnoughTimePassed(double &lastTime, double delay);
 
     int raiseAmount;
@@ -91,7 +94,7 @@ private:
                                 }
                                 else
                                 {
-                                    popUpMessages.push_back(PokerClient::popUpMessage("You have already sent ready for this game."));
+                                    popUpMessages.push_back(PokerClient::popUpMessage("You have already sent ready for this game.", popUpMessageType::Error));
                                 } });
     Button playAgainButton = Button(0, 610, 200, 50, "Play Again", [this]()
                                     {
@@ -101,7 +104,7 @@ private:
                                     }
                                     else
                                     {
-                                        popUpMessages.push_back(PokerClient::popUpMessage("You can only start a new game once the current game is over."));
+                                        popUpMessages.push_back(PokerClient::popUpMessage("You can only start a new game once the current game is over.", popUpMessageType::Error));
                                     } });
     Button startGameButton = Button(0, 670, 200, 50, "Start Game", [this]()
                                     {
@@ -111,7 +114,7 @@ private:
                                     }
                                     else
                                     {
-                                        popUpMessages.push_back(PokerClient::popUpMessage("You can only start the game when it's in the waiting for players state."));
+                                        popUpMessages.push_back(PokerClient::popUpMessage("You can only start the game when it's in the waiting for players state.", popUpMessageType::Error));
                                     } });
     std::vector<Button> actionButtons;
 
