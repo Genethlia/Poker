@@ -65,6 +65,7 @@ public:
         std::unordered_map<int, int> playerMoney = {}; // player id -> money
         std::unordered_map<int, bool> isSpectator = {};
         std::unordered_map<int, bool> isSeated = {};
+        std::unordered_map<int, int> betThisRound = {};
         std::vector<valRank> communityCards;
         std::vector<valRank> myCards;
         std::vector<std::pair<int, valRank>> opponentCards;

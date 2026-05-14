@@ -1,6 +1,4 @@
 #pragma once
-#define WIN32_LEAN_AND_MEAN
-#define NOMINMAX
 #define NOGDI
 #define NOUSER
 #include <boost/asio.hpp>
@@ -113,6 +111,7 @@ struct MessageServerToClient
     std::unordered_map<int, int> playerMoney = {};
     std::unordered_map<int, bool> isSpectatorMap = {};
     std::unordered_map<int, bool> isSeatedMap = {};
+    std::unordered_map<int, int> betThisRoundMap = {};
     std::unordered_map<int, hand> playerHands = {};
 
     std::string chatText = "";
@@ -260,6 +259,10 @@ inline std::string serialize_server(const MessageServerToClient &m)
         {
             out << " " << it->first << " " << it->second;
         }
+        for (auto it = m.betThisRoundMap.begin(); it != m.betThisRoundMap.end(); it++)
+        {
+            out << " " << it->first << " " << it->second;
+        }
         break;
     case MessageTypeServerToClient::PlayerJoined:
         out << "PLAYER_JOINED " << m.playerId << " " << m.name << " " << m.isSpectator << " " << m.isSeated;
@@ -309,7 +312,7 @@ inline std::string serialize_server(const MessageServerToClient &m)
         break;
     case MessageTypeServerToClient::NewPlayerUpdateGraphics:
         out << "NEW_PLAYER_UPDATE_GRAPHICS";
-        out << " " << m.toAct << " " << m.toCall << " " << m.currentBet << " " << m.minRaise << " " << m.playerHands.size() << " " << m.communityCards.size() << " " << m.dealerId << " " << m.smallBlindId << " " << m.bigBlindId;
+        out << " " << m.toAct << " " << m.toCall << " " << m.currentBet << " " << m.minRaise << " " << m.dealerId << " " << m.smallBlindId << " " << m.bigBlindId << " " << m.playerHands.size() << " " << m.communityCards.size();
         for (auto it = m.playerHands.begin(); it != m.playerHands.end(); it++)
         {
             out << " " << it->first << " " << it->second.first.value << " " << it->second.first.suit << " " << it->second.second.value << " " << it->second.second.suit;
@@ -337,6 +340,11 @@ inline std::string serialize_server(const MessageServerToClient &m)
         }
         out << " " << m.isSeatedMap.size();
         for (auto it = m.isSeatedMap.begin(); it != m.isSeatedMap.end(); it++)
+        {
+            out << " " << it->first << " " << it->second;
+        }
+        out << " " << m.betThisRoundMap.size();
+        for (auto it = m.betThisRoundMap.begin(); it != m.betThisRoundMap.end(); it++)
         {
             out << " " << it->first << " " << it->second;
         }
@@ -395,6 +403,13 @@ inline MessageServerToClient deserialize_server(const std::string &line)
             bool isSeated;
             in >> id >> isSeated;
             msg.isSeatedMap[id] = isSeated;
+        }
+        for (int i = 0; i < msg.playerSum; i++)
+        {
+            int id;
+            int betThisRound;
+            in >> id >> betThisRound;
+            msg.betThisRoundMap[id] = betThisRound;
         }
         break;
     case 'P': // PLAYER_JOINED or PLAYER_LEFT or PLAYER_READY or PLAYER_HAND or POT_UPDATE
@@ -507,7 +522,7 @@ inline MessageServerToClient deserialize_server(const std::string &line)
         break;
     case 'U': // UNORDERED_MAP_UPDATE
         msg.type = MessageTypeServerToClient::UnorderedMapUpdate;
-        int numPlayerMoney, numPlayerNames, numIsSpectator, numIsSeated;
+        int numPlayerMoney, numPlayerNames, numIsSpectator, numIsSeated, numBetThisRound;
         in >> numPlayerMoney;
         for (int i = 0; i < numPlayerMoney; i++)
         {
@@ -538,6 +553,13 @@ inline MessageServerToClient deserialize_server(const std::string &line)
             bool isSeated;
             in >> id >> isSeated;
             msg.isSeatedMap[id] = isSeated;
+        }
+        in >> numBetThisRound;
+        for (int i = 0; i < numBetThisRound; i++)
+        {
+            int id, betThisRound;
+            in >> id >> betThisRound;
+            msg.betThisRoundMap[id] = betThisRound;
         }
         break;
     default:

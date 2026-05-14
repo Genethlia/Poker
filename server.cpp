@@ -66,15 +66,7 @@ void Server::end()
 void Server::play_game()
 {
     promoteWaitingPlayers();
-    vector<shared_ptr<Client>> players;
-
-    for (auto &c : state.clients)
-    {
-        if (c->connected && c->ready && !c->spectator && c->seated)
-        {
-            players.push_back(c);
-        }
-    }
+    vector<shared_ptr<Client>> players = orderedActivePlayers();
     sort(players.begin(), players.end(), [](const shared_ptr<Client> &a, const shared_ptr<Client> &b)
          { return a->id < b->id; });
 
@@ -100,6 +92,7 @@ void Server::play_game()
         client->inHand = false;
         client->allin = false;
         client->betThisRound = 0;
+        client->totalBetThisHand = 0;
     }
 
     gameInProgress = true;
@@ -360,6 +353,7 @@ void Server::onPlayerAction(int playerId, PlayerActionType action, int actionAmo
         int act = min(amt, p->money);
         p->money -= act;
         p->betThisRound += act;
+        p->totalBetThisHand += act;
         state.pot += act;
         if (p->money == 0)
             p->allin = true;
@@ -461,6 +455,7 @@ void Server::gameEndedReset()
         c->inHand = false;
         c->allin = false;
         c->betThisRound = 0;
+        c->totalBetThisHand = 0;
     }
     state.pot = 0;
     state.currentBet = 0;
@@ -525,83 +520,89 @@ void Server::runOutToFive()
 
 void Server::doShowdown()
 {
-    vector<hand> hands;
-    vector<int> handOwnerIds;
-    for (size_t i = 0; i < state.handstate.orderedPlayerIds.size(); i++)
-    {
-        int pid = state.handstate.orderedPlayerIds[i];
-        auto p = find_client_by_id(pid);
-        if (p && p->inHand)
-        {
-            hands.push_back(state.handstate.hole[pid]);
-            handOwnerIds.push_back(pid);
-        }
-    }
-
-    if (hands.empty())
-    {
-        cout << "No hands left for showdown.\n";
-        state.handstate.active = false;
-        gameInProgress = false;
-        removeDisconnectedClients();
-        return;
-    }
-
-    for (auto player : handOwnerIds)
-    {
-        state.broadcast_all(serialize_server(MessageServerToClient{
-            .type = MessageTypeServerToClient::ShowCardsOf,
-            .playerId = player}));
-    }
-
+    vector<SidePot> sidePots = buildSidePots();
     vector<valRank> community = state.handstate.communityCards;
 
-    int winPower = 0;
-    auto winnerIndexes = determine_winner(hands, community, winPower);
+    set<int> allWinners{};
+    int finalWinPower = 0;
 
-    vector<int> winners;
-    for (int idx : winnerIndexes)
+    broadcastShowCardsOf(sidePots);
+
+    for (const auto &pot : sidePots)
     {
-        if (idx >= 0 && idx < (int)handOwnerIds.size())
-            winners.push_back(handOwnerIds[idx]);
+        vector<hand> hands;
+        vector<int> handOwnerIds;
+
+        for (int pid : pot.eligiblePlayers)
+        {
+            auto p = find_client_by_id(pid);
+            if (p && p->inHand)
+            {
+                hands.push_back(state.handstate.hole[pid]);
+                handOwnerIds.push_back(pid);
+            }
+        }
+
+        if (hands.empty())
+        {
+            continue;
+        }
+
+        int winPower = 0;
+        auto winnerIndexes = determine_winner(hands, community, winPower);
+
+        vector<int> winners;
+        for (int idx : winnerIndexes)
+        {
+            if (idx >= 0 && idx < (int)handOwnerIds.size())
+                winners.push_back(handOwnerIds[idx]);
+        }
+
+        if (winners.empty())
+            continue;
+
+        int share = pot.amount / winners.size();
+        int remainder = pot.amount % winners.size();
+
+        for (int winnerId : winners)
+        {
+            auto winner = find_client_by_id(winnerId);
+            if (winner)
+            {
+                winner->money += share;
+            }
+
+            allWinners.insert(winnerId);
+        }
+
+        auto remainderWinner = find_client_by_id(winners[0]);
+        if (remainderWinner)
+        {
+            remainderWinner->money += remainder;
+        }
+
+        finalWinPower = max(finalWinPower, winPower);
+
+        cout << "Side pot of " << pot.amount << " won by ";
+        for (int winnerId : winners)
+        {
+            auto winner = find_client_by_id(winnerId);
+            if (winner)
+            {
+                cout << winner->display_name();
+            }
+        }
+        cout << "\n";
     }
 
+    vector<int> allWinnersVector(allWinners.begin(), allWinners.end());
     state.gameState = GameState::Showdown;
     broadcastGameState();
     state.broadcast_all(serialize_server(MessageServerToClient{
         .type = MessageTypeServerToClient::Showdown,
         .potAmount = state.pot,
-        .idWinners = winners,
-        .winPower = winPower}));
-
-    if (winners.size() == 1)
-    {
-        auto winner = find_client_by_id(winners[0]);
-        if (winner)
-        {
-            winner->money += state.pot;
-            cout << "Player " << winner->display_name() << " wins the pot of " << state.pot << " with a showdown!\n";
-        }
-    }
-    else
-    {
-        cout << "Players ";
-        for (size_t i = 0; i < winners.size(); i++)
-        {
-            auto winner = find_client_by_id(winners[i]);
-            if (winner)
-            {
-                winner->money += state.pot / winners.size();
-                cout << winner->display_name() << " (ID: " << winner->id << ") ";
-            }
-        }
-        cout << "split the pot of " << state.pot << " with a showdown!\n";
-        auto remainder_winner = find_client_by_id(state.toAct);
-        if (remainder_winner)
-        {
-            remainder_winner->money += state.pot % winners.size();
-        }
-    }
+        .idWinners = allWinnersVector,
+        .winPower = finalWinPower}));
 
     state.handstate.active = false;
     gameInProgress = false;

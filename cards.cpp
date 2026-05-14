@@ -1,6 +1,6 @@
 #include "cards.h"
 
-Card::Card(float x, float y, valRank card, Images *suitTextures, Font *font, Images *gameimages, bool secret)
+Card::Card(float x, float y, valRank cardInfo, Images *suitTextures, Font *font, Images *gameimages, bool secret)
     : suitTextures(suitTextures), font(font), gameimages(gameimages), secret(secret)
 {
     target = {x, y};
@@ -8,7 +8,7 @@ Card::Card(float x, float y, valRank card, Images *suitTextures, Font *font, Ima
 
     width = 72;
     height = 120;
-    this->card = card;
+    this->card = cardInfo;
 
     moving = true;
     facedown = true;
@@ -87,20 +87,20 @@ void Card::Draw()
     {
         Texture2D tex = suitTextures->filiTexture;
         Rectangle src = {0, 0, (float)tex.width, (float)tex.height};
-        Vector2 origin = {float(tex.width) / 2.0f, float(tex.height) / 2.0f};
+        Vector2 origin1 = {float(tex.width) / 2.0f, float(tex.height) / 2.0f};
 
         Rectangle dst1 = {smallSuitTopLeft.x, smallSuitTopLeft.y, (float)tex.width, (float)tex.height};
 
-        DrawTexturePro(suitTextures->filiTexture, src, dst1, origin, 0, WHITE);
+        DrawTexturePro(suitTextures->filiTexture, src, dst1, origin1, 0, WHITE);
     }
     if (suitTextures->bigfiliTexture.id != 0)
     {
         Texture2D tex = suitTextures->bigfiliTexture;
         Rectangle src = {0, 0, (float)tex.width, (float)tex.height};
-        Vector2 origin = {float(tex.width) / 2.0f, float(tex.height) / 2.0f};
+        Vector2 origin2 = {float(tex.width) / 2.0f, float(tex.height) / 2.0f};
         Rectangle dst = {bigSuitPos.x, bigSuitPos.y, (float)tex.width, (float)tex.height};
 
-        DrawTexturePro(suitTextures->bigfiliTexture, src, dst, origin, 0, WHITE);
+        DrawTexturePro(suitTextures->bigfiliTexture, src, dst, origin2, 0, WHITE);
     }
     // DrawCircle((int)pos.x, (int)pos.y, 5, RED);        // top-left
     // DrawCircle((int)center.x, (int)center.y, 5, BLUE); // center
@@ -169,31 +169,31 @@ void Card::StartFlip()
     flipProgress = 0.0f;
 }
 
-string Card::cardnum(valRank card)
+string Card::cardnum(valRank cardInfo)
 {
-    if (card.value == 14)
+    if (cardInfo.value == 14)
     {
         return "A";
     }
-    if (card.value == 11)
+    if (cardInfo.value == 11)
     {
         return "J";
     }
-    if (card.value == 12)
+    if (cardInfo.value == 12)
     {
         return "Q";
     }
-    if (card.value == 13)
+    if (cardInfo.value == 13)
     {
         return "K";
     }
 
-    return to_string(card.value);
+    return to_string(cardInfo.value);
 }
 
-int Card::GetColorOfRank(valRank card)
+int Card::GetColorOfRank(valRank cardInfo)
 {
-    if (card.suit == 1 || card.suit == 3)
+    if (cardInfo.suit == 1 || cardInfo.suit == 3)
     {
         return 0;
     }

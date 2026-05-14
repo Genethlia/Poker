@@ -50,6 +50,7 @@ struct ServerState
     std::unordered_map<int, int> buildMoneySnapshot() const;
     std::unordered_map<int, bool> buildSpectatorSnapshot() const;
     std::unordered_map<int, bool> buildSeatedSnapshot() const;
+    std::unordered_map<int, int> buildBetThisRoundSnapshot() const;
 
     GameState gameState = GameState::WaitingForPlayers;
 
@@ -92,6 +93,7 @@ public:
     std::function<void(int /*playerId*/, PlayerActionType, int /*actionAmount*/)> on_action_ptr;
     std::function<void(int /*playerId*/)> on_disconnect_ptr;
     int betThisRound = 0;
+    int totalBetThisHand = 0;
 
 private:
     tcp::socket socket;

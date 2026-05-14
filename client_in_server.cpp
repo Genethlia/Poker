@@ -30,7 +30,8 @@ void ServerState::reset_game()
     gameState = GameState::WaitingForPlayers;
     for (const auto &client : clients)
     {
-        client->ready = false;
+        client->betThisRound = 0;
+        client->totalBetThisHand = 0;
     }
 }
 
@@ -53,6 +54,7 @@ Client::Client(tcp::socket s, ServerState *state)
     connected = true;
     disconnectedHandled = false;
     betThisRound = 0;
+    totalBetThisHand = 0;
 }
 
 void Client::start()
@@ -212,6 +214,7 @@ void Client::handle_line(const string &line)
             welcomeMesg.playerMoney = serverState->buildMoneySnapshot();
             welcomeMesg.isSpectatorMap = serverState->buildSpectatorSnapshot();
             welcomeMesg.isSeatedMap = serverState->buildSeatedSnapshot();
+            welcomeMesg.betThisRoundMap = serverState->buildBetThisRoundSnapshot();
             send(make_shared<string>(serialize_server(welcomeMesg)));
 
             response.type = MessageTypeServerToClient::PlayerJoined;
@@ -229,6 +232,9 @@ void Client::handle_line(const string &line)
                 graphicsUpdateMsg.minRaise = serverState->minRaise;
                 graphicsUpdateMsg.playerHands = serverState->handstate.hole;
                 graphicsUpdateMsg.communityCards = serverState->handstate.communityCards;
+                graphicsUpdateMsg.dealerId = serverState->dealerId;
+                graphicsUpdateMsg.smallBlindId = serverState->smallBlindId;
+                graphicsUpdateMsg.bigBlindId = serverState->bigBlindId;
                 send(make_shared<string>(serialize_server(graphicsUpdateMsg)));
             }
 
@@ -251,7 +257,8 @@ void Client::handle_line(const string &line)
                 .playerNames = names,
                 .playerMoney = serverState->buildMoneySnapshot(),
                 .isSpectatorMap = serverState->buildSpectatorSnapshot(),
-                .isSeatedMap = serverState->buildSeatedSnapshot()})));
+                .isSeatedMap = serverState->buildSeatedSnapshot(),
+                .betThisRoundMap = serverState->buildBetThisRoundSnapshot()})));
 
         response.type = MessageTypeServerToClient::PlayerJoined;
         response.playerId = id;
@@ -326,6 +333,7 @@ void Client::handle_line(const string &line)
         response.playerNames = serverState->buildNameSnapshot();
         response.isSpectatorMap = serverState->buildSpectatorSnapshot();
         response.isSeatedMap = serverState->buildSeatedSnapshot();
+        response.betThisRoundMap = serverState->buildBetThisRoundSnapshot();
         send(make_shared<string>(serialize_server(response)));
         validMessage = false; // Don't broadcast this message to other clients
         break;
@@ -378,4 +386,15 @@ std::unordered_map<int, bool> ServerState::buildSeatedSnapshot() const
             seatedSnapshot[client->id] = client->seated;
     }
     return seatedSnapshot;
+}
+
+std::unordered_map<int, int> ServerState::buildBetThisRoundSnapshot() const
+{
+    std::unordered_map<int, int> betThisRoundSnapshot;
+    for (const auto &client : clients)
+    {
+        if (client->id >= 0 && client->connected)
+            betThisRoundSnapshot[client->id] = client->betThisRound;
+    }
+    return betThisRoundSnapshot;
 }

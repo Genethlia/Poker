@@ -52,6 +52,67 @@ vector<int> Server::orderedActiveIds()
     return ids;
 }
 
+std::vector<shared_ptr<Client>> Server::orderedActivePlayers()
+{
+    std::vector<shared_ptr<Client>> players;
+    for (auto &c : state.clients)
+    {
+        if (c->connected && c->ready && !c->spectator && c->seated)
+        {
+            players.push_back(c);
+        }
+    }
+    return players;
+}
+
+std::vector<Server::SidePot> Server::buildSidePots()
+{
+    vector<shared_ptr<Client>> players = orderedActivePlayers();
+
+    players.erase(remove_if(players.begin(), players.end(), [this](const shared_ptr<Client> &c)
+                            { return c->totalBetThisHand == 0; }),
+                  players.end());
+
+    sort(players.begin(), players.end(), [](const shared_ptr<Client> &a, const shared_ptr<Client> &b)
+         { return a->totalBetThisHand < b->totalBetThisHand; });
+
+    vector<SidePot> sidePots;
+
+    int lastLevel = 0;
+
+    for (auto &p : players)
+    {
+        int level = p->totalBetThisHand;
+
+        if (level == lastLevel)
+            continue;
+
+        int gap = level - lastLevel;
+
+        vector<int> contributors;
+        vector<int> eligible;
+
+        for (auto &c : players)
+        {
+            if (c->totalBetThisHand >= level)
+            {
+                contributors.push_back(c->id);
+                if (c->inHand)
+                    eligible.push_back(c->id);
+            }
+        }
+
+        SidePot sp;
+
+        sp.amount = gap * contributors.size();
+        sp.eligiblePlayers = eligible;
+
+        if (sp.amount > 0 && !sp.eligiblePlayers.empty())
+            sidePots.push_back(sp);
+    }
+    return sidePots;
+}
+
 int Server::nextIdNeedingAction(int startId)
 {
     auto ids = orderedActiveIds();
@@ -122,6 +183,31 @@ void Server::broadcastGameState()
         .type = MessageTypeServerToClient::GameState,
         .potAmount = state.pot,
         .gameState = state.gameState}));
+}
+
+void Server::broadcastShowCardsOf(vector<Server::SidePot> &sidePots)
+{
+    set<int> playerIdsToShow;
+
+    for (const auto &p : sidePots)
+    {
+        for (int id : p.eligiblePlayers)
+        {
+            auto p = find_client_by_id(id);
+            if (p && p->inHand)
+            {
+                playerIdsToShow.insert(id);
+            }
+        }
+    }
+
+    for (int id : playerIdsToShow)
+    {
+
+        state.broadcast_all(serialize_server(MessageServerToClient{
+            .type = MessageTypeServerToClient::ShowCardsOf,
+            .playerId = id}));
+    }
 }
 
 void Server::broadcastBettingUpdate(int toCall)
@@ -212,6 +298,7 @@ void Server::postBlind(int playerId, int amount)
     int actualAmount = min(amount, p->money);
     p->money -= actualAmount;
     p->betThisRound += actualAmount;
+    p->totalBetThisHand += actualAmount;
     state.pot += actualAmount;
 
     if (p->money == 0)

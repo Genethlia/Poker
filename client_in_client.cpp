@@ -37,7 +37,7 @@ pop PokerClient::createPopUpMessage(MessageServerToClient msg)
             actionStr = "raised to " + to_string(msg.actionAmount);
             break;
         default:
-            actionStr = "performed an unknown action";
+            actionStr = "performed an illegal action";
             break;
         }
         return pop(nameOfUnsafe(msg.playerId) + " " + actionStr + ".", popUpMessageType::ActionResult);
@@ -50,6 +50,7 @@ pop PokerClient::createPopUpMessage(MessageServerToClient msg)
             string t = (msg.toCall == 0) ? "" : "You need to call " + to_string(msg.toCall) + " to stay in the hand.";
             return pop("It's your turn to act! " + t, popUpMessageType::BettingUpdate);
         }
+        return pop("", popUpMessageType::BettingUpdate);
         break;
     }
     case MessageTypeServerToClient::Showdown:
@@ -280,8 +281,8 @@ void PokerClient::handle_line(const string &line)
                 state.isSpectator[id] = msg.isSpectatorMap[id];
             if (msg.isSeatedMap.find(id) != msg.isSeatedMap.end())
                 state.isSeated[id] = msg.isSeatedMap[id];
-            // auto temp1 = "Player " + name + " (ID: " + to_string(id) + ") is in the game." + (id == msg.playerId ? " (You)" : "");
-            // popUpMessages.push_back(temp1);
+            if (msg.betThisRoundMap.find(id) != msg.betThisRoundMap.end())
+                state.betThisRound[id] = msg.betThisRoundMap[id];
         }
         state.myId = msg.playerId;
         rebuildPlayerPositions();
@@ -403,7 +404,7 @@ void PokerClient::handle_line(const string &line)
     }
     case MessageTypeServerToClient::NewPlayerUpdateGraphics:
     {
-
+        cout << line << "\n";
         // auto tempMessage = "Graphics update for new player: To Act: " + nameOfUnsafe(msg.toAct) + " (ID: " + to_string(msg.toAct) + "), To Call: $" + to_string(msg.toCall) + ", Current Bet: $" + to_string(msg.currentBet) + ", Min Raise: $" + to_string(msg.minRaise);
         // popUpMessages.push_back(tempMessage);
         state.toAct = msg.toAct;               // Update the client state with the new player to act
@@ -488,6 +489,10 @@ void PokerClient::rebuildPlayerPositions()
     std::vector<int> ids;
     for (auto &[id, name] : state.playerNames)
     {
+        bool spectator = state.isSpectator.count(id) && state.isSpectator[id];
+        bool seated = state.isSeated.count(id) && state.isSeated[id];
+        if (spectator && !seated)
+            continue;
         ids.push_back(id);
     }
     std::sort(ids.begin(), ids.end());

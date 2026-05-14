@@ -16,6 +16,12 @@ public:
     void onPlayerAction(int playerId, PlayerActionType action, int actionAmount);
 
 private:
+    struct SidePot
+    {
+        int amount;
+        std::vector<int> eligiblePlayers;
+    };
+
     boost::asio::io_context io;
     ServerState state;
     Deck deck;
@@ -34,6 +40,7 @@ private:
     void handleDisconnect(int playerId);
     void removeDisconnectedClients();
     void broadcastGameState();
+    void broadcastShowCardsOf(vector<Server::SidePot> &sidePots);
     void broadcastBettingUpdate(int toCall);
     void broadcastActionResult(int playerId, PlayerActionType action, int actionAmount, bool ok);
     void broadcastSpectatingUpdate(shared_ptr<Client> c);
@@ -51,4 +58,7 @@ private:
     string findNameById(int id);
 
     std::vector<int> orderedActiveIds();
+    std::vector<shared_ptr<Client>> orderedActivePlayers();
+
+    std::vector<SidePot> buildSidePots();
 };
