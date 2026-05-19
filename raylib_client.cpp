@@ -6,22 +6,7 @@ Font Game::cardFontStatic{}; // Definition of the static card font variable
 
 Game::Game()
 {
-    raiseAmount = 0;
-    actionButtons.push_back(Button(0, 610, 200, 50, "Fold", [this]()
-                                   { client.sendAction(PlayerActionType::Fold); }));
-    actionButtons.push_back(Button(0, 670, 200, 50, "Check", [this]()
-                                   { client.sendAction(PlayerActionType::Check); }));
-    actionButtons.push_back(Button(0, 730, 200, 50, "Call", [this]()
-                                   { client.sendAction(PlayerActionType::Call); }));
-    actionButtons.push_back(Button(0, 790, 200, 50, "Raise", [this]()
-                                   { client.sendAction(PlayerActionType::Raise, raiseAmount);
-                                raiseAmount = 0; }));
-    actionButtons.push_back(Button(0, 550, 200, 50, "Raise +50", [this]()
-                                   { raiseAmount += 50; }));
-    actionButtons.push_back(Button(0, 490, 200, 50, "Raise +100", [this]()
-                                   { raiseAmount += 100; }));
-    actionButtons.push_back(Button(0, 430, 200, 50, "Raise -50", [this]()
-                                   { raiseAmount = std::max(0, raiseAmount - 50); }));
+    uiButton.Init(&client, &popUpMessages, &visualState.gameState, &currentState);
 }
 
 Game::~Game()
@@ -111,14 +96,6 @@ void Game::start()
     CloseWindow();
 }
 
-void Game::updateActionButtons()
-{
-    for (auto &button : actionButtons)
-    {
-        button.Update();
-    }
-}
-
 void Game::update()
 {
 
@@ -139,21 +116,10 @@ void Game::update()
     updateGameState();
     updateFullScreen();
     updateDimensions();
-    if (!sendReady || visualState.gameState == GameState::WaitingForPlayers)
-    {
-        readyButton.Update();
-    }
-    if (sendReady && visualState.gameState == GameState::WaitingForPlayers)
-    {
-        startGameButton.Update();
-    }
-    else if (visualState.gameState == GameState::GameOver)
-    {
-        playAgainButton.Update();
-    }
+    uiButton.Update();
+
     if (visualState.gameState != GameState::WaitingForPlayers && visualState.gameState != GameState::GameOver)
     {
-        updateActionButtons();
         visualState.updateCards();
     }
 }
@@ -228,6 +194,11 @@ void Game::drawSinglePlayer(int id)
 
     pos boxPos = getPlayerPosition(id);
     Seat seat = getPlayerSeat(id);
+
+    if (currentState.betThisRound.count(id) && currentState.betThisRound[id] > 0)
+    {
+        drawBetOfPlayer(id);
+    }
 
     int offsetX = 0, offsetY = 0;
 
@@ -314,34 +285,23 @@ void Game::draw()
 
     drawInput();
     drawPopUpMessages();
+    uiButton.Draw();
 }
 
 void Game::drawInput()
 {
-    if (!sendReady || visualState.gameState == GameState::WaitingForPlayers)
-    {
-        readyButton.Draw();
-    }
     if (visualState.gameState == GameState::WaitingForPlayers)
     {
-        startGameButton.Draw();
         string waitingText = "Waiting for players...";
         int textWidth = MeasureText(waitingText.c_str(), 24);
         DrawText(waitingText.c_str(), VIRTUAL_WIDTH / 2 - textWidth / 2, VIRTUAL_HEIGHT / 2, 24, YELLOW);
     }
     else if (visualState.gameState == GameState::GameOver)
     {
-        playAgainButton.Draw();
+
         string gameOverText = "Game Over!";
         int textWidth = MeasureText(gameOverText.c_str(), 24);
         DrawText(gameOverText.c_str(), VIRTUAL_WIDTH / 2 - textWidth / 2, VIRTUAL_HEIGHT / 2, 24, YELLOW);
-    }
-    else
-    {
-        for (auto &button : actionButtons)
-        {
-            button.Draw();
-        }
     }
     /*
    for (int i = 0; i <= 12; i++)
@@ -428,6 +388,14 @@ void Game::updateVisualState()
             }
         }
     }
+}
+
+void Game::drawBetOfPlayer(int id)
+{
+    int betAmount = currentState.betThisRound[id];
+    pos basePos = getPlayerBetPosition(id);
+    DrawRectangleRounded({basePos.x - 20, basePos.y - 10, 80, 30}, 0.25f, 8, Fade(BLACK, 0.8f));
+    DrawText(TextFormat("$%d", betAmount), basePos.x, basePos.y, 20, GOLD);
 }
 
 void Game::clearCardsIfNecessary()
@@ -563,6 +531,20 @@ pos Game::getPlayerCardPosition(int id)
     if (it == seatCardPositions.end())
     {
         std::cout << "ERROR: Invalid card seat for player id: " << id << std::endl;
+        return {0, 0};
+    }
+
+    return it->second;
+}
+
+pos Game::getPlayerBetPosition(int id)
+{
+    Seat seat = getPlayerSeat(id);
+
+    auto it = seatBetPositions.find(seat);
+    if (it == seatBetPositions.end())
+    {
+        std::cout << "ERROR: Invalid bet seat for player id: " << id << std::endl;
         return {0, 0};
     }
 

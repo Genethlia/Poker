@@ -47,6 +47,7 @@ add_executable(client
   cards.cpp
   images.cpp
   buttons.cpp
+  uibuttons.cpp
   ${SHARED_SOURCES}
 )
 

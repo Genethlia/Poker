@@ -439,6 +439,8 @@ void PokerClient::handle_line(const string &line)
         state.playerNames = msg.playerNames;
         state.isSpectator = msg.isSpectatorMap;
         state.isSeated = msg.isSeatedMap;
+        state.betThisRound = msg.betThisRoundMap;
+        rebuildPlayerPositions();
         break;
     }
     case MessageTypeServerToClient::ShowCardsOf:
