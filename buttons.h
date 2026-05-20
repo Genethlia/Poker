@@ -1,25 +1,36 @@
 #pragma once
+#include "client_in_client.hpp"
 #include <string>
 #include <functional>
 #include <raylib.h>
+#include <algorithm>
 #include <iostream>
+
+enum class quickBetButtonPressed
+{
+    None,
+    Min,
+    Pot,
+    AllIn
+};
 
 class Button
 {
 public:
     Button() = default;
     virtual void Init(int x, int y, int width, int height, const std::string &text, std::function<void()> onClick);
-    virtual void Draw();
+    void Draw(int textSize = 20);
     virtual void Update();
     Vector2 getPosition() const;
+    float getWidth() const;
+    float getHeight() const;
     Rectangle rect;
     std::string text;
     bool isButtonClicked() const;
-    bool isButtonHovered() const;
 
 private:
     int x, y, width, height;
-
+    bool isButtonHovered() const;
     std::function<void()> onClick;
 };
 
@@ -28,7 +39,8 @@ class ActionButton : public Button
 public:
     ActionButton() = default;
     void Init(int x, int y, int width, int height, const std::string &text, std::function<void()> onClick, int *toAct, int *myId);
-    void Draw() override;
+    virtual void Draw();
+    void Update() override;
     int *toAct;
     int *myId;
 };
@@ -48,14 +60,17 @@ class RaiseAmountButton : public ActionButton
 {
 public:
     RaiseAmountButton() = default;
-    void Init(int x, int y, int width, int height, int *toAct, int *myId, int *minRaise, int *money, int *raiseAmount);
+    void Init(int x, int y, int width, int height, PokerClient::ClientState *currentState, int *raiseAmount, bool *buttonInteractionFlag, quickBetButtonPressed *quick);
     void Update() override;
     void Draw() override;
 
 private:
-    int *minRaise;
-    int *money;
+    PokerClient::ClientState *currentState;
     int *raiseAmount;
+    bool *buttonInteractionFlag;
     float percentageRaised;
-    Rectangle rect1;
+    quickBetButtonPressed *quick;
+    bool isButtonPressed() const;
+    Rectangle smallRect;
+    Rectangle barRect;
 };

@@ -394,8 +394,9 @@ void Game::drawBetOfPlayer(int id)
 {
     int betAmount = currentState.betThisRound[id];
     pos basePos = getPlayerBetPosition(id);
+    int textWidth = MeasureText(TextFormat("$%d", betAmount), 20);
     DrawRectangleRounded({basePos.x - 20, basePos.y - 10, 80, 30}, 0.25f, 8, Fade(BLACK, 0.8f));
-    DrawText(TextFormat("$%d", betAmount), basePos.x, basePos.y, 20, GOLD);
+    DrawText(TextFormat("$%d", betAmount), basePos.x - 20 + (80 - textWidth) / 2, basePos.y, 20, GOLD);
 }
 
 void Game::clearCardsIfNecessary()

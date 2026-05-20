@@ -11,10 +11,13 @@ void Button::Init(int x, int y, int width, int height, const std::string &text, 
     rect = {static_cast<float>(x), static_cast<float>(y), static_cast<float>(width), static_cast<float>(height)};
 }
 
-void Button::Draw()
+void Button::Draw(int textSize)
 {
-    DrawRectangleRec(rect, isButtonHovered() ? DARKGREEN : GREEN);
-    DrawText(text.c_str(), x + 10, y + height / 2 - 10, 20, BLACK);
+    DrawRectangleRounded(rect, 0.5f, 16, isButtonHovered() ? DARKGREEN : GREEN);
+    float textWidth = MeasureText(text.c_str(), textSize);
+    float textX = x + (width - textWidth) / 2;
+    float textY = y + height / 2 - textSize / 2;
+    DrawText(text.c_str(), textX, textY, textSize, BLACK);
 }
 
 void Button::Update()
@@ -32,6 +35,16 @@ void Button::Update()
 Vector2 Button::getPosition() const
 {
     return {static_cast<float>(x), static_cast<float>(y)};
+}
+
+float Button::getWidth() const
+{
+    return this->width;
+}
+
+float Button::getHeight() const
+{
+    return this->height;
 }
 
 bool Button::isButtonHovered() const
@@ -54,15 +67,28 @@ void ActionButton::Init(int x, int y, int width, int height, const std::string &
 
 void ActionButton::Draw()
 {
+    int textSize = 20;
     if (*toAct == *myId)
     {
-        Button::Draw();
+        textSize = 30;
+        Button::Draw(textSize);
     }
     else
     {
         Vector2 pos = getPosition();
-        DrawRectangleRec(rect, GRAY);
-        DrawText(text.c_str(), pos.x + 10, pos.y + rect.height / 2 - 10, 20, DARKGRAY);
+        float textWidth = MeasureText(text.c_str(), textSize);
+        float textX = pos.x + (getWidth() - textWidth) / 2;
+        float textY = pos.y + getHeight() / 2 - textSize / 2;
+        DrawRectangleRounded(rect, 0.5f, 16, GRAY);
+        DrawText(text.c_str(), textX, textY, textSize, DARKGRAY);
+    }
+}
+
+void ActionButton::Update()
+{
+    if (*toAct == *myId)
+    {
+        Button::Update();
     }
 }
 
@@ -84,51 +110,123 @@ void CheckCallButton::Update()
         {
             text = "Check";
         }
+        Button::Update();
     }
-    Button::Update();
 }
 
-void RaiseAmountButton::Init(int x, int y, int width, int height, int *toAct, int *myId, int *minRaise, int *money, int *raiseAmount)
+void RaiseAmountButton::Init(int x, int y, int width, int height, PokerClient::ClientState *currentState, int *raiseAmount, bool *buttonInteractionFlag, quickBetButtonPressed *quick)
 {
-    ActionButton::Init(x, y, width, height, "", nullptr, toAct, myId);
-    this->minRaise = minRaise;
-    this->money = money;
+    ActionButton::Init(x, y, width, height, "", nullptr, &currentState->toAct, &currentState->myId);
+    this->currentState = currentState;
     this->raiseAmount = raiseAmount;
+    this->buttonInteractionFlag = buttonInteractionFlag;
+    this->quick = quick;
     this->percentageRaised = 0.0f;
+    barRect = {static_cast<float>(x), static_cast<float>(y), static_cast<float>(width), static_cast<float>(height)};
 }
 
 void RaiseAmountButton::Update()
 {
-    if (minRaise >= money)
+    if (currentState->toAct != currentState->myId)
     {
         return;
     }
-    if (IsMouseButtonDown(MOUSE_LEFT_BUTTON) && isButtonHovered())
-    {
-        if (GetMousePosition().x < rect.x + rect.width / 2)
-        {
-            percentageRaised -= 0.05f;
-            percentageRaised = std::max(0.0f, percentageRaised);
-        }
-        else
-        {
-            percentageRaised += 0.05f;
-            percentageRaised = std::min(1.0f, percentageRaised);
-        }
-        *raiseAmount = *minRaise + static_cast<int>(percentageRaised * (*money - *minRaise));
-    }
+
+    int myId = currentState->myId;
+
+    if (!currentState->playerMoney.count(myId))
+        return;
+
+    if (!currentState->betThisRound.count(myId))
+        return;
+
+    int money = currentState->playerMoney[myId];
+    int currentBet = currentState->currentBet;
+    int minRaise = currentState->minRaise;
+    int betThisRound = currentState->betThisRound[myId];
+
+    int minTotalRaise = minRaise + currentBet;
+    int maxTotalRaise = money + betThisRound;
 
     Vector2 pos = getPosition();
-    rect1 = {pos.x + percentageRaised * rect.width, pos.y - 30, 10, 60};
+    barRect = {pos.x, pos.y, getWidth(), getHeight()};
+
+    if (!*buttonInteractionFlag)
+    {
+        percentageRaised = 0.0f;
+        *raiseAmount = minTotalRaise;
+        *buttonInteractionFlag = true;
+    }
+
+    if (*quick != quickBetButtonPressed::None)
+    {
+        switch (*quick)
+        {
+        case quickBetButtonPressed::Min:
+            *raiseAmount = minTotalRaise;
+            percentageRaised = 0.0f;
+            break;
+        case quickBetButtonPressed::Pot:
+        {
+            *raiseAmount = std::min(currentState->potAmount + currentBet, maxTotalRaise);
+            int range = maxTotalRaise - minTotalRaise;
+            int betForPercentage = *raiseAmount - minTotalRaise;
+            percentageRaised = static_cast<float>(betForPercentage) / range;
+            break;
+        }
+        case quickBetButtonPressed::AllIn:
+            *raiseAmount = maxTotalRaise;
+            percentageRaised = 1.0f;
+            break;
+        default:
+            break;
+        }
+        *quick = quickBetButtonPressed::None;
+    }
+
+    if (maxTotalRaise <= currentBet)
+        return;
+
+    if (minTotalRaise > maxTotalRaise)
+    {
+        *raiseAmount = maxTotalRaise;
+        percentageRaised = 1.0f;
+    }
+
+    else if (isButtonPressed())
+    {
+
+        float mouseX = GetMousePosition().x;
+        percentageRaised = (mouseX - barRect.x) / barRect.width;
+        percentageRaised = std::clamp(percentageRaised, 0.0f, 1.0f);
+
+        int range = maxTotalRaise - minTotalRaise;
+        *raiseAmount = minTotalRaise + static_cast<int>(percentageRaised * range);
+    }
+
+    smallRect = {barRect.x + percentageRaised * barRect.width - 5, barRect.y, 50, 50};
 }
 
 void RaiseAmountButton::Draw()
 {
-    if (minRaise >= money)
+    if (*toAct != *myId)
     {
         return;
     }
-    ActionButton::Draw();
-    DrawText(TextFormat("Raise: $%d", *raiseAmount), rect1.x, rect1.y - 20, 20, BLACK);
-    DrawRectangleRec(rect1, (*toAct == *myId) ? GOLD : GRAY);
+
+    Rectangle barRectDraw = barRect;
+    barRectDraw.width += 45;
+    Rectangle betRect = {barRect.x - 120, barRect.y, 100, barRect.height};
+    DrawRectangleRounded(betRect, 0.5f, 16, BLACK);
+    DrawRectangleRoundedLines(betRect, 0.5f, 16, GRAY);
+    int textWidth = MeasureText(TextFormat("$%d", *raiseAmount), 30);
+    DrawText(TextFormat("$%d", *raiseAmount), barRect.x - 120 + betRect.width / 2 - (textWidth) / 2, barRect.y + 15, 30, WHITE);
+    DrawRectangleRec(barRectDraw, LIGHTGRAY);
+    DrawRectangleRec(smallRect, GOLD);
+}
+
+bool RaiseAmountButton::isButtonPressed() const
+{
+    bool isButtonHovered = CheckCollisionPointRec(GetMousePosition(), barRect) || CheckCollisionPointRec(GetMousePosition(), smallRect);
+    return isButtonHovered && IsMouseButtonDown(MOUSE_LEFT_BUTTON);
 }

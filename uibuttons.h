@@ -20,9 +20,14 @@ private:
     CheckCallButton checkCallButton;
     RaiseAmountButton raiseButton;
     ActionButton confirmRaiseButton;
+    ActionButton minRaiseButton;
+    ActionButton potRaiseButton;
+    ActionButton allInButton;
     Button playAgainButton;
     Button startGameButton;
     Button readyButton;
     bool sendReady;
     int raiseAmount;
+    bool buttonInteractionFlag;
+    quickBetButtonPressed quick;
 };

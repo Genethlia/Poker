@@ -384,14 +384,19 @@ void Server::onPlayerAction(int playerId, PlayerActionType action, int actionAmo
         int raiseTo = actionAmount;
         int minTo = state.currentBet + state.minRaise;
         int maxTo = p->betThisRound + p->money;
-        if (raiseTo < minTo)
-        {
-            ok = false;
-            break;
-        }
+
         if (raiseTo > maxTo)
         {
             raiseTo = maxTo;
+        }
+
+        bool allIn = (raiseTo == maxTo && p->money > 0);
+        bool fullRaise = raiseTo >= minTo;
+
+        if (!fullRaise && !allIn)
+        {
+            ok = false;
+            break;
         }
 
         int additional = raiseTo - p->betThisRound;
@@ -404,14 +409,22 @@ void Server::onPlayerAction(int playerId, PlayerActionType action, int actionAmo
 
         int newTotalBet = p->betThisRound;
         int raiseAmount = newTotalBet - state.currentBet;
-        if (raiseAmount > 0)
-            state.minRaise = raiseAmount;
-        state.currentBet = max(state.currentBet, newTotalBet);
-        state.needsAction.clear();
-        for (auto &c : state.clients)
+        if (fullRaise)
         {
-            if (c->inHand && !c->allin && c->id != playerId)
-                state.needsAction.insert(c->id);
+            if (raiseAmount > 0)
+                state.minRaise = raiseAmount;
+            state.currentBet = max(state.currentBet, newTotalBet);
+            state.needsAction.clear();
+            for (auto &c : state.clients)
+            {
+                if (c->inHand && !c->allin && c->id != playerId)
+                    state.needsAction.insert(c->id);
+            }
+        }
+        else
+        {
+            state.currentBet = max(state.currentBet, newTotalBet);
+            state.needsAction.erase(playerId);
         }
         break;
     }
