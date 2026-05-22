@@ -9,9 +9,10 @@ public:
 
     void UnloadAll();
     void LoadSuit(int rank);
-    void LoadMatHiddenCard();
+    void LoadHiddenCard();
+    void LoadChatTexture();
 
     Texture filiTexture{}, bigfiliTexture{}; // Textures for small and big suit images
-    Texture matTexture{};                    // Table mat texture
     Texture hiddenCardTexture{};
+    Texture chatTexture{};
 };

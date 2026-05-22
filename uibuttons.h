@@ -18,11 +18,11 @@ private:
     PokerClient::ClientState *currentState;
     ActionButton foldButton;
     CheckCallButton checkCallButton;
-    RaiseAmountButton raiseButton;
+    RaiseSliderButton raiseButton;
     ActionButton confirmRaiseButton;
-    ActionButton minRaiseButton;
-    ActionButton potRaiseButton;
-    ActionButton allInButton;
+    RaiseAmountButton minRaiseButton;
+    RaiseAmountButton potRaiseButton;
+    RaiseAmountButton allInButton;
     Button playAgainButton;
     Button startGameButton;
     Button readyButton;

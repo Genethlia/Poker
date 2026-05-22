@@ -327,7 +327,6 @@ void PokerClient::handle_line(const string &line)
         }
         createPopUp = false;
         break;
-        break;
     }
     case MessageTypeServerToClient::ActionResult:
     {
@@ -430,6 +429,7 @@ void PokerClient::handle_line(const string &line)
         gameRunning = true;
         createPopUp = false;
         requestState();
+        rebuildPlayerPositions();
         break;
     }
     case MessageTypeServerToClient::UnorderedMapUpdate:

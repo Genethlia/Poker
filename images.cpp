@@ -58,27 +58,33 @@ void Images::LoadSuit(int rank)
 
     UnloadImage(image);
 }
-void Images::LoadMatHiddenCard()
+void Images::LoadHiddenCard()
 {
-    if (matTexture.id != 0 || hiddenCardTexture.id != 0)
+    if (hiddenCardTexture.id != 0)
     {
-        UnloadTexture(matTexture);
         UnloadTexture(hiddenCardTexture);
     }
-    Image mat = LoadImageFromMemory(".png", mat_png, mat_png_len);
-    if (mat.data != nullptr)
-    {
-        ImageResize(&mat, 2000, 1010);
-        matTexture = LoadTextureFromImage(mat);
-        UnloadImage(mat);
-    }
-
     Image card = LoadImageFromMemory(".png", card_png, card_png_len);
     if (card.data != nullptr)
     {
         ImageResize(&card, 72, 120);
         hiddenCardTexture = LoadTextureFromImage(card);
         UnloadImage(card);
+    }
+}
+
+void Images::LoadChatTexture()
+{
+    if (chatTexture.id != 0)
+    {
+        UnloadTexture(chatTexture);
+    }
+    Image chat = LoadImageFromMemory(".png", chat_png, chat_png_len);
+    if (chat.data != nullptr)
+    {
+        ImageResize(&chat, 100, 100);
+        chatTexture = LoadTextureFromImage(chat);
+        UnloadImage(chat);
     }
 }
 
@@ -94,15 +100,15 @@ void Images::UnloadAll()
         UnloadTexture(bigfiliTexture);
         bigfiliTexture = Texture2D{};
     }
-    if (matTexture.id != 0)
-    {
-        UnloadTexture(matTexture);
-        matTexture = Texture2D{};
-    }
     if (hiddenCardTexture.id != 0)
     {
         UnloadTexture(hiddenCardTexture);
         hiddenCardTexture = Texture2D{};
+    }
+    if (chatTexture.id != 0)
+    {
+        UnloadTexture(chatTexture);
+        chatTexture = Texture2D{};
     }
 }
 

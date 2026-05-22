@@ -450,7 +450,7 @@ void Server::promoteWaitingPlayers()
         if (activePlayers >= 4)
             break;
 
-        if (c->connected && c->spectator)
+        if (c->connected && c->spectator && c->money > 0)
         {
             c->spectator = false;
             c->wantsToPlay = false;

@@ -17,7 +17,7 @@ void UiButton::Init(PokerClient *client, deque<PokerClient::popUpMessage> *popUp
                                 else
                                 {
                                     this->popUpMessages->push_back(PokerClient::popUpMessage("You have already sent ready for this game.", popUpMessageType::Error));
-                                } });
+                                } }, 2); // Green
     playAgainButton.Init(0, 610, 200, 50, "Play Again", [this]()
                          {
                                     if (*this->gamestate == GameState::GameOver)
@@ -27,7 +27,7 @@ void UiButton::Init(PokerClient *client, deque<PokerClient::popUpMessage> *popUp
                                     else
                                     {
                                         this->popUpMessages->push_back(PokerClient::popUpMessage("You can only start a new game once the current game is over.", popUpMessageType::Error));
-                                    } });
+                                    } }, 1); // Blue
     startGameButton.Init(0, 670, 200, 50, "Start Game", [this]()
                          {
                                     if (*this->gamestate == GameState::WaitingForPlayers)
@@ -37,12 +37,12 @@ void UiButton::Init(PokerClient *client, deque<PokerClient::popUpMessage> *popUp
                                     else
                                     {
                                         this->popUpMessages->push_back(PokerClient::popUpMessage("You can only start the game when it's in the waiting for players state.", popUpMessageType::Error));
-                                    } });
+                                    } }, 2); // Green
     raiseAmount = 0;
     buttonInteractionFlag = false;
     quick = quickBetButtonPressed::None;
     foldButton.Init(10, 800, 200, 80, "Fold", [this]()
-                    { this->client->sendAction(PlayerActionType::Fold); }, &currentState->toAct, &currentState->myId);
+                    { this->client->sendAction(PlayerActionType::Fold); }, &currentState->toAct, &currentState->myId, 0); // Red
     checkCallButton.Init(230, 800, 200, 80, "Check", [this, currentState]()
                          {
         if (currentState->toCall > 0)
@@ -53,7 +53,7 @@ void UiButton::Init(PokerClient *client, deque<PokerClient::popUpMessage> *popUp
         {
             this->client->sendAction(PlayerActionType::Check);
         } }, &currentState->toAct, &currentState->myId, &currentState->toCall);
-    raiseButton.Init(1000, 820, 500, 50, currentState, &raiseAmount, &buttonInteractionFlag, &quick);
+    raiseButton.Init(1020, 820, 500, 50, currentState, &raiseAmount, &buttonInteractionFlag, &quick);
     confirmRaiseButton.Init(450, 800, 200, 80, "Bet", [this]()
                             {
                                                 if (raiseAmount > 0)
@@ -65,8 +65,8 @@ void UiButton::Init(PokerClient *client, deque<PokerClient::popUpMessage> *popUp
                                                 else
                                                 {
                                                     this->popUpMessages->push_back(PokerClient::popUpMessage("Raise amount must be greater than 0.", popUpMessageType::Error));
-                                                } }, &currentState->toAct, &currentState->myId);
-    minRaiseButton.Init(1350, 600, 220, 50, "Min Raise", [this, currentState]()
+                                                } }, &currentState->toAct, &currentState->myId, 3); // Gold
+    minRaiseButton.Init(1350, 620, 220, 50, "Min Raise", [this, currentState]()
                         {
         if(!currentState->playerMoney.count(currentState->myId))
             return;
@@ -76,9 +76,9 @@ void UiButton::Init(PokerClient *client, deque<PokerClient::popUpMessage> *popUp
         int betthisRound = currentState->betThisRound[currentState->myId];
         int minTotalRaise = currentState->minRaise + currentState->currentBet;
         raiseAmount = std::min(minTotalRaise,money+betthisRound);
-        quick=quickBetButtonPressed::Min; }, &currentState->toAct, &currentState->myId);
+        quick=quickBetButtonPressed::Min; }, &currentState->toAct, &currentState->myId, 2); // Green
 
-    potRaiseButton.Init(1350, 660, 220, 50, "Pot Raise", [this, currentState]()
+    potRaiseButton.Init(1350, 680, 220, 50, "Pot Raise", [this, currentState]()
                         {
                             if(!currentState->playerMoney.count(currentState->myId))
                                 return;
@@ -88,8 +88,8 @@ void UiButton::Init(PokerClient *client, deque<PokerClient::popUpMessage> *popUp
                             int betthisRound = currentState->betThisRound[currentState->myId];
                             int potRaise = currentState->potAmount + currentState->currentBet;
                             raiseAmount = std::min(potRaise,money+betthisRound);
-                            quick=quickBetButtonPressed::Pot; }, &currentState->toAct, &currentState->myId);
-    allInButton.Init(1350, 720, 220, 50, "All In", [this, currentState]()
+                            quick=quickBetButtonPressed::Pot; }, &currentState->toAct, &currentState->myId, 1); // Blue
+    allInButton.Init(1350, 740, 220, 50, "All In", [this, currentState]()
                      {
                          if (!currentState->playerMoney.count(currentState->myId))
                              return;
@@ -98,7 +98,7 @@ void UiButton::Init(PokerClient *client, deque<PokerClient::popUpMessage> *popUp
                          int money = currentState->playerMoney[currentState->myId];
                          int betthisRound = currentState->betThisRound[currentState->myId];
                          raiseAmount = money + betthisRound;
-                          quick=quickBetButtonPressed::AllIn; }, &currentState->toAct, &currentState->myId);
+                          quick=quickBetButtonPressed::AllIn; }, &currentState->toAct, &currentState->myId, 3); // Gold
 }
 
 void UiButton::Draw()

@@ -1,6 +1,6 @@
 #include "buttons.h"
 
-void Button::Init(int x, int y, int width, int height, const std::string &text, std::function<void()> onClick)
+void Button::Init(int x, int y, int width, int height, const std::string &text, std::function<void()> onClick, int colorScheme)
 {
     this->x = x;
     this->y = y;
@@ -8,12 +8,14 @@ void Button::Init(int x, int y, int width, int height, const std::string &text, 
     this->height = height;
     this->text = text;
     this->onClick = onClick;
+    this->colorScheme = colorScheme;
     rect = {static_cast<float>(x), static_cast<float>(y), static_cast<float>(width), static_cast<float>(height)};
 }
 
 void Button::Draw(int textSize)
 {
-    DrawRectangleRounded(rect, 0.5f, 16, isButtonHovered() ? DARKGREEN : GREEN);
+    Color bgColor = isButtonHovered() ? buttonColorSchemes[colorScheme].first : buttonColorSchemes[colorScheme].second;
+    DrawRectangleRounded(rect, 0.5f, 16, bgColor);
     float textWidth = MeasureText(text.c_str(), textSize);
     float textX = x + (width - textWidth) / 2;
     float textY = y + height / 2 - textSize / 2;
@@ -58,16 +60,16 @@ bool Button::isButtonClicked() const
     return isButtonHovered() && IsMouseButtonPressed(MOUSE_LEFT_BUTTON);
 }
 
-void ActionButton::Init(int x, int y, int width, int height, const std::string &text, std::function<void()> onClick, int *toAct, int *myId)
+void ActionButton::Init(int x, int y, int width, int height, const std::string &text, std::function<void()> onClick, int *toAct, int *myId, int colorScheme)
 {
-    Button::Init(x, y, width, height, text, onClick);
+    Button::Init(x, y, width, height, text, onClick, colorScheme);
     this->toAct = toAct;
     this->myId = myId;
 }
 
 void ActionButton::Draw()
 {
-    int textSize = 20;
+    int textSize = 25;
     if (*toAct == *myId)
     {
         textSize = 30;
@@ -94,7 +96,7 @@ void ActionButton::Update()
 
 void CheckCallButton::Init(int x, int y, int width, int height, const std::string &text, std::function<void()> onClick, int *toAct, int *myId, int *toCall)
 {
-    ActionButton::Init(x, y, width, height, text, onClick, toAct, myId);
+    ActionButton::Init(x, y, width, height, text, onClick, toAct, myId, 2);
     this->toCall = toCall;
 }
 
@@ -105,18 +107,20 @@ void CheckCallButton::Update()
         if (*toCall > 0)
         {
             text = "Call $" + std::to_string(*toCall);
+            colorScheme = 2;
         }
         else
         {
             text = "Check";
+            colorScheme = 1;
         }
         Button::Update();
     }
 }
 
-void RaiseAmountButton::Init(int x, int y, int width, int height, PokerClient::ClientState *currentState, int *raiseAmount, bool *buttonInteractionFlag, quickBetButtonPressed *quick)
+void RaiseSliderButton::Init(int x, int y, int width, int height, PokerClient::ClientState *currentState, int *raiseAmount, bool *buttonInteractionFlag, quickBetButtonPressed *quick)
 {
-    ActionButton::Init(x, y, width, height, "", nullptr, &currentState->toAct, &currentState->myId);
+    ActionButton::Init(x, y, width, height, "", nullptr, &currentState->toAct, &currentState->myId, 0);
     this->currentState = currentState;
     this->raiseAmount = raiseAmount;
     this->buttonInteractionFlag = buttonInteractionFlag;
@@ -125,7 +129,7 @@ void RaiseAmountButton::Init(int x, int y, int width, int height, PokerClient::C
     barRect = {static_cast<float>(x), static_cast<float>(y), static_cast<float>(width), static_cast<float>(height)};
 }
 
-void RaiseAmountButton::Update()
+void RaiseSliderButton::Update()
 {
     if (currentState->toAct != currentState->myId)
     {
@@ -207,7 +211,7 @@ void RaiseAmountButton::Update()
     smallRect = {barRect.x + percentageRaised * barRect.width - 5, barRect.y, 50, 50};
 }
 
-void RaiseAmountButton::Draw()
+void RaiseSliderButton::Draw()
 {
     if (*toAct != *myId)
     {
@@ -225,8 +229,16 @@ void RaiseAmountButton::Draw()
     DrawRectangleRec(smallRect, GOLD);
 }
 
-bool RaiseAmountButton::isButtonPressed() const
+bool RaiseSliderButton::isButtonPressed() const
 {
     bool isButtonHovered = CheckCollisionPointRec(GetMousePosition(), barRect) || CheckCollisionPointRec(GetMousePosition(), smallRect);
     return isButtonHovered && IsMouseButtonDown(MOUSE_LEFT_BUTTON);
+}
+
+void RaiseAmountButton::Draw()
+{
+    if (*toAct == *myId)
+    {
+        Button::Draw(30);
+    }
 }

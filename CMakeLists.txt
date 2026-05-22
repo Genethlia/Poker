@@ -1,8 +1,17 @@
 cmake_minimum_required(VERSION 3.16)
+
+cmake_policy(SET CMP0091 NEW)
+
 project(POKER LANGUAGES CXX)
 
 set(CMAKE_CXX_STANDARD 20)
 set(CMAKE_CXX_STANDARD_REQUIRED ON)
+
+# Use static MSVC runtime: /MT in Release, /MTd in Debug
+# This removes MSVCP140.dll / VCRUNTIME140.dll dependencies
+if (MSVC)
+  set(CMAKE_MSVC_RUNTIME_LIBRARY "MultiThreaded$<$<CONFIG:Debug>:Debug>")
+endif()
 
 # Warnings
 if (MSVC)
@@ -23,7 +32,10 @@ function(make_mingw_static target_name)
 endfunction()
 
 # ---- raylib ----
+set(BUILD_SHARED_LIBS OFF CACHE BOOL "" FORCE)
 set(BUILD_EXAMPLES OFF CACHE BOOL "" FORCE)
+set(BUILD_GAMES OFF CACHE BOOL "" FORCE)
+
 add_subdirectory(${CMAKE_SOURCE_DIR}/raylib raylib_build)
 
 # --- Shared sources used by both client and server ---
@@ -43,13 +55,24 @@ add_executable(server
 add_executable(client
   client.cpp
   client_in_client.cpp
-  raylib_client.cpp
+  game.cpp
   cards.cpp
   images.cpp
   buttons.cpp
   uibuttons.cpp
   ${SHARED_SOURCES}
 )
+
+# Force static MSVC runtime on your targets too
+if (MSVC)
+  set_property(TARGET server PROPERTY
+    MSVC_RUNTIME_LIBRARY "MultiThreaded$<$<CONFIG:Debug>:Debug>"
+  )
+
+  set_property(TARGET client PROPERTY
+    MSVC_RUNTIME_LIBRARY "MultiThreaded$<$<CONFIG:Debug>:Debug>"
+  )
+endif()
 
 # Threads
 find_package(Threads REQUIRED)

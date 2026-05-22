@@ -17,6 +17,8 @@
 //Build the examples.
 BUILD_EXAMPLES:BOOL=OFF
 
+BUILD_GAMES:BOOL=OFF
+
 //Build shared libraries
 BUILD_SHARED_LIBS:BOOL=OFF
 
