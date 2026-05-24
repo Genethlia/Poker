@@ -210,7 +210,7 @@ void Game::drawSinglePlayer(int id)
         offsetY = -30;
         break;
     case Seat::Left:
-        offsetX = -280;
+
         break;
     case Seat::Right:
         offsetX = 100;
