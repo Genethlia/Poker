@@ -453,7 +453,6 @@ void Server::promoteWaitingPlayers()
         if (c->connected && c->spectator && c->money > 0)
         {
             c->spectator = false;
-            c->wantsToPlay = false;
             c->seated = true;
             activePlayers++;
             broadcastSpectatingUpdate(c);
@@ -476,11 +475,12 @@ void Server::gameEndedReset()
     state.toAct = -1;
     state.needsAction.clear();
     state.handstate.clear();
+    state.gameState = GameState::WaitingForPlayers;
 
     removeBrokePlayers();
     promoteWaitingPlayers();
 
-    // play_game();
+    scheduleNextGame();
 }
 
 void Server::removeBrokePlayers()
@@ -491,7 +491,6 @@ void Server::removeBrokePlayers()
         {
             c->spectator = true;
             c->seated = false;
-            c->wantsToPlay = false;
             broadcastSpectatingUpdate(c);
         }
     }

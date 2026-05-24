@@ -1,5 +1,7 @@
 #pragma once
 #include <vector>
+#include <unordered_map>
+#include <string>
 #include <raylib.h>
 using Colors = std::pair<Color, Color>;
 inline std::vector<Colors> buttonColorSchemes = {
@@ -8,3 +10,8 @@ inline std::vector<Colors> buttonColorSchemes = {
     Colors{{0, 114, 0, 255}, {0, 128, 0, 255}},      // Green
     Colors{{255, 183, 0, 255}, {255, 170, 0, 255}}   // Gold
 };
+
+inline unordered_map<string, Color> all_Colors = {
+    {"woodColor", {60, 30, 10, 255}},
+    {"tableRed", {200, 33, 42, 255}},
+    {"background", {82, 36, 0, 255}}};

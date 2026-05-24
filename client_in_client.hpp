@@ -46,6 +46,7 @@ public:
 
     void sendReady();
     void requestState();
+    void requestUnorderedMapUpdates();
     void leaveGame();
     void sendAction(PlayerActionType action, int amount = 0);
     void startGame();

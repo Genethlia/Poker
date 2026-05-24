@@ -145,6 +145,14 @@ void PokerClient::requestState()
     write_line(serialize_client(msg));
 }
 
+void PokerClient::requestUnorderedMapUpdates()
+{
+    MessageClientToServer msg;
+    msg.type = MessageTypeClientToServer::RequestUnorderedMapUpdates;
+
+    write_line(serialize_client(msg));
+}
+
 void PokerClient::leaveGame()
 {
     MessageClientToServer msg;
@@ -341,6 +349,7 @@ void PokerClient::handle_line(const string &line)
     case MessageTypeServerToClient::PlayerHand:
     {
         auto temp = extractCardValueSuit(msg);
+        cout << "Received hand card for player " << msg.playerId << ": Value = " << temp.value << ", Suit = " << temp.suit << "\n";
         if (msg.playerId == state.myId)
         {
             state.myCards.push_back(temp);
@@ -361,9 +370,7 @@ void PokerClient::handle_line(const string &line)
     case MessageTypeServerToClient::Showdown:
     {
         gameRunning = false;
-        MessageClientToServer requestUpdate;
-        requestUpdate.type = MessageTypeClientToServer::RequestUnorderedMapUpdates;
-        write_line(serialize_client(requestUpdate)); // Request unordered map updates after showdown
+        requestUnorderedMapUpdates();
         break;
     }
     case MessageTypeServerToClient::BettingUpdate:
@@ -378,9 +385,7 @@ void PokerClient::handle_line(const string &line)
         state.dealerId = msg.dealerId;         // Update the client state with the new dealer ID
         state.smallBlindId = msg.smallBlindId; // Update the client state with the new small blind ID
         state.bigBlindId = msg.bigBlindId;     // Update the client state with the new big blind ID
-        MessageClientToServer requestUpdate;
-        requestUpdate.type = MessageTypeClientToServer::RequestUnorderedMapUpdates;
-        write_line(serialize_client(requestUpdate)); // Request unordered map updates after betting update
+        requestUnorderedMapUpdates();
         break;
     }
     case MessageTypeServerToClient::Reject:
@@ -403,7 +408,10 @@ void PokerClient::handle_line(const string &line)
     }
     case MessageTypeServerToClient::NewPlayerUpdateGraphics:
     {
-        cout << line << "\n";
+        state.opponentCards.clear();
+        state.communityCards.clear();
+        state.idToShowCardsOf.clear();
+        // cout << line << "\n";
         // auto tempMessage = "Graphics update for new player: To Act: " + nameOfUnsafe(msg.toAct) + " (ID: " + to_string(msg.toAct) + "), To Call: $" + to_string(msg.toCall) + ", Current Bet: $" + to_string(msg.currentBet) + ", Min Raise: $" + to_string(msg.minRaise);
         // popUpMessages.push_back(tempMessage);
         state.toAct = msg.toAct;               // Update the client state with the new player to act
@@ -429,7 +437,7 @@ void PokerClient::handle_line(const string &line)
         gameRunning = true;
         createPopUp = false;
         requestState();
-        rebuildPlayerPositions();
+        requestUnorderedMapUpdates();
         break;
     }
     case MessageTypeServerToClient::UnorderedMapUpdate:
@@ -447,6 +455,14 @@ void PokerClient::handle_line(const string &line)
     {
         createPopUp = false;
         state.idToShowCardsOf.push_back(msg.playerId);
+        break;
+    }
+    case MessageTypeServerToClient::SpectatingUpdate:
+    {
+        createPopUp = false;
+        state.isSpectator[msg.playerId] = msg.isSpectator;
+        state.isSeated[msg.playerId] = msg.isSeated;
+        rebuildPlayerPositions();
         break;
     }
     default:
@@ -469,6 +485,7 @@ void PokerClient::newGame()
     state.communityCards.clear();
     state.myCards.clear();
     state.opponentCards.clear();
+    state.idToShowCardsOf.clear();
     state.toAct = -1;
     state.toCall = 0;
     state.currentBet = 0;
@@ -478,10 +495,8 @@ void PokerClient::newGame()
 
 valRank PokerClient::extractCardValueSuit(const MessageServerToClient &msg)
 {
-    cout << msg.cards << "\n";
     int value = stoi(msg.cards.substr(0, msg.cards.find(',')));
     int suit = stoi(msg.cards.substr(msg.cards.find(',') + 1));
-    cout << "Parsed card: Value = " << value << ", Suit = " << suit << "\n";
     return {value, suit};
 }
 
@@ -495,6 +510,7 @@ void PokerClient::rebuildPlayerPositions()
         bool seated = state.isSeated.count(id) && state.isSeated[id];
         if (spectator && !seated)
             continue;
+
         ids.push_back(id);
     }
     std::sort(ids.begin(), ids.end());
@@ -527,7 +543,8 @@ void PokerClient::rebuildPlayerPositions()
     {
         if (id == state.myId)
         {
-            state.PlayerPosition[id] = playerCardPositionsAndAngles.back(); // Position for self
+            // state.PlayerPosition[id] = playerCardPositionsAndAngles.back(); // Position for self
+            state.PlayerPosition[id] = {Seat::Left, 90}; // Debug: Temporarily set self to Left seat for chat testing.
         }
         else
         {

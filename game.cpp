@@ -111,16 +111,16 @@ void Game::update()
     }
     */
 
-    clearCardsIfNecessary();
-    updateVisualState();
-    updatePopUpMessages();
     updateGameState();
+    clearCardsIfNecessary();
+    updatePopUpMessages();
     updateFullScreen();
     updateDimensions();
     uiButton.Update();
 
     if (visualState.gameState != GameState::WaitingForPlayers && visualState.gameState != GameState::GameOver)
     {
+        updateVisualState();
         visualState.updateCards();
     }
 }
@@ -139,6 +139,7 @@ void Game::updateGameState()
         if (hasEnoughTimePassed(visualState.showdownTimerStartTime, 5.0))
         {
             visualState.gameState = GameState::GameOver;
+            resetForNewGame();
         }
     }
 }
@@ -188,38 +189,15 @@ void Game::drawPlayers()
 
 void Game::drawSinglePlayer(int id)
 {
-    int rotationAngle = getPlayerCardRotationAngle(id);
-
     std::string name = getPlayerName(id);
     int money = currentState.playerMoney.count(id) ? currentState.playerMoney[id] : 0;
 
-    pos boxPos = getPlayerPosition(id);
+    pos boxPos = getSeatLayout(id).nameBoxPos;
     Seat seat = getPlayerSeat(id);
 
     if (currentState.betThisRound.count(id) && currentState.betThisRound[id] > 0)
     {
         drawBetOfPlayer(id);
-    }
-
-    int offsetX = 0, offsetY = 0;
-
-    switch (seat)
-    {
-    case Seat::Top:
-        offsetX = -300;
-        offsetY = -30;
-        break;
-    case Seat::Left:
-
-        break;
-    case Seat::Right:
-        offsetX = 100;
-        offsetY = 110;
-        break;
-    case Seat::Bottom:
-        offsetX = -100;
-        offsetY = 30;
-        break;
     }
 
     Color bgColor = BLACK;
@@ -228,35 +206,31 @@ void Game::drawSinglePlayer(int id)
         bgColor = {122, 0, 0, 255}; // DARK RED
 
     DrawRectangleRounded(
-        {boxPos.x + offsetX, boxPos.y + offsetY, 200, 65},
+        {boxPos.x, boxPos.y, 200, 65},
         0.25f,
         8,
         bgColor);
 
-    offsetX += 10;
-    DrawText(name.c_str(), boxPos.x + offsetX, boxPos.y + offsetY, 22, WHITE);
-    DrawText(TextFormat("$%d", money), boxPos.x + offsetX, boxPos.y + offsetY + 28, 20, GOLD);
+    int offsetX = 10;
+    DrawText(name.c_str(), boxPos.x + offsetX, boxPos.y, 22, WHITE);
+    DrawText(TextFormat("$%d", money), boxPos.x + offsetX, boxPos.y + 28, 20, GOLD);
 
     if (id == currentState.myId)
     {
-        DrawText("YOU", boxPos.x + offsetX + 150, boxPos.y + offsetY, 18, WHITE);
-        for (auto &card : visualState.myCards)
-        {
-            card.Draw();
-        }
+        DrawText("YOU", boxPos.x + 150, boxPos.y, 18, WHITE);
     }
     bgColor = WHITE;
     if (id == currentState.dealerId)
     {
-        DrawText("D", boxPos.x + offsetX + 140, boxPos.y + offsetY + 40, 18, bgColor);
+        DrawText("D", boxPos.x + 140, boxPos.y + 40, 18, bgColor);
     }
     if (id == currentState.smallBlindId)
     {
-        DrawText("SB", boxPos.x + offsetX + 160, boxPos.y + offsetY + 40, 18, bgColor);
+        DrawText("SB", boxPos.x + 160, boxPos.y + 40, 18, bgColor);
     }
     if (id == currentState.bigBlindId)
     {
-        DrawText("BB", boxPos.x + offsetX + 160, boxPos.y + offsetY + 40, 18, bgColor);
+        DrawText("BB", boxPos.x + 160, boxPos.y + 40, 18, bgColor);
     }
 }
 
@@ -279,7 +253,7 @@ void Game::VisualState::updateCards()
 void Game::draw()
 {
     drawBackground();
-
+    drawChat();
     visualState.drawCards();
     drawPlayers();
     drawMoneyChips();
@@ -331,7 +305,7 @@ void Game::drawMoneyChips()
     {
         if (!currentState.isSeated[id] || currentState.isSpectator[id])
             continue; // Only draw chips for seated players who are not spectators
-        pos basePos = getPlayerPosition(id);
+        pos basePos = getSeatLayout(id).chipPos;
         int rotationAngle = getPlayerCardRotationAngle(id);
         chips.drawChips(basePos, rotationAngle);
     }
@@ -339,10 +313,10 @@ void Game::drawMoneyChips()
 
 void Game::VisualState::drawCards()
 {
-    // for (auto &card : myCards)
-    // {
-    //     card.Draw();
-    // }
+    for (auto &card : myCards)
+    {
+        card.Draw();
+    }
     for (auto &card : opponentCards)
     {
         card.second.Draw();
@@ -358,14 +332,19 @@ void Game::updateVisualState()
     while (currentState.myCards.size() > visualState.myCards.size())
     {
         valRank cardInfo = currentState.myCards[visualState.myCards.size()];
-        visualState.myCards.emplace_back(getPlayerCardPosition(currentState.myId).x + DrawnCount[currentState.myId] * 25, getPlayerCardPosition(currentState.myId).y + DrawnCount[currentState.myId] * 5, cardInfo, &suitTextures[cardInfo.suit], &cardFont, &gameImages);
+        visualState.myCards.emplace_back(getSeatLayout(currentState.myId).cardPos.x + DrawnCount[currentState.myId] * 25, getSeatLayout(currentState.myId).cardPos.y + DrawnCount[currentState.myId] * 5, cardInfo, &suitTextures[cardInfo.suit], &cardFont, &gameImages);
         DrawnCount[currentState.myId]++;
     }
     while (currentState.opponentCards.size() > visualState.opponentCards.size())
     {
         auto &[id, cardInfo] = currentState.opponentCards[visualState.opponentCards.size()];
-        pos basePos = getPlayerCardPosition(id);
-        int rotationAngle = 0; // Show them normally
+
+        if (!currentState.PlayerPosition.count(id))
+        {
+            cout << "Error: Received card for player ID " << id << " but no position information is available.\n";
+            break;
+        }
+        pos basePos = getSeatLayout(id).cardPos;
         int offsetX = DrawnCount[id] * 80;
         visualState.opponentCards.emplace_back(id, Card(basePos.x + offsetX, basePos.y, cardInfo, &suitTextures[cardInfo.suit], &cardFont, &gameImages, true));
         DrawnCount[id]++;
@@ -394,7 +373,7 @@ void Game::updateVisualState()
 void Game::drawBetOfPlayer(int id)
 {
     int betAmount = currentState.betThisRound[id];
-    pos basePos = getPlayerBetPosition(id);
+    pos basePos = getSeatLayout(id).betPos;
     int textWidth = MeasureText(TextFormat("$%d", betAmount), 20);
     DrawRectangleRounded({basePos.x - 20, basePos.y - 10, 80, 30}, 0.25f, 8, Fade(BLACK, 0.8f));
     DrawText(TextFormat("$%d", betAmount), basePos.x - 20 + (80 - textWidth) / 2, basePos.y, 20, GOLD);
@@ -402,11 +381,23 @@ void Game::drawBetOfPlayer(int id)
 
 void Game::clearCardsIfNecessary()
 {
-    if (visualState.myCards.size() > currentState.myCards.size() || visualState.opponentCards.size() > currentState.opponentCards.size() || visualState.communityCards.size() > currentState.communityCards.size())
+    bool hasCardWithoutPosition = false;
+
+    for (auto &[id, card] : visualState.opponentCards)
+    {
+        if (!currentState.PlayerPosition.count(id))
+        {
+            hasCardWithoutPosition = true;
+            break;
+        }
+    }
+
+    if (hasCardWithoutPosition || visualState.myCards.size() > currentState.myCards.size() || visualState.opponentCards.size() > currentState.opponentCards.size() || visualState.communityCards.size() > currentState.communityCards.size() || visualState.idToShowCardsOf.size() > currentState.idToShowCardsOf.size())
     {
         visualState.myCards.clear();
         visualState.opponentCards.clear();
         visualState.communityCards.clear();
+        visualState.idToShowCardsOf.clear();
         DrawnCount.clear();
     }
 }
@@ -446,6 +437,22 @@ void Game::onServerStateChange(GameState newState)
     {
         visualState.showdownTimerStartTime = GetTime();
     }
+}
+
+void Game::resetForNewGame()
+{
+    visualState.communityCards.clear();
+    visualState.opponentCards.clear();
+    visualState.myCards.clear();
+    visualState.idToShowCardsOf.clear();
+    DrawnCount.clear();
+    visualState.showdownTimerStartTime = 0.0;
+}
+
+void Game::drawChat()
+{
+    DrawTexture(gameImages.chatTexture, 20, 20, WHITE);
+    DrawRectangle(20, 20, 380, 250, Fade(WHITE, 0.5f));
 }
 
 Color Game::getColorForPopUpMessageType(popUpMessageType type)
@@ -511,45 +518,15 @@ Seat Game::getPlayerSeat(int id)
     return it->second.first;
 }
 
-pos Game::getPlayerPosition(int id)
+seatLayout Game::getSeatLayout(int id)
 {
     Seat seat = getPlayerSeat(id);
-
-    auto it = seatPositions.find(seat);
-    if (it == seatPositions.end())
+    auto it = seatLayouts.find(seat);
+    if (it == seatLayouts.end())
     {
-        std::cout << "ERROR: Invalid seat for player id: " << id << std::endl;
-        return {0, 0};
+        std::cout << "ERROR: Invalid seat layout for player id: " << id << std::endl;
+        return seatLayout();
     }
-
-    return it->second;
-}
-
-pos Game::getPlayerCardPosition(int id)
-{
-    Seat seat = getPlayerSeat(id);
-
-    auto it = seatCardPositions.find(seat);
-    if (it == seatCardPositions.end())
-    {
-        std::cout << "ERROR: Invalid card seat for player id: " << id << std::endl;
-        return {0, 0};
-    }
-
-    return it->second;
-}
-
-pos Game::getPlayerBetPosition(int id)
-{
-    Seat seat = getPlayerSeat(id);
-
-    auto it = seatBetPositions.find(seat);
-    if (it == seatBetPositions.end())
-    {
-        std::cout << "ERROR: Invalid bet seat for player id: " << id << std::endl;
-        return {0, 0};
-    }
-
     return it->second;
 }
 

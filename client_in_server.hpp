@@ -79,9 +79,8 @@ public:
     bool ready;
     bool connected;
     bool disconnectedHandled;
-    bool spectator = false;
-    bool wantsToPlay = false;
-    bool seated = true;
+    bool spectator = true;
+    bool seated = false;
 
     std::string getName() const { return name; }
     int id = -1;

@@ -109,6 +109,8 @@ std::vector<Server::SidePot> Server::buildSidePots()
 
         if (sp.amount > 0 && !sp.eligiblePlayers.empty())
             sidePots.push_back(sp);
+
+        lastLevel = level;
     }
     return sidePots;
 }
@@ -303,4 +305,24 @@ void Server::postBlind(int playerId, int amount)
 
     if (p->money == 0)
         p->allin = true;
+}
+
+void Server::scheduleNextGame()
+{
+    nextGameTimer.expires_after(std::chrono::seconds(5));
+    nextGameTimer.async_wait([this](const boost::system::error_code &ec)
+                             {
+                                 if (ec)
+                                 {
+                                     return;
+                                 }
+                                 if(!state.all_ready())
+                                 {
+                                     return;
+                                 }
+                                 if(gameInProgress)
+                                 {
+                                     return;
+                                 }
+                                play_game(); });
 }

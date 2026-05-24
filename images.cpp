@@ -82,7 +82,7 @@ void Images::LoadChatTexture()
     Image chat = LoadImageFromMemory(".png", chat_png, chat_png_len);
     if (chat.data != nullptr)
     {
-        ImageResize(&chat, 100, 100);
+        ImageResize(&chat, 40, 40);
         chatTexture = LoadTextureFromImage(chat);
         UnloadImage(chat);
     }

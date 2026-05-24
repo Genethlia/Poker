@@ -7,7 +7,7 @@ void UiButton::Init(PokerClient *client, deque<PokerClient::popUpMessage> *popUp
     this->gamestate = gamestate;
     this->currentState = currentState;
     sendReady = false;
-    readyButton.Init(0, 550, 200, 50, "Ready", [this]()
+    readyButton.Init(10, 560, 200, 50, "Ready", [this]()
                      {
                                 if (!sendReady)
                                 {
@@ -18,7 +18,7 @@ void UiButton::Init(PokerClient *client, deque<PokerClient::popUpMessage> *popUp
                                 {
                                     this->popUpMessages->push_back(PokerClient::popUpMessage("You have already sent ready for this game.", popUpMessageType::Error));
                                 } }, 2); // Green
-    playAgainButton.Init(0, 610, 200, 50, "Play Again", [this]()
+    playAgainButton.Init(10, 630, 200, 50, "Play Again", [this]()
                          {
                                     if (*this->gamestate == GameState::GameOver)
                                     {
@@ -28,7 +28,7 @@ void UiButton::Init(PokerClient *client, deque<PokerClient::popUpMessage> *popUp
                                     {
                                         this->popUpMessages->push_back(PokerClient::popUpMessage("You can only start a new game once the current game is over.", popUpMessageType::Error));
                                     } }, 1); // Blue
-    startGameButton.Init(0, 670, 200, 50, "Start Game", [this]()
+    startGameButton.Init(10, 630, 200, 50, "Start Game", [this]()
                          {
                                     if (*this->gamestate == GameState::WaitingForPlayers)
                                     {

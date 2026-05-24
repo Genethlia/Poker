@@ -23,6 +23,7 @@ private:
     };
 
     boost::asio::io_context io;
+    boost::asio::steady_timer nextGameTimer{io};
     ServerState state;
     Deck deck;
     bool gameInProgress = false;
@@ -47,6 +48,7 @@ private:
     void advanceDealer(const std::vector<int> &activeIds);
     void chooseBlinds(const std::vector<int> &activeIds);
     void postBlind(int playerId, int amount);
+    void scheduleNextGame();
 
     int countInHand();
     int CountCanAct();

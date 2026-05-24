@@ -201,7 +201,6 @@ void Client::handle_line(const string &line)
         if (serverState->gameState != GameState::WaitingForPlayers || joinedPlayers >= 4)
         {
             this->spectator = true;
-            this->wantsToPlay = true;
             this->seated = false;
 
             cout << "[" << msg.name << "] joined as spectator \n";
@@ -221,6 +220,7 @@ void Client::handle_line(const string &line)
             response.playerId = id;
             response.name = name;
             response.isSpectator = spectator;
+            response.isSeated = seated;
 
             if (serverState->gameState != GameState::WaitingForPlayers)
             {
@@ -242,7 +242,6 @@ void Client::handle_line(const string &line)
         }
 
         spectator = false;
-        wantsToPlay = false;
         seated = true;
 
         cout << "[" << display_name() << "] joined\n";
@@ -264,6 +263,7 @@ void Client::handle_line(const string &line)
         response.playerId = id;
         response.name = name;
         response.isSpectator = spectator;
+        response.isSeated = seated;
         break;
     }
     case MessageTypeClientToServer::Ready:
