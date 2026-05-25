@@ -3,6 +3,7 @@
 #include "client_in_client.hpp"
 #include "cards.h"
 #include "uibuttons.h"
+#include "chat.h"
 static constexpr int VIRTUAL_WIDTH = 1600;
 static constexpr int VIRTUAL_HEIGHT = 900;
 static pos center = {VIRTUAL_WIDTH / 2, VIRTUAL_HEIGHT / 2};
@@ -43,13 +44,15 @@ private:
     void onServerStateChange(GameState newState);
     void resetForNewGame();
     void drawChat();
+    void updateChat();
 
     PokerClient client = PokerClient();
     PokerClient::ClientState currentState;
     std::string playerName;
 
     Images suitTextures[4];
-    Images gameImages;
+    Images hiddenCardImage;
+    Images chatImage;
 
     Font cardFont;
     static Font cardFontStatic; // Static variable to hold the card font for use in static functions
@@ -112,8 +115,9 @@ private:
     void buildMoneyChips();
     string getPlayerName(int id);
 
-    RenderTexture2D target;
+    RenderTexture2D target{};
     std::vector<std::vector<Card>> allCards = {}; // for testing
 
     UiButton uiButton;
+    Chat chat;
 };

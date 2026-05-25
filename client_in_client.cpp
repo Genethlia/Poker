@@ -263,6 +263,14 @@ std::deque<pop> PokerClient::getAndClearPopUpMessages()
     return messages;
 }
 
+std::deque<PokerClient::chatMessage> PokerClient::getAndClearChatMessages()
+{
+    lock_guard<std::mutex> lock(chatMessagesMutex);
+    std::deque<PokerClient::chatMessage> messages = std::move(chatMessages);
+    chatMessages.clear();
+    return messages;
+}
+
 void PokerClient::handle_line(const string &line)
 {
     lock_guard<std::mutex> lock(stateMutex);
@@ -277,12 +285,10 @@ void PokerClient::handle_line(const string &line)
         state.playerMoney.clear();
         state.isSpectator.clear();
         state.isSeated.clear();
-        // auto temp = "Welcome, " + msg.name + "! Your player ID is " + to_string(msg.playerId) + ". There are " + to_string(msg.playerSum) + " players in the game.";
-        // popUpMessages.push_back(temp, popUpMessageType::PlayerJoined);
         for (auto &[id, name] : msg.playerNames)
         {
             if (msg.playerMoney.find(id) != msg.playerMoney.end())
-                state.playerMoney[id] = msg.playerMoney[id]; // Initialize player money, can be updated later with actual values from the server
+                state.playerMoney[id] = msg.playerMoney[id];
             if (msg.playerNames.find(id) != msg.playerNames.end())
                 state.playerNames[id] = msg.playerNames[id];
             if (msg.isSpectatorMap.find(id) != msg.isSpectatorMap.end())
@@ -321,12 +327,11 @@ void PokerClient::handle_line(const string &line)
     }
     case MessageTypeServerToClient::ChatFrom:
     {
+        chatMessages.push_back(PokerClient::chatMessage(msg.playerId, msg.chatText));
         break;
     }
     case MessageTypeServerToClient::GameState:
     {
-        // auto temp = "Game state changed: " + to_string(int(msg.gameState));
-        // popUpMessages.push_back(temp);
         state.gameState = msg.gameState;
         state.potAmount = msg.potAmount; // Update pot amount in the client state
         if (msg.gameState == GameState::PreFlop && !gameRunning)
@@ -411,9 +416,6 @@ void PokerClient::handle_line(const string &line)
         state.opponentCards.clear();
         state.communityCards.clear();
         state.idToShowCardsOf.clear();
-        // cout << line << "\n";
-        // auto tempMessage = "Graphics update for new player: To Act: " + nameOfUnsafe(msg.toAct) + " (ID: " + to_string(msg.toAct) + "), To Call: $" + to_string(msg.toCall) + ", Current Bet: $" + to_string(msg.currentBet) + ", Min Raise: $" + to_string(msg.minRaise);
-        // popUpMessages.push_back(tempMessage);
         state.toAct = msg.toAct;               // Update the client state with the new player to act
         state.toCall = msg.toCall;             // Update the client state with the new amount to call
         state.currentBet = msg.currentBet;     // Update the client state with the new current bet
@@ -423,15 +425,11 @@ void PokerClient::handle_line(const string &line)
         state.bigBlindId = msg.bigBlindId;     // Update the client state with the new big blind ID
         for (auto &[id, hand] : msg.playerHands)
         {
-            // auto tempMessage1 = "Player " + nameOfUnsafe(id) + "'s hand updated.";
-            // popUpMessages.push_back(tempMessage1);
             state.opponentCards.push_back({id, hand.first});
             state.opponentCards.push_back({id, hand.second});
         }
         for (auto &card : msg.communityCards)
         {
-            // auto tempMessage = "Community card updated: Value = " + to_string(card.value) + ", Suit = " + to_string(card.suit);
-            // popUpMessages.push_back(tempMessage);
             state.communityCards.push_back(card);
         }
         gameRunning = true;

@@ -101,6 +101,20 @@ public:
     std::mutex popUpMessagesMutex;
     std::deque<pop> getAndClearPopUpMessages();
 
+    struct chatMessage
+    {
+        int playerId;
+        std::string message;
+
+        chatMessage(int id, const std::string &msg) : playerId(id), message(msg)
+        {
+        }
+    };
+
+    std::deque<chatMessage> chatMessages;
+    std::mutex chatMessagesMutex;
+    std::deque<chatMessage> getAndClearChatMessages();
+
 private:
     boost::asio::io_context io;
     tcp::socket socket;

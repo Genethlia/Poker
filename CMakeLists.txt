@@ -56,6 +56,7 @@ add_executable(client
   client.cpp
   client_in_client.cpp
   game.cpp
+  chat.cpp
   cards.cpp
   images.cpp
   buttons.cpp

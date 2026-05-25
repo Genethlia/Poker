@@ -36,6 +36,6 @@ private:
 	Vector2 findCenterToRotate(Vector2 point, Vector2 center, float angle);
 
 	Images *suitTextures;
-	Images *gameimages;
+	Images *hiddenCardTexture;
 	Font *font;
 };

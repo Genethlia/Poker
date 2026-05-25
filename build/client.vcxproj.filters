@@ -10,6 +10,9 @@
     <ClCompile Include="C:\Users\tgene\OneDrive - MOEC\Poker\game.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
+    <ClCompile Include="C:\Users\tgene\OneDrive - MOEC\Poker\chat.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
     <ClCompile Include="C:\Users\tgene\OneDrive - MOEC\Poker\cards.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>

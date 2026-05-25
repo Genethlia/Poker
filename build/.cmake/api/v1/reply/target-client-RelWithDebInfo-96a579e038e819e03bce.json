@@ -2,10 +2,10 @@
 	"artifacts" : 
 	[
 		{
-			"path" : "MinSizeRel/server.exe"
+			"path" : "RelWithDebInfo/client.exe"
 		},
 		{
-			"path" : "MinSizeRel/server.pdb"
+			"path" : "RelWithDebInfo/client.pdb"
 		}
 	],
 	"backtrace" : 1,
@@ -21,7 +21,8 @@
 		],
 		"files" : 
 		[
-			"CMakeLists.txt"
+			"CMakeLists.txt",
+			"raylib/src/CMakeLists.txt"
 		],
 		"nodes" : 
 		[
@@ -31,19 +32,34 @@
 			{
 				"command" : 0,
 				"file" : 0,
-				"line" : 47,
+				"line" : 55,
 				"parent" : 0
 			},
 			{
 				"command" : 1,
 				"file" : 0,
-				"line" : 92,
+				"line" : 89,
 				"parent" : 0
 			},
 			{
 				"command" : 1,
 				"file" : 0,
-				"line" : 79,
+				"line" : 94,
+				"parent" : 0
+			},
+			{
+				"file" : 1
+			},
+			{
+				"command" : 1,
+				"file" : 1,
+				"line" : 99,
+				"parent" : 4
+			},
+			{
+				"command" : 1,
+				"file" : 0,
+				"line" : 81,
 				"parent" : 0
 			},
 			{
@@ -55,13 +71,13 @@
 			{
 				"command" : 3,
 				"file" : 0,
-				"line" : 95,
+				"line" : 102,
 				"parent" : 0
 			},
 			{
 				"command" : 4,
 				"file" : 0,
-				"line" : 84,
+				"line" : 86,
 				"parent" : 0
 			}
 		]
@@ -74,8 +90,12 @@
 	"compileDependencies" : 
 	[
 		{
-			"backtrace" : 3,
+			"backtrace" : 6,
 			"id" : "Threads::Threads::@6890427a1f51a3e7e1df"
+		},
+		{
+			"backtrace" : 2,
+			"id" : "raylib::@52310b9926f245239ea7"
 		}
 	],
 	"compileGroups" : 
@@ -84,33 +104,45 @@
 			"compileCommandFragments" : 
 			[
 				{
-					"fragment" : "/DWIN32 /D_WINDOWS /GR /EHsc /O1 /Ob1 /DNDEBUG -std:c++20 -MT"
+					"fragment" : "/DWIN32 /D_WINDOWS /GR /EHsc /Zi /O2 /Ob1 /DNDEBUG -std:c++20 -MT"
 				},
 				{
-					"backtrace" : 4,
+					"backtrace" : 7,
 					"fragment" : "/W4"
 				}
 			],
 			"defines" : 
 			[
 				{
-					"backtrace" : 5,
+					"backtrace" : 2,
+					"define" : "GRAPHICS_API_OPENGL_33"
+				},
+				{
+					"backtrace" : 8,
 					"define" : "NOMINMAX"
 				},
 				{
-					"backtrace" : 5,
+					"backtrace" : 2,
+					"define" : "PLATFORM_DESKTOP"
+				},
+				{
+					"backtrace" : 8,
 					"define" : "WIN32_LEAN_AND_MEAN"
 				},
 				{
-					"backtrace" : 5,
+					"backtrace" : 8,
 					"define" : "_WIN32_WINNT=0x0A00"
 				}
 			],
 			"includes" : 
 			[
 				{
-					"backtrace" : 6,
+					"backtrace" : 9,
 					"path" : "C:/boost/boost_1_84_0"
+				},
+				{
+					"backtrace" : 2,
+					"path" : "C:/Users/tgene/OneDrive - MOEC/Poker/raylib/src"
 				}
 			],
 			"language" : "CXX",
@@ -127,27 +159,40 @@
 				0,
 				1,
 				2,
-				3
+				3,
+				4,
+				5,
+				6,
+				7,
+				8
 			]
 		}
 	],
 	"dependencies" : 
 	[
 		{
+			"backtrace" : 2,
+			"id" : "raylib::@52310b9926f245239ea7"
+		},
+		{
+			"backtrace" : 2,
+			"id" : "glfw::@0007fcb0029cba81045f"
+		},
+		{
 			"id" : "ZERO_CHECK::@6890427a1f51a3e7e1df"
 		}
 	],
-	"id" : "server::@6890427a1f51a3e7e1df",
+	"id" : "client::@6890427a1f51a3e7e1df",
 	"link" : 
 	{
 		"commandFragments" : 
 		[
 			{
-				"fragment" : "/DWIN32 /D_WINDOWS /GR /EHsc /O1 /Ob1 /DNDEBUG -MT",
+				"fragment" : "/DWIN32 /D_WINDOWS /GR /EHsc /Zi /O2 /Ob1 /DNDEBUG -MT",
 				"role" : "flags"
 			},
 			{
-				"fragment" : "/machine:x64 /INCREMENTAL:NO",
+				"fragment" : "/machine:x64 /debug /INCREMENTAL",
 				"role" : "flags"
 			},
 			{
@@ -156,12 +201,32 @@
 			},
 			{
 				"backtrace" : 2,
+				"fragment" : "raylib_build\\raylib\\RelWithDebInfo\\raylib.lib",
+				"role" : "libraries"
+			},
+			{
+				"backtrace" : 3,
 				"fragment" : "ws2_32.lib",
 				"role" : "libraries"
 			},
 			{
-				"backtrace" : 2,
+				"backtrace" : 3,
 				"fragment" : "mswsock.lib",
+				"role" : "libraries"
+			},
+			{
+				"backtrace" : 5,
+				"fragment" : "opengl32.lib",
+				"role" : "libraries"
+			},
+			{
+				"backtrace" : 5,
+				"fragment" : "glu32.lib",
+				"role" : "libraries"
+			},
+			{
+				"backtrace" : 5,
+				"fragment" : "winmm.lib",
 				"role" : "libraries"
 			},
 			{
@@ -174,20 +239,24 @@
 	"linkLibraries" : 
 	[
 		{
-			"backtrace" : 3,
+			"backtrace" : 6,
 			"id" : "Threads::Threads::@6890427a1f51a3e7e1df"
 		},
 		{
 			"backtrace" : 2,
+			"id" : "raylib::@52310b9926f245239ea7"
+		},
+		{
+			"backtrace" : 3,
 			"fragment" : "ws2_32"
 		},
 		{
-			"backtrace" : 2,
+			"backtrace" : 3,
 			"fragment" : "mswsock"
 		}
 	],
-	"name" : "server",
-	"nameOnDisk" : "server.exe",
+	"name" : "client",
+	"nameOnDisk" : "client.exe",
 	"paths" : 
 	{
 		"build" : ".",
@@ -202,7 +271,12 @@
 				0,
 				1,
 				2,
-				3
+				3,
+				4,
+				5,
+				6,
+				7,
+				8
 			]
 		}
 	],
@@ -211,19 +285,49 @@
 		{
 			"backtrace" : 1,
 			"compileGroupIndex" : 0,
-			"path" : "server.cpp",
+			"path" : "client.cpp",
 			"sourceGroupIndex" : 0
 		},
 		{
 			"backtrace" : 1,
 			"compileGroupIndex" : 0,
-			"path" : "client_in_server.cpp",
+			"path" : "client_in_client.cpp",
 			"sourceGroupIndex" : 0
 		},
 		{
 			"backtrace" : 1,
 			"compileGroupIndex" : 0,
-			"path" : "server_helpers.cpp",
+			"path" : "game.cpp",
+			"sourceGroupIndex" : 0
+		},
+		{
+			"backtrace" : 1,
+			"compileGroupIndex" : 0,
+			"path" : "chat.cpp",
+			"sourceGroupIndex" : 0
+		},
+		{
+			"backtrace" : 1,
+			"compileGroupIndex" : 0,
+			"path" : "cards.cpp",
+			"sourceGroupIndex" : 0
+		},
+		{
+			"backtrace" : 1,
+			"compileGroupIndex" : 0,
+			"path" : "images.cpp",
+			"sourceGroupIndex" : 0
+		},
+		{
+			"backtrace" : 1,
+			"compileGroupIndex" : 0,
+			"path" : "buttons.cpp",
+			"sourceGroupIndex" : 0
+		},
+		{
+			"backtrace" : 1,
+			"compileGroupIndex" : 0,
+			"path" : "uibuttons.cpp",
 			"sourceGroupIndex" : 0
 		},
 		{

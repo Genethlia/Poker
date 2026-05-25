@@ -41,29 +41,24 @@ void Game::start()
 
     // ToggleFullscreen();
 
-    client.connect_to(serverIP, "6767");
-    client.join_us(playerName);
-    client.start();
-
     for (int i = 0; i < 4; i++)
         suitTextures[i].LoadSuit(i);
-    gameImages.LoadHiddenCard();
-    gameImages.LoadChatTexture();
+    hiddenCardImage.LoadHiddenCard();
+    chatImage.LoadChatTexture();
     cardFont = LoadFontFromMemory(".ttf", cardfont_ttf, cardfont_ttf_len, 32, nullptr, 0);
     Game::cardFontStatic = cardFont; // Initialize the static card font variable
+    chat.Init(&chatImage, &client);
 
-    /*
-    for (int i = 2; i <= 14; i++)
+    try
     {
-        vector<Card> suitCards;
-        for (int j = 0; j < 4; j++)
-        {
-            Card tempCard(200 + i * 75, 100 + j * 150, {i, j}, &suitTextures[j], &cardFont, &gameImages);
-            suitCards.push_back(tempCard);
-        }
-        allCards.push_back(suitCards);
+        client.connect_to(serverIP, "6767");
+        client.join_us(playerName);
+        client.start();
     }
-    */
+    catch (const exception &e)
+    {
+        cout << "Failed to connect: " << e.what() << "\n";
+    }
 
     while (!WindowShouldClose() && client.running)
     {
@@ -117,6 +112,7 @@ void Game::update()
     updateFullScreen();
     updateDimensions();
     uiButton.Update();
+    updateChat();
 
     if (visualState.gameState != GameState::WaitingForPlayers && visualState.gameState != GameState::GameOver)
     {
@@ -259,6 +255,7 @@ void Game::draw()
     drawMoneyChips();
 
     drawInput();
+    drawChat();
     drawPopUpMessages();
     uiButton.Draw();
 }
@@ -332,7 +329,7 @@ void Game::updateVisualState()
     while (currentState.myCards.size() > visualState.myCards.size())
     {
         valRank cardInfo = currentState.myCards[visualState.myCards.size()];
-        visualState.myCards.emplace_back(getSeatLayout(currentState.myId).cardPos.x + DrawnCount[currentState.myId] * 25, getSeatLayout(currentState.myId).cardPos.y + DrawnCount[currentState.myId] * 5, cardInfo, &suitTextures[cardInfo.suit], &cardFont, &gameImages);
+        visualState.myCards.emplace_back(getSeatLayout(currentState.myId).cardPos.x + DrawnCount[currentState.myId] * 25, getSeatLayout(currentState.myId).cardPos.y + DrawnCount[currentState.myId] * 5, cardInfo, &suitTextures[cardInfo.suit], &cardFont, &hiddenCardImage);
         DrawnCount[currentState.myId]++;
     }
     while (currentState.opponentCards.size() > visualState.opponentCards.size())
@@ -346,13 +343,13 @@ void Game::updateVisualState()
         }
         pos basePos = getSeatLayout(id).cardPos;
         int offsetX = DrawnCount[id] * 80;
-        visualState.opponentCards.emplace_back(id, Card(basePos.x + offsetX, basePos.y, cardInfo, &suitTextures[cardInfo.suit], &cardFont, &gameImages, true));
+        visualState.opponentCards.emplace_back(id, Card(basePos.x + offsetX, basePos.y, cardInfo, &suitTextures[cardInfo.suit], &cardFont, &hiddenCardImage, true));
         DrawnCount[id]++;
     }
     while (currentState.communityCards.size() > visualState.communityCards.size())
     {
         valRank cardInfo = currentState.communityCards[visualState.communityCards.size()];
-        visualState.communityCards.emplace_back(446 + visualState.communityCards.size() * 150, 360, cardInfo, &suitTextures[cardInfo.suit], &cardFont, &gameImages);
+        visualState.communityCards.emplace_back(446 + visualState.communityCards.size() * 150, 360, cardInfo, &suitTextures[cardInfo.suit], &cardFont, &hiddenCardImage);
     }
     while (currentState.idToShowCardsOf.size() > visualState.idToShowCardsOf.size())
     {
@@ -451,8 +448,12 @@ void Game::resetForNewGame()
 
 void Game::drawChat()
 {
-    DrawTexture(gameImages.chatTexture, 20, 20, WHITE);
-    DrawRectangle(20, 20, 380, 250, Fade(WHITE, 0.5f));
+    chat.Draw();
+}
+
+void Game::updateChat()
+{
+    chat.Update();
 }
 
 Color Game::getColorForPopUpMessageType(popUpMessageType type)

@@ -86,6 +86,18 @@ void Images::LoadChatTexture()
         chatTexture = LoadTextureFromImage(chat);
         UnloadImage(chat);
     }
+
+    if (xTexture.id != 0)
+    {
+        UnloadTexture(xTexture);
+    }
+    Image x = LoadImageFromMemory(".png", x_png, x_png_len);
+    if (x.data != nullptr)
+    {
+        ImageResize(&x, 40, 40);
+        xTexture = LoadTextureFromImage(x);
+        UnloadImage(x);
+    }
 }
 
 void Images::UnloadAll()
@@ -109,6 +121,11 @@ void Images::UnloadAll()
     {
         UnloadTexture(chatTexture);
         chatTexture = Texture2D{};
+    }
+    if (xTexture.id != 0)
+    {
+        UnloadTexture(xTexture);
+        xTexture = Texture2D{};
     }
 }
 

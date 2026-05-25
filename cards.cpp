@@ -1,7 +1,7 @@
 #include "cards.h"
 
-Card::Card(float x, float y, valRank cardInfo, Images *suitTextures, Font *font, Images *gameimages, bool secret)
-    : suitTextures(suitTextures), font(font), gameimages(gameimages), secret(secret)
+Card::Card(float x, float y, valRank cardInfo, Images *suitTextures, Font *font, Images *hiddenCardTexture, bool secret)
+    : suitTextures(suitTextures), font(font), hiddenCardTexture(hiddenCardTexture), secret(secret)
 {
     target = {x, y};
     pos = {700, 20};
@@ -55,11 +55,11 @@ void Card::Draw()
 
     Rectangle destRec = {center.x, center.y, visibleWidth, height};
 
-    Rectangle source = {0, 0, (float)gameimages->hiddenCardTexture.width, (float)gameimages->hiddenCardTexture.height};
+    Rectangle source = {0, 0, (float)hiddenCardTexture->hiddenCardTexture.width, (float)hiddenCardTexture->hiddenCardTexture.height};
 
     if (shouldShowBack)
     {
-        DrawTexturePro(gameimages->hiddenCardTexture, source, destRec, origin, 0, WHITE);
+        DrawTexturePro(hiddenCardTexture->hiddenCardTexture, source, destRec, origin, 0, WHITE);
         return;
     }
 

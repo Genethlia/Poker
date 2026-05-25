@@ -15,4 +15,5 @@ public:
     Texture filiTexture{}, bigfiliTexture{}; // Textures for small and big suit images
     Texture hiddenCardTexture{};
     Texture chatTexture{};
+    Texture xTexture{};
 };

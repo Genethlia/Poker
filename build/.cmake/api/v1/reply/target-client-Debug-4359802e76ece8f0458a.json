@@ -2,10 +2,10 @@
 	"artifacts" : 
 	[
 		{
-			"path" : "MinSizeRel/client.exe"
+			"path" : "Debug/client.exe"
 		},
 		{
-			"path" : "MinSizeRel/client.pdb"
+			"path" : "Debug/client.pdb"
 		}
 	],
 	"backtrace" : 1,
@@ -38,13 +38,13 @@
 			{
 				"command" : 1,
 				"file" : 0,
-				"line" : 88,
+				"line" : 89,
 				"parent" : 0
 			},
 			{
 				"command" : 1,
 				"file" : 0,
-				"line" : 93,
+				"line" : 94,
 				"parent" : 0
 			},
 			{
@@ -59,7 +59,7 @@
 			{
 				"command" : 1,
 				"file" : 0,
-				"line" : 80,
+				"line" : 81,
 				"parent" : 0
 			},
 			{
@@ -71,13 +71,13 @@
 			{
 				"command" : 3,
 				"file" : 0,
-				"line" : 101,
+				"line" : 102,
 				"parent" : 0
 			},
 			{
 				"command" : 4,
 				"file" : 0,
-				"line" : 85,
+				"line" : 86,
 				"parent" : 0
 			}
 		]
@@ -104,7 +104,7 @@
 			"compileCommandFragments" : 
 			[
 				{
-					"fragment" : "/DWIN32 /D_WINDOWS /GR /EHsc /O1 /Ob1 /DNDEBUG -std:c++20 -MT"
+					"fragment" : "/DWIN32 /D_WINDOWS /GR /EHsc /Zi /Ob0 /Od /RTC1 -std:c++20 -MTd"
 				},
 				{
 					"backtrace" : 7,
@@ -163,7 +163,8 @@
 				4,
 				5,
 				6,
-				7
+				7,
+				8
 			]
 		}
 	],
@@ -171,11 +172,11 @@
 	[
 		{
 			"backtrace" : 2,
-			"id" : "glfw::@0007fcb0029cba81045f"
+			"id" : "raylib::@52310b9926f245239ea7"
 		},
 		{
 			"backtrace" : 2,
-			"id" : "raylib::@52310b9926f245239ea7"
+			"id" : "glfw::@0007fcb0029cba81045f"
 		},
 		{
 			"id" : "ZERO_CHECK::@6890427a1f51a3e7e1df"
@@ -187,11 +188,11 @@
 		"commandFragments" : 
 		[
 			{
-				"fragment" : "/DWIN32 /D_WINDOWS /GR /EHsc /O1 /Ob1 /DNDEBUG -MT",
+				"fragment" : "/DWIN32 /D_WINDOWS /GR /EHsc /Zi /Ob0 /Od /RTC1 -MTd",
 				"role" : "flags"
 			},
 			{
-				"fragment" : "/machine:x64 /INCREMENTAL:NO",
+				"fragment" : "/machine:x64 /debug /INCREMENTAL",
 				"role" : "flags"
 			},
 			{
@@ -200,7 +201,7 @@
 			},
 			{
 				"backtrace" : 2,
-				"fragment" : "raylib_build\\raylib\\MinSizeRel\\raylib.lib",
+				"fragment" : "raylib_build\\raylib\\Debug\\raylib.lib",
 				"role" : "libraries"
 			},
 			{
@@ -274,7 +275,8 @@
 				4,
 				5,
 				6,
-				7
+				7,
+				8
 			]
 		}
 	],
@@ -296,6 +298,12 @@
 			"backtrace" : 1,
 			"compileGroupIndex" : 0,
 			"path" : "game.cpp",
+			"sourceGroupIndex" : 0
+		},
+		{
+			"backtrace" : 1,
+			"compileGroupIndex" : 0,
+			"path" : "chat.cpp",
 			"sourceGroupIndex" : 0
 		},
 		{
