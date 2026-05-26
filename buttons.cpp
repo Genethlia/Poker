@@ -51,7 +51,7 @@ float Button::getHeight() const
 
 bool Button::isButtonHovered() const
 {
-    Vector2 mousePos = GetMousePosition();
+    Vector2 mousePos = GetVirtualMousePosition();
     return CheckCollisionPointRec(mousePos, rect);
 }
 
@@ -200,7 +200,7 @@ void RaiseSliderButton::Update()
     else if (isButtonPressed())
     {
 
-        float mouseX = GetMousePosition().x;
+        float mouseX = GetVirtualMousePosition().x;
         percentageRaised = (mouseX - barRect.x) / barRect.width;
         percentageRaised = std::clamp(percentageRaised, 0.0f, 1.0f);
 
@@ -231,7 +231,7 @@ void RaiseSliderButton::Draw()
 
 bool RaiseSliderButton::isButtonPressed() const
 {
-    bool isButtonHovered = CheckCollisionPointRec(GetMousePosition(), barRect) || CheckCollisionPointRec(GetMousePosition(), smallRect);
+    bool isButtonHovered = CheckCollisionPointRec(GetVirtualMousePosition(), barRect) || CheckCollisionPointRec(GetVirtualMousePosition(), smallRect);
     return isButtonHovered && IsMouseButtonDown(MOUSE_LEFT_BUTTON);
 }
 

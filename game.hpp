@@ -1,11 +1,10 @@
 #pragma once
 #include "raylib.h"
+#include "raylib_helpers.h"
 #include "client_in_client.hpp"
 #include "cards.h"
 #include "uibuttons.h"
 #include "chat.h"
-static constexpr int VIRTUAL_WIDTH = 1600;
-static constexpr int VIRTUAL_HEIGHT = 900;
 static pos center = {VIRTUAL_WIDTH / 2, VIRTUAL_HEIGHT / 2};
 
 struct seatLayout
@@ -55,7 +54,13 @@ private:
     Images chatImage;
 
     Font cardFont;
-    static Font cardFontStatic; // Static variable to hold the card font for use in static functions
+    Font mainFont;
+    Font buttonFont;
+
+    static Font cardFontStatic;
+    static Font mainFontStatic;
+    static Font buttonFontStatic;
+
     struct VisualState
     {
         std::vector<Card> myCards{};

@@ -55,7 +55,7 @@ void Chat::UpdateButtons()
 void Chat::UpdateChatButton()
 {
     bool clickedChatButton = IsMouseButtonPressed(MOUSE_BUTTON_LEFT);
-    bool hoveringChatButton = CheckCollisionPointRec(GetMousePosition(), Rectangle{20, 20, (float)chatImages->chatTexture.width, (float)chatImages->chatTexture.height});
+    bool hoveringChatButton = CheckCollisionPointRec(GetVirtualMousePosition(), Rectangle{20, 20, (float)chatImages->chatTexture.width, (float)chatImages->chatTexture.height});
     if (clickedChatButton && hoveringChatButton && !chatOpen)
     {
         chatOpen = true;
@@ -67,7 +67,7 @@ void Chat::UpdateChatButton()
 void Chat::UpdateXButton()
 {
     bool clickedChatButton = IsMouseButtonPressed(MOUSE_BUTTON_LEFT);
-    bool hoveringChatButton = CheckCollisionPointRec(GetMousePosition(), Rectangle{360, 20, (float)chatImages->xTexture.width, (float)chatImages->xTexture.height});
+    bool hoveringChatButton = CheckCollisionPointRec(GetVirtualMousePosition(), Rectangle{380, 20, (float)chatImages->xTexture.width, (float)chatImages->xTexture.height});
     if (clickedChatButton && hoveringChatButton && chatOpen)
     {
         chatOpen = false;
@@ -83,10 +83,19 @@ void Chat::Draw()
         return;
 
     if (!chatOpen)
+    {
         DrawTexture(chatImages->chatTexture, 20, 20, WHITE);
+        if (countOfNewMessages > 0)
+        {
+            DrawRectangle(70, 20, 40, 40, RED);
+            int textWidth = MeasureText(to_string(countOfNewMessages).c_str(), 30);
+            DrawText(to_string(countOfNewMessages).c_str(), 70 + (40 - textWidth) / 2, 27, 30, WHITE);
+        }
+    }
     else
     {
         DrawRectangle(20, 20, 380, 250, Fade(BLACK, 0.6f));
+        DrawRectangle(380, 40, 20, 230, Fade(GRAY, 0.6f));
         DrawTexture(chatImages->xTexture, 400 - (float)chatImages->xTexture.width, 20, WHITE);
     }
 }

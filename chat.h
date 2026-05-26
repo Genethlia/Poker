@@ -1,5 +1,6 @@
 #pragma once
 #include "client_in_client.hpp"
+#include "raylib_helpers.h"
 class Chat
 {
 public:

@@ -94,8 +94,9 @@ void Images::LoadChatTexture()
     Image x = LoadImageFromMemory(".png", x_png, x_png_len);
     if (x.data != nullptr)
     {
-        ImageResize(&x, 40, 40);
+        ImageResize(&x, 20, 20);
         xTexture = LoadTextureFromImage(x);
+        SetTextureFilter(xTexture, TEXTURE_FILTER_POINT);
         UnloadImage(x);
     }
 }
