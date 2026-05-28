@@ -48,11 +48,13 @@ void Game::start()
         suitTextures[i].LoadSuit(i);
     hiddenCardImage.LoadHiddenCard();
     chatImage.LoadChatTexture();
+
     cardFont = LoadFontFromMemory(".ttf", cardfont_ttf, cardfont_ttf_len, 64, nullptr, 0);
     mainFont = LoadFontFromMemory(".ttf", mainfont_ttf, mainfont_ttf_len, 64, nullptr, 0);
     buttonFont = LoadFontFromMemory(".ttf", buttonfont_ttf, buttonfont_ttf_len, 64, nullptr, 0);
+
     Game::cardFontStatic = cardFont; // Initialize the static card font variable
-    chat.Init(&chatImage, &client);
+    chat.Init(&chatImage, &client, &mainFont);
 
     try
     {

@@ -6,8 +6,8 @@ class Chat
 public:
     Chat();
     ~Chat() = default;
-    void sendChat(const string &chat);
-    void Init(Images *chatImages, PokerClient *client);
+    void sendChat(const std::string &chat);
+    void Init(Images *chatImages, PokerClient *client, Font *mainFont);
     void Update();
     void UpdateButtons();
     void UpdateChatButton();
@@ -17,9 +17,19 @@ public:
 private:
     Images *chatImages;
     PokerClient *client;
+    Font *mainFont;
+
     bool chatOpen;
     bool typingChat;
     bool hasNewMessage;
     int countOfNewMessages;
-    vector<string> chatMessages;
+    std::string input;
+    vector<std::string> chatMessages;
+
+    Rectangle countOfNewMessagesRec;
+    Rectangle chatOpenRec;
+    Rectangle chatCloseRec;
+    Rectangle panel;
+    Rectangle scrolbarRec;
+    Rectangle inputBox;
 };

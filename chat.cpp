@@ -16,10 +16,18 @@ void Chat::sendChat(const string &chat)
     client->sendChat(chat);
 }
 
-void Chat::Init(Images *chatImages, PokerClient *client)
+void Chat::Init(Images *chatImages, PokerClient *client, Font *mainFont)
 {
     this->chatImages = chatImages;
     this->client = client;
+    this->mainFont = mainFont;
+
+    countOfNewMessagesRec = {70, 20, 40, 40};
+    chatOpenRec = Rectangle{20, 20, (float)chatImages->chatTexture.width, (float)chatImages->chatTexture.height};
+    chatCloseRec = Rectangle{380, 20, (float)chatImages->xTexture.width, (float)chatImages->xTexture.height};
+    panel = {20, 20, 380, 250};
+    scrolbarRec = {380, 40, 20, 230};
+    inputBox = {30, 230, 340, 30};
 }
 
 void Chat::Update()
@@ -27,10 +35,13 @@ void Chat::Update()
     if (!client || !chatImages)
         return;
     auto newMessages = client->getAndClearChatMessages();
-    if (!newMessages.empty() && chatOpen)
+    if (!newMessages.empty())
     {
-        hasNewMessage = true;
-        countOfNewMessages += newMessages.size();
+        if (!chatOpen)
+        {
+            hasNewMessage = true;
+            countOfNewMessages += newMessages.size();
+        }
         for (auto &message : newMessages)
         {
             string playerName = client->nameOf(message.playerId);
@@ -55,7 +66,7 @@ void Chat::UpdateButtons()
 void Chat::UpdateChatButton()
 {
     bool clickedChatButton = IsMouseButtonPressed(MOUSE_BUTTON_LEFT);
-    bool hoveringChatButton = CheckCollisionPointRec(GetVirtualMousePosition(), Rectangle{20, 20, (float)chatImages->chatTexture.width, (float)chatImages->chatTexture.height});
+    bool hoveringChatButton = CheckCollisionPointRec(GetVirtualMousePosition(), chatOpenRec);
     if (clickedChatButton && hoveringChatButton && !chatOpen)
     {
         chatOpen = true;
@@ -67,7 +78,7 @@ void Chat::UpdateChatButton()
 void Chat::UpdateXButton()
 {
     bool clickedChatButton = IsMouseButtonPressed(MOUSE_BUTTON_LEFT);
-    bool hoveringChatButton = CheckCollisionPointRec(GetVirtualMousePosition(), Rectangle{380, 20, (float)chatImages->xTexture.width, (float)chatImages->xTexture.height});
+    bool hoveringChatButton = CheckCollisionPointRec(GetVirtualMousePosition(), chatCloseRec);
     if (clickedChatButton && hoveringChatButton && chatOpen)
     {
         chatOpen = false;
@@ -87,15 +98,16 @@ void Chat::Draw()
         DrawTexture(chatImages->chatTexture, 20, 20, WHITE);
         if (countOfNewMessages > 0)
         {
-            DrawRectangle(70, 20, 40, 40, RED);
-            int textWidth = MeasureText(to_string(countOfNewMessages).c_str(), 30);
-            DrawText(to_string(countOfNewMessages).c_str(), 70 + (40 - textWidth) / 2, 27, 30, WHITE);
+
+            DrawRectangleRec(countOfNewMessagesRec, RED);
+            DrawTextCentered(countOfNewMessagesRec, to_string(countOfNewMessages).c_str(), 30, *mainFont, WHITE);
         }
     }
     else
     {
-        DrawRectangle(20, 20, 380, 250, Fade(BLACK, 0.6f));
-        DrawRectangle(380, 40, 20, 230, Fade(GRAY, 0.6f));
+        DrawRectangleRec(panel, Fade(BLACK, 0.6f));
+        DrawRectangleRec(scrolbarRec, Fade(GRAY, 0.6f));
+        DrawRectangleRec(inputBox, Fade(WHITE, 0.6f));
         DrawTexture(chatImages->xTexture, 400 - (float)chatImages->xTexture.width, 20, WHITE);
     }
 }
