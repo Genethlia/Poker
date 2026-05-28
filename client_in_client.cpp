@@ -541,8 +541,8 @@ void PokerClient::rebuildPlayerPositions()
     {
         if (id == state.myId)
         {
-            // state.PlayerPosition[id] = playerCardPositionsAndAngles.back(); // Position for self
-            state.PlayerPosition[id] = {Seat::Left, 90}; // Debug: Temporarily set self to Left seat for chat testing.
+            state.PlayerPosition[id] = playerCardPositionsAndAngles.back(); // Position for self
+            // state.PlayerPosition[id] = {Seat::Left, 90}; // Debug: Temporarily set self to Left seat for chat testing.
         }
         else
         {

@@ -71,7 +71,7 @@
 					"jsonFile" : "directory-raylib_build-Debug-da523658f630fb0961ed.json",
 					"minimumCMakeVersion" : 
 					{
-						"string" : "3.25"
+						"string" : "3.22"
 					},
 					"parentIndex" : 0,
 					"projectIndex" : 1,
@@ -96,7 +96,7 @@
 					"jsonFile" : "directory-raylib_build.raylib-Debug-7a5fc93b014f10f06384.json",
 					"minimumCMakeVersion" : 
 					{
-						"string" : "3.25"
+						"string" : "3.22"
 					},
 					"parentIndex" : 1,
 					"projectIndex" : 1,
@@ -351,7 +351,7 @@
 					"jsonFile" : "directory-raylib_build-Release-da523658f630fb0961ed.json",
 					"minimumCMakeVersion" : 
 					{
-						"string" : "3.25"
+						"string" : "3.22"
 					},
 					"parentIndex" : 0,
 					"projectIndex" : 1,
@@ -376,7 +376,7 @@
 					"jsonFile" : "directory-raylib_build.raylib-Release-490a5b82d84cf27771f8.json",
 					"minimumCMakeVersion" : 
 					{
-						"string" : "3.25"
+						"string" : "3.22"
 					},
 					"parentIndex" : 1,
 					"projectIndex" : 1,
@@ -631,7 +631,7 @@
 					"jsonFile" : "directory-raylib_build-MinSizeRel-da523658f630fb0961ed.json",
 					"minimumCMakeVersion" : 
 					{
-						"string" : "3.25"
+						"string" : "3.22"
 					},
 					"parentIndex" : 0,
 					"projectIndex" : 1,
@@ -656,7 +656,7 @@
 					"jsonFile" : "directory-raylib_build.raylib-MinSizeRel-6c9ba11a968f12ecea8f.json",
 					"minimumCMakeVersion" : 
 					{
-						"string" : "3.25"
+						"string" : "3.22"
 					},
 					"parentIndex" : 1,
 					"projectIndex" : 1,
@@ -911,7 +911,7 @@
 					"jsonFile" : "directory-raylib_build-RelWithDebInfo-da523658f630fb0961ed.json",
 					"minimumCMakeVersion" : 
 					{
-						"string" : "3.25"
+						"string" : "3.22"
 					},
 					"parentIndex" : 0,
 					"projectIndex" : 1,
@@ -936,7 +936,7 @@
 					"jsonFile" : "directory-raylib_build.raylib-RelWithDebInfo-8a5480227224dae90600.json",
 					"minimumCMakeVersion" : 
 					{
-						"string" : "3.25"
+						"string" : "3.22"
 					},
 					"parentIndex" : 1,
 					"projectIndex" : 1,

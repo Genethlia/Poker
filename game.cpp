@@ -215,25 +215,25 @@ void Game::drawSinglePlayer(int id)
         bgColor);
 
     int offsetX = 10;
-    DrawText(name.c_str(), boxPos.x + offsetX, boxPos.y, 22, WHITE);
-    DrawText(TextFormat("$%d", money), boxPos.x + offsetX, boxPos.y + 28, 20, GOLD);
+    DrawTextEx(mainFont, name.c_str(), {boxPos.x + offsetX, boxPos.y}, 22, 1.0f, WHITE);
+    DrawTextEx(mainFont, TextFormat("$%d", money), {boxPos.x + offsetX, boxPos.y + 40}, 20, 1.0f, GOLD);
 
     if (id == currentState.myId)
     {
-        DrawText("YOU", boxPos.x + 150, boxPos.y, 18, WHITE);
+        DrawTextEx(mainFont, "YOU", {boxPos.x + 150, boxPos.y}, 18, 1.0f, WHITE);
     }
     bgColor = WHITE;
     if (id == currentState.dealerId)
     {
-        DrawText("D", boxPos.x + 140, boxPos.y + 40, 18, bgColor);
+        DrawTextEx(mainFont, "D", {boxPos.x + 140, boxPos.y + 40}, 18, 1.0f, bgColor);
     }
     if (id == currentState.smallBlindId)
     {
-        DrawText("SB", boxPos.x + 160, boxPos.y + 40, 18, bgColor);
+        DrawTextEx(mainFont, "SB", {boxPos.x + 160, boxPos.y + 40}, 18, 1.0f, bgColor);
     }
     if (id == currentState.bigBlindId)
     {
-        DrawText("BB", boxPos.x + 160, boxPos.y + 40, 18, bgColor);
+        DrawTextEx(mainFont, "BB", {boxPos.x + 160, boxPos.y + 40}, 18, 1.0f, bgColor);
     }
 }
 
@@ -273,14 +273,14 @@ void Game::drawInput()
     {
         string waitingText = "Waiting for players...";
         int textWidth = MeasureText(waitingText.c_str(), 24);
-        DrawText(waitingText.c_str(), VIRTUAL_WIDTH / 2 - textWidth / 2, VIRTUAL_HEIGHT / 2, 24, YELLOW);
+        DrawTextCentered({0, 0, VIRTUAL_WIDTH, VIRTUAL_HEIGHT}, waitingText.c_str(), 24, mainFont, YELLOW);
     }
     else if (visualState.gameState == GameState::GameOver)
     {
 
         string gameOverText = "Game Over!";
         int textWidth = MeasureText(gameOverText.c_str(), 24);
-        DrawText(gameOverText.c_str(), VIRTUAL_WIDTH / 2 - textWidth / 2, VIRTUAL_HEIGHT / 2, 24, YELLOW);
+        DrawTextCentered({0, 0, VIRTUAL_WIDTH, VIRTUAL_HEIGHT}, gameOverText.c_str(), 24, mainFont, YELLOW);
     }
     /*
    for (int i = 0; i <= 12; i++)
@@ -378,9 +378,8 @@ void Game::drawBetOfPlayer(int id)
 {
     int betAmount = currentState.betThisRound[id];
     pos basePos = getSeatLayout(id).betPos;
-    int textWidth = MeasureText(TextFormat("$%d", betAmount), 20);
     DrawRectangleRounded({basePos.x - 20, basePos.y - 10, 80, 30}, 0.25f, 8, Fade(BLACK, 0.8f));
-    DrawText(TextFormat("$%d", betAmount), basePos.x - 20 + (80 - textWidth) / 2, basePos.y, 20, GOLD);
+    DrawTextCentered({basePos.x - 20, basePos.y - 10, 80, 30}, TextFormat("$%d", betAmount), 20, mainFont, GOLD);
 }
 
 void Game::clearCardsIfNecessary()
@@ -416,19 +415,19 @@ void Game::drawPopUpMessages()
         if (message.text.length() >= 30)
         {
             size_t splitIndex = message.text.find(' ', message.text.length() / 2);
-            int textWidth1 = MeasureText(message.text.substr(0, splitIndex).c_str(), 20);
-            int textWidth2 = MeasureText(message.text.substr(splitIndex).c_str(), 20);
+            int textWidth1 = MeasureTextEx(mainFont, message.text.substr(0, splitIndex).c_str(), 20, 1.0f).x;
+            int textWidth2 = MeasureTextEx(mainFont, message.text.substr(splitIndex).c_str(), 20, 1.0f).x;
             int textWidth = max(textWidth1, textWidth2); // find biggest width for the background rectangle
             DrawRectangleRounded({400, 20.0f + yOffset, (float)textWidth + 20, 59}, 0.5f, 4, Fade(BLACK, 0.5f));
-            DrawText(message.text.substr(0, splitIndex).c_str(), 410, 20 + yOffset, 20, bgColor);
+            DrawTextEx(mainFont, message.text.substr(0, splitIndex).c_str(), {410.0f, 20.0f + yOffset}, 20, 1.0f, bgColor);
             yOffset += 30;
-            DrawText(message.text.substr(splitIndex).c_str(), 410, 20 + yOffset, 20, bgColor);
+            DrawTextEx(mainFont, message.text.substr(splitIndex).c_str(), {410.0f, 20.0f + yOffset}, 20, 1.0f, bgColor);
         }
         else
         {
-            int textWidth = MeasureText(message.text.c_str(), 20);
+            int textWidth = MeasureTextEx(mainFont, message.text.c_str(), 20, 1.0f).x;
             DrawRectangleRounded({400, 20.0f + yOffset, (float)textWidth + 20, 29}, 0.5f, 4, Fade(BLACK, 0.5f));
-            DrawText(message.text.c_str(), 410, 20 + yOffset, 20, bgColor);
+            DrawTextEx(mainFont, message.text.c_str(), {410.0f, 20.0f + yOffset}, 20, 1.0f, bgColor);
         }
         yOffset += 30;
     }
