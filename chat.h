@@ -12,7 +12,12 @@ public:
     void UpdateButtons();
     void UpdateChatButton();
     void UpdateXButton();
+    void UpdateTyping();
     void Draw();
+    void DrawMessages();
+    void DrawInput();
+    void DrawScrollBar();
+    void UpdateScroll();
 
 private:
     Images *chatImages;
@@ -25,11 +30,12 @@ private:
     int countOfNewMessages;
     std::string input;
     vector<std::string> chatMessages;
+    int scrollOffset;
 
     Rectangle countOfNewMessagesRec;
     Rectangle chatOpenRec;
     Rectangle chatCloseRec;
     Rectangle panel;
-    Rectangle scrolbarRec;
+    Rectangle scrollbarRec;
     Rectangle inputBox;
 };

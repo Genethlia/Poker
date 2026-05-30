@@ -1,6 +1,6 @@
 #include "buttons.h"
 
-void Button::Init(int x, int y, int width, int height, const std::string &text, std::function<void()> onClick, int colorScheme)
+void Button::Init(int x, int y, int width, int height, const std::string &text, std::function<void()> onClick, int colorScheme, Font *buttonFont)
 {
     this->x = x;
     this->y = y;
@@ -9,6 +9,7 @@ void Button::Init(int x, int y, int width, int height, const std::string &text, 
     this->text = text;
     this->onClick = onClick;
     this->colorScheme = colorScheme;
+    this->buttonFont = buttonFont;
     rect = {static_cast<float>(x), static_cast<float>(y), static_cast<float>(width), static_cast<float>(height)};
 }
 
@@ -16,10 +17,7 @@ void Button::Draw(int textSize)
 {
     Color bgColor = isButtonHovered() ? buttonColorSchemes[colorScheme].first : buttonColorSchemes[colorScheme].second;
     DrawRectangleRounded(rect, 0.5f, 16, bgColor);
-    float textWidth = MeasureText(text.c_str(), textSize);
-    float textX = x + (width - textWidth) / 2;
-    float textY = y + height / 2 - textSize / 2;
-    DrawText(text.c_str(), textX, textY, textSize, BLACK);
+    drawTextCenteredWithButtonFont(rect, text, textSize, BLACK);
 }
 
 void Button::Update()
@@ -32,6 +30,11 @@ void Button::Update()
     {
         std::cout << "Warning: Button '" << text << "' has no onClick action defined.\n";
     }
+}
+
+void Button::drawTextCenteredWithButtonFont(Rectangle rect, const std::string &text, float fontSize, Color color)
+{
+    DrawTextCentered(rect, text, fontSize, *buttonFont, color);
 }
 
 Vector2 Button::getPosition() const
@@ -60,9 +63,9 @@ bool Button::isButtonClicked() const
     return isButtonHovered() && IsMouseButtonPressed(MOUSE_LEFT_BUTTON);
 }
 
-void ActionButton::Init(int x, int y, int width, int height, const std::string &text, std::function<void()> onClick, int *toAct, int *myId, int colorScheme)
+void ActionButton::Init(int x, int y, int width, int height, const std::string &text, std::function<void()> onClick, int *toAct, int *myId, int colorScheme, Font *buttonFont)
 {
-    Button::Init(x, y, width, height, text, onClick, colorScheme);
+    Button::Init(x, y, width, height, text, onClick, colorScheme, buttonFont);
     this->toAct = toAct;
     this->myId = myId;
 }
@@ -78,11 +81,8 @@ void ActionButton::Draw()
     else
     {
         Vector2 pos = getPosition();
-        float textWidth = MeasureText(text.c_str(), textSize);
-        float textX = pos.x + (getWidth() - textWidth) / 2;
-        float textY = pos.y + getHeight() / 2 - textSize / 2;
         DrawRectangleRounded(rect, 0.5f, 16, GRAY);
-        DrawText(text.c_str(), textX, textY, textSize, DARKGRAY);
+        drawTextCenteredWithButtonFont(rect, text, textSize, DARKGRAY);
     }
 }
 
@@ -94,9 +94,9 @@ void ActionButton::Update()
     }
 }
 
-void CheckCallButton::Init(int x, int y, int width, int height, const std::string &text, std::function<void()> onClick, int *toAct, int *myId, int *toCall)
+void CheckCallButton::Init(int x, int y, int width, int height, const std::string &text, std::function<void()> onClick, int *toAct, int *myId, int *toCall, Font *buttonFont)
 {
-    ActionButton::Init(x, y, width, height, text, onClick, toAct, myId, 2);
+    ActionButton::Init(x, y, width, height, text, onClick, toAct, myId, 2, buttonFont);
     this->toCall = toCall;
 }
 
@@ -118,9 +118,9 @@ void CheckCallButton::Update()
     }
 }
 
-void RaiseSliderButton::Init(int x, int y, int width, int height, PokerClient::ClientState *currentState, int *raiseAmount, bool *buttonInteractionFlag, quickBetButtonPressed *quick)
+void RaiseSliderButton::Init(int x, int y, int width, int height, PokerClient::ClientState *currentState, int *raiseAmount, bool *buttonInteractionFlag, quickBetButtonPressed *quick, Font *buttonFont)
 {
-    ActionButton::Init(x, y, width, height, "", nullptr, &currentState->toAct, &currentState->myId, 0);
+    ActionButton::Init(x, y, width, height, "", nullptr, &currentState->toAct, &currentState->myId, 0, buttonFont);
     this->currentState = currentState;
     this->raiseAmount = raiseAmount;
     this->buttonInteractionFlag = buttonInteractionFlag;
@@ -223,8 +223,7 @@ void RaiseSliderButton::Draw()
     Rectangle betRect = {barRect.x - 120, barRect.y, 100, barRect.height};
     DrawRectangleRounded(betRect, 0.5f, 16, BLACK);
     DrawRectangleRoundedLines(betRect, 0.5f, 16, GRAY);
-    int textWidth = MeasureText(TextFormat("$%d", *raiseAmount), 30);
-    DrawText(TextFormat("$%d", *raiseAmount), barRect.x - 120 + betRect.width / 2 - (textWidth) / 2, barRect.y + 15, 30, WHITE);
+    drawTextCenteredWithButtonFont(betRect, TextFormat("$%d", *raiseAmount), 30, WHITE);
     DrawRectangleRec(barRectDraw, LIGHTGRAY);
     DrawRectangleRec(smallRect, GOLD);
 }

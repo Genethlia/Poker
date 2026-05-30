@@ -6,7 +6,6 @@ Font Game::cardFontStatic{}; // Definition of the static card font variable
 
 Game::Game()
 {
-    uiButton.Init(&client, &popUpMessages, &visualState.gameState, &currentState);
 }
 
 Game::~Game()
@@ -55,6 +54,7 @@ void Game::start()
 
     Game::cardFontStatic = cardFont; // Initialize the static card font variable
     chat.Init(&chatImage, &client, &mainFont);
+    uiButton.Init(&client, &popUpMessages, &visualState.gameState, &currentState, &buttonFont);
 
     try
     {

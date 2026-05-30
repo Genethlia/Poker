@@ -1,0 +1,3 @@
+C:\mingw64\bin\cmake.exe -E rm -f CMakeFiles\client.dir/objects.a
+C:\msys64\mingw64\bin\ar.exe qc CMakeFiles\client.dir/objects.a @CMakeFiles\client.dir\objects1.rsp
+C:\mingw64\bin\g++.exe -O3 -DNDEBUG -static -static-libgcc -static-libstdc++ -Wl,--whole-archive CMakeFiles\client.dir/objects.a -Wl,--no-whole-archive -o Release\AllInPoker.exe -Wl,--out-implib,libAllInPoker.dll.a -Wl,--major-image-version,0,--minor-image-version,0 @CMakeFiles\client.dir\linkLibs.rsp

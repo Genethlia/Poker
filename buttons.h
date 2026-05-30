@@ -20,9 +20,10 @@ class Button
 {
 public:
     Button() = default;
-    virtual void Init(int x, int y, int width, int height, const std::string &text, std::function<void()> onClick, int colorScheme);
+    virtual void Init(int x, int y, int width, int height, const std::string &text, std::function<void()> onClick, int colorScheme, Font *buttonFont);
     void Draw(int textSize = 20);
     virtual void Update();
+    void drawTextCenteredWithButtonFont(Rectangle rect, const std::string &text, float fontSize, Color color);
     Vector2 getPosition() const;
     float getWidth() const;
     float getHeight() const;
@@ -35,13 +36,14 @@ private:
     int x, y, width, height;
     bool isButtonHovered() const;
     std::function<void()> onClick;
+    Font *buttonFont;
 };
 
 class ActionButton : public Button
 {
 public:
     ActionButton() = default;
-    void Init(int x, int y, int width, int height, const std::string &text, std::function<void()> onClick, int *toAct, int *myId, int colorScheme);
+    void Init(int x, int y, int width, int height, const std::string &text, std::function<void()> onClick, int *toAct, int *myId, int colorScheme, Font *buttonFont);
     virtual void Draw();
     void Update() override;
     int *toAct;
@@ -52,7 +54,7 @@ class CheckCallButton : public ActionButton
 {
 public:
     CheckCallButton() = default;
-    void Init(int x, int y, int width, int height, const std::string &text, std::function<void()> onClick, int *toAct, int *myId, int *toCall);
+    void Init(int x, int y, int width, int height, const std::string &text, std::function<void()> onClick, int *toAct, int *myId, int *toCall, Font *buttonFont);
     void Update() override;
 
 private:
@@ -63,7 +65,7 @@ class RaiseSliderButton : public ActionButton
 {
 public:
     RaiseSliderButton() = default;
-    void Init(int x, int y, int width, int height, PokerClient::ClientState *currentState, int *raiseAmount, bool *buttonInteractionFlag, quickBetButtonPressed *quick);
+    void Init(int x, int y, int width, int height, PokerClient::ClientState *currentState, int *raiseAmount, bool *buttonInteractionFlag, quickBetButtonPressed *quick, Font *buttonFont);
     void Update() override;
     void Draw() override;
 

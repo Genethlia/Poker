@@ -18,7 +18,7 @@ pop PokerClient::createPopUpMessage(MessageServerToClient msg)
     case MessageTypeServerToClient::PlayerReady:
         return pop(nameOfUnsafe(msg.playerId) + " is ready.", popUpMessageType::PlayerReady);
     case MessageTypeServerToClient::ChatFrom:
-        return pop("You have a new chat message from " + nameOfUnsafe(msg.playerId) + ": ", popUpMessageType::ChatMessage);
+        return pop("You have a new chat message from " + nameOfUnsafe(msg.playerId), popUpMessageType::ChatMessage);
     case MessageTypeServerToClient::ActionResult:
     {
         string actionStr;
@@ -518,7 +518,7 @@ void PokerClient::rebuildPlayerPositions()
 
     int selfIndex = -1;
 
-    for (int i = 0; i < ids.size(); i++)
+    for (size_t i = 0; i < ids.size(); i++)
     {
         if (ids[i] == state.myId)
         {
@@ -529,7 +529,7 @@ void PokerClient::rebuildPlayerPositions()
 
     vector<int> visualOrder{};
 
-    for (int i = 0; i < ids.size(); i++)
+    for (size_t i = 0; i < ids.size(); i++)
     {
         int index = (selfIndex + i) % ids.size();
         visualOrder.push_back(ids[index]);

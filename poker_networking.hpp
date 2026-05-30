@@ -93,8 +93,8 @@ struct MessageClientToServer
     std::string name;     // For JOIN
     std::string chatText; // For CHAT
 
-    PlayerActionType action; // For ACTION
-    int actionAmount = 0;    // For BET/RAISE
+    PlayerActionType action = PlayerActionType::Failed; // For ACTION
+    int actionAmount = 0;                               // For BET/RAISE
 };
 
 struct MessageServerToClient
@@ -124,7 +124,7 @@ struct MessageServerToClient
     PlayerActionType action = PlayerActionType::Failed;
     int actionAmount = 0;
 
-    std::string cards; // later can be vector<Card>
+    std::string cards{}; // later can be vector<Card>
 
     std::vector<int> idWinners = {};          // For Showdown
     std::vector<valRank> communityCards = {}; // For Showdown

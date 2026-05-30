@@ -7,7 +7,7 @@ class UiButton
 {
 public:
     UiButton() = default;
-    void Init(PokerClient *client, deque<PokerClient::popUpMessage> *popUpMessages, GameState *gamestate, PokerClient::ClientState *currentState);
+    void Init(PokerClient *client, deque<PokerClient::popUpMessage> *popUpMessages, GameState *gamestate, PokerClient::ClientState *currentState, Font *buttonFont);
     void Draw();
     void Update();
 
@@ -16,6 +16,7 @@ private:
     deque<PokerClient::popUpMessage> *popUpMessages;
     GameState *gamestate;
     PokerClient::ClientState *currentState;
+    Font *buttonFont;
     ActionButton foldButton;
     CheckCallButton checkCallButton;
     RaiseSliderButton raiseButton;
