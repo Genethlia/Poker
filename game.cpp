@@ -19,21 +19,21 @@ Game::~Game()
 
 void Game::start()
 {
-    std::cout << "Enter your name: ";
-    std::getline(std::cin, playerName);
-    while (playerName.empty())
-    {
-        std::cout << "Name cannot be empty. Please enter your name: ";
-        std::getline(std::cin, playerName);
-    }
+    // std::cout << "Enter your name: ";
+    // std::getline(std::cin, playerName);
+    // while (playerName.empty())
+    // {
+    //     std::cout << "Name cannot be empty. Please enter your name: ";
+    //     std::getline(std::cin, playerName);
+    // }
 
-    std::cout << "Enter server IP (default: 127.0.0.1): ";
-    std::string serverIP;
-    std::getline(std::cin, serverIP);
-    if (serverIP.empty() || !authenticateIP(serverIP))
-    {
-        serverIP = "127.0.0.1";
-    }
+    // std::cout << "Enter server IP (default: 127.0.0.1): ";
+    // std::string serverIP;
+    // std::getline(std::cin, serverIP);
+    // if (serverIP.empty() || !authenticateIP(serverIP))
+    // {
+    //     serverIP = "127.0.0.1";
+    // }
 
     SetConfigFlags(FLAG_WINDOW_RESIZABLE);
     InitWindow(VIRTUAL_WIDTH, VIRTUAL_HEIGHT, "Poker Game");
@@ -55,19 +55,20 @@ void Game::start()
     Game::cardFontStatic = cardFont; // Initialize the static card font variable
     chat.Init(&chatImage, &client, &mainFont);
     uiButton.Init(&client, &popUpMessages, &visualState.gameState, &currentState, &buttonFont);
+    mainMenu.Init(&mainFont);
 
-    try
-    {
-        client.connect_to(serverIP, "6767");
-        client.join_us(playerName);
-        client.start();
-    }
-    catch (const exception &e)
-    {
-        cout << "Failed to connect: " << e.what() << "\n";
-    }
+    // try
+    // {
+    //     client.connect_to(serverIP, "6767");
+    //     client.join_us(playerName);
+    //     client.start();
+    // }
+    // catch (const exception &e)
+    // {
+    //     cout << "Failed to connect: " << e.what() << "\n";
+    // }
 
-    while (!WindowShouldClose() && client.running)
+    while (!WindowShouldClose())
     {
 
         update();
@@ -101,30 +102,36 @@ void Game::start()
 
 void Game::update()
 {
-
-    /*
-    for (int i = 0; i <= 12; i++)
+    if (screenState == ScreenState::MainMenu)
     {
-        for (int j = 0; j < 4; j++)
+        mainMenu.Update();
+        if (mainMenu.shouldJoin())
         {
-
-            allCards[i][j].Update();
+            tryJoin();
+            mainMenu.clearJoinRequest();
         }
     }
-    */
-
-    updateGameState();
-    clearCardsIfNecessary();
-    updatePopUpMessages();
-    updateFullScreen();
-    updateDimensions();
-    uiButton.Update();
-    updateChat();
-
-    if (visualState.gameState != GameState::WaitingForPlayers && visualState.gameState != GameState::GameOver)
+    else
     {
-        updateVisualState();
-        visualState.updateCards();
+        updateGameState();
+        clearCardsIfNecessary();
+        updatePopUpMessages();
+        updateFullScreen();
+        updateDimensions();
+        uiButton.Update();
+        updateChat();
+
+        if (visualState.gameState != GameState::WaitingForPlayers && visualState.gameState != GameState::GameOver)
+        {
+            updateVisualState();
+            visualState.updateCards();
+        }
+
+        if (!client.running)
+        {
+            screenState = ScreenState::MainMenu;
+            mainMenu.setErrorMessage("Disconnected from server. Please try joining again.");
+        }
     }
 }
 
@@ -255,16 +262,23 @@ void Game::VisualState::updateCards()
 
 void Game::draw()
 {
-    drawBackground();
-    drawChat();
-    visualState.drawCards();
-    drawPlayers();
-    drawMoneyChips();
+    if (screenState == ScreenState::MainMenu)
+    {
+        mainMenu.Draw();
+    }
+    else
+    {
+        drawBackground();
+        drawChat();
+        visualState.drawCards();
+        drawPlayers();
+        drawMoneyChips();
 
-    drawInput();
-    drawChat();
-    drawPopUpMessages();
-    uiButton.Draw();
+        drawInput();
+        drawChat();
+        drawPopUpMessages();
+        uiButton.Draw();
+    }
 }
 
 void Game::drawInput()
@@ -637,6 +651,38 @@ void Game::buildMoneyChips()
 string Game::getPlayerName(int id)
 {
     return playerName = (currentState.playerNames.count(id) > 0) ? currentState.playerNames.at(id) : ("Player " + to_string(id));
+}
+
+void Game::tryJoin()
+{
+    std::string name = mainMenu.getPlayerName();
+    std::string serverIP = mainMenu.getServerIP();
+
+    if (name.empty())
+    {
+        mainMenu.setErrorMessage("Name cannot be empty.");
+        return;
+    }
+
+    if (serverIP.empty() || !authenticateIP(serverIP))
+    {
+        serverIP = "127.0.0.1"; // Localhost
+    }
+
+    try
+    {
+        playerName = name;
+        client.connect_to(serverIP, "6767");
+        client.join_us(playerName);
+        client.start();
+
+        screenState = ScreenState::InGame;
+    }
+    catch (const exception &e)
+    {
+        mainMenu.setErrorMessage("Failed to connect: " + string(e.what()));
+        screenState = ScreenState::MainMenu;
+    }
 }
 
 void Game::updatePopUpMessages()

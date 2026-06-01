@@ -36,6 +36,7 @@ set(CMAKE_DEPENDS_DEPENDENCY_FILES
   "C:/Users/tgene/OneDrive - MOEC/Poker/deck.cpp" "CMakeFiles/client.dir/deck.cpp.obj" "gcc" "CMakeFiles/client.dir/deck.cpp.obj.d"
   "C:/Users/tgene/OneDrive - MOEC/Poker/game.cpp" "CMakeFiles/client.dir/game.cpp.obj" "gcc" "CMakeFiles/client.dir/game.cpp.obj.d"
   "C:/Users/tgene/OneDrive - MOEC/Poker/images.cpp" "CMakeFiles/client.dir/images.cpp.obj" "gcc" "CMakeFiles/client.dir/images.cpp.obj.d"
+  "C:/Users/tgene/OneDrive - MOEC/Poker/mainmenu.cpp" "CMakeFiles/client.dir/mainmenu.cpp.obj" "gcc" "CMakeFiles/client.dir/mainmenu.cpp.obj.d"
   "C:/Users/tgene/OneDrive - MOEC/Poker/uibuttons.cpp" "CMakeFiles/client.dir/uibuttons.cpp.obj" "gcc" "CMakeFiles/client.dir/uibuttons.cpp.obj.d"
   )
 

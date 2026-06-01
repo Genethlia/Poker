@@ -16,6 +16,8 @@ file(REMOVE_RECURSE
   "CMakeFiles/client.dir/game.cpp.obj.d"
   "CMakeFiles/client.dir/images.cpp.obj"
   "CMakeFiles/client.dir/images.cpp.obj.d"
+  "CMakeFiles/client.dir/mainmenu.cpp.obj"
+  "CMakeFiles/client.dir/mainmenu.cpp.obj.d"
   "CMakeFiles/client.dir/uibuttons.cpp.obj"
   "CMakeFiles/client.dir/uibuttons.cpp.obj.d"
   "Release/AllInPoker.exe"

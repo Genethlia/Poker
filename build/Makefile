@@ -472,6 +472,30 @@ images.cpp.s:
 	$(MAKE) $(MAKESILENT) -f CMakeFiles\client.dir\build.make CMakeFiles/client.dir/images.cpp.s
 .PHONY : images.cpp.s
 
+mainmenu.obj: mainmenu.cpp.obj
+.PHONY : mainmenu.obj
+
+# target to build an object file
+mainmenu.cpp.obj:
+	$(MAKE) $(MAKESILENT) -f CMakeFiles\client.dir\build.make CMakeFiles/client.dir/mainmenu.cpp.obj
+.PHONY : mainmenu.cpp.obj
+
+mainmenu.i: mainmenu.cpp.i
+.PHONY : mainmenu.i
+
+# target to preprocess a source file
+mainmenu.cpp.i:
+	$(MAKE) $(MAKESILENT) -f CMakeFiles\client.dir\build.make CMakeFiles/client.dir/mainmenu.cpp.i
+.PHONY : mainmenu.cpp.i
+
+mainmenu.s: mainmenu.cpp.s
+.PHONY : mainmenu.s
+
+# target to generate assembly for a file
+mainmenu.cpp.s:
+	$(MAKE) $(MAKESILENT) -f CMakeFiles\client.dir\build.make CMakeFiles/client.dir/mainmenu.cpp.s
+.PHONY : mainmenu.cpp.s
+
 server.obj: server.cpp.obj
 .PHONY : server.obj
 
@@ -599,6 +623,9 @@ help:
 	@echo ... images.obj
 	@echo ... images.i
 	@echo ... images.s
+	@echo ... mainmenu.obj
+	@echo ... mainmenu.i
+	@echo ... mainmenu.s
 	@echo ... server.obj
 	@echo ... server.i
 	@echo ... server.s

@@ -71,26 +71,11 @@ include raylib_build/raylib/CMakeFiles/raylib.dir/flags.make
 raylib_build/raylib/CMakeFiles/raylib.dir/codegen:
 .PHONY : raylib_build/raylib/CMakeFiles/raylib.dir/codegen
 
-raylib_build/raylib/CMakeFiles/raylib.dir/raudio.c.obj: raylib_build/raylib/CMakeFiles/raylib.dir/flags.make
-raylib_build/raylib/CMakeFiles/raylib.dir/raudio.c.obj: raylib_build/raylib/CMakeFiles/raylib.dir/includes_C.rsp
-raylib_build/raylib/CMakeFiles/raylib.dir/raudio.c.obj: C:/Users/tgene/OneDrive\ -\ MOEC/Poker/raylib/src/raudio.c
-raylib_build/raylib/CMakeFiles/raylib.dir/raudio.c.obj: raylib_build/raylib/CMakeFiles/raylib.dir/compiler_depend.ts
-	@$(CMAKE_COMMAND) -E cmake_echo_color "--switch=$(COLOR)" --green --progress-dir="C:\Users\tgene\OneDrive - MOEC\Poker\build\CMakeFiles" --progress-num=$(CMAKE_PROGRESS_1) "Building C object raylib_build/raylib/CMakeFiles/raylib.dir/raudio.c.obj"
-	cd /d C:\Users\tgene\ONEDRI~1\Poker\build\RAYLIB~1\raylib && C:\mingw64\bin\gcc.exe $(C_DEFINES) $(C_INCLUDES) $(C_FLAGS) -MD -MT raylib_build/raylib/CMakeFiles/raylib.dir/raudio.c.obj -MF CMakeFiles\raylib.dir\raudio.c.obj.d -o CMakeFiles\raylib.dir\raudio.c.obj -c "C:\Users\tgene\OneDrive - MOEC\Poker\raylib\src\raudio.c"
-
-raylib_build/raylib/CMakeFiles/raylib.dir/raudio.c.i: cmake_force
-	@$(CMAKE_COMMAND) -E cmake_echo_color "--switch=$(COLOR)" --green "Preprocessing C source to CMakeFiles/raylib.dir/raudio.c.i"
-	cd /d C:\Users\tgene\ONEDRI~1\Poker\build\RAYLIB~1\raylib && C:\mingw64\bin\gcc.exe $(C_DEFINES) $(C_INCLUDES) $(C_FLAGS) -E "C:\Users\tgene\OneDrive - MOEC\Poker\raylib\src\raudio.c" > CMakeFiles\raylib.dir\raudio.c.i
-
-raylib_build/raylib/CMakeFiles/raylib.dir/raudio.c.s: cmake_force
-	@$(CMAKE_COMMAND) -E cmake_echo_color "--switch=$(COLOR)" --green "Compiling C source to assembly CMakeFiles/raylib.dir/raudio.c.s"
-	cd /d C:\Users\tgene\ONEDRI~1\Poker\build\RAYLIB~1\raylib && C:\mingw64\bin\gcc.exe $(C_DEFINES) $(C_INCLUDES) $(C_FLAGS) -S "C:\Users\tgene\OneDrive - MOEC\Poker\raylib\src\raudio.c" -o CMakeFiles\raylib.dir\raudio.c.s
-
 raylib_build/raylib/CMakeFiles/raylib.dir/rcore.c.obj: raylib_build/raylib/CMakeFiles/raylib.dir/flags.make
 raylib_build/raylib/CMakeFiles/raylib.dir/rcore.c.obj: raylib_build/raylib/CMakeFiles/raylib.dir/includes_C.rsp
 raylib_build/raylib/CMakeFiles/raylib.dir/rcore.c.obj: C:/Users/tgene/OneDrive\ -\ MOEC/Poker/raylib/src/rcore.c
 raylib_build/raylib/CMakeFiles/raylib.dir/rcore.c.obj: raylib_build/raylib/CMakeFiles/raylib.dir/compiler_depend.ts
-	@$(CMAKE_COMMAND) -E cmake_echo_color "--switch=$(COLOR)" --green --progress-dir="C:\Users\tgene\OneDrive - MOEC\Poker\build\CMakeFiles" --progress-num=$(CMAKE_PROGRESS_2) "Building C object raylib_build/raylib/CMakeFiles/raylib.dir/rcore.c.obj"
+	@$(CMAKE_COMMAND) -E cmake_echo_color "--switch=$(COLOR)" --green --progress-dir="C:\Users\tgene\OneDrive - MOEC\Poker\build\CMakeFiles" --progress-num=$(CMAKE_PROGRESS_1) "Building C object raylib_build/raylib/CMakeFiles/raylib.dir/rcore.c.obj"
 	cd /d C:\Users\tgene\ONEDRI~1\Poker\build\RAYLIB~1\raylib && C:\mingw64\bin\gcc.exe $(C_DEFINES) $(C_INCLUDES) $(C_FLAGS) -MD -MT raylib_build/raylib/CMakeFiles/raylib.dir/rcore.c.obj -MF CMakeFiles\raylib.dir\rcore.c.obj.d -o CMakeFiles\raylib.dir\rcore.c.obj -c "C:\Users\tgene\OneDrive - MOEC\Poker\raylib\src\rcore.c"
 
 raylib_build/raylib/CMakeFiles/raylib.dir/rcore.c.i: cmake_force
@@ -101,26 +86,11 @@ raylib_build/raylib/CMakeFiles/raylib.dir/rcore.c.s: cmake_force
 	@$(CMAKE_COMMAND) -E cmake_echo_color "--switch=$(COLOR)" --green "Compiling C source to assembly CMakeFiles/raylib.dir/rcore.c.s"
 	cd /d C:\Users\tgene\ONEDRI~1\Poker\build\RAYLIB~1\raylib && C:\mingw64\bin\gcc.exe $(C_DEFINES) $(C_INCLUDES) $(C_FLAGS) -S "C:\Users\tgene\OneDrive - MOEC\Poker\raylib\src\rcore.c" -o CMakeFiles\raylib.dir\rcore.c.s
 
-raylib_build/raylib/CMakeFiles/raylib.dir/rmodels.c.obj: raylib_build/raylib/CMakeFiles/raylib.dir/flags.make
-raylib_build/raylib/CMakeFiles/raylib.dir/rmodels.c.obj: raylib_build/raylib/CMakeFiles/raylib.dir/includes_C.rsp
-raylib_build/raylib/CMakeFiles/raylib.dir/rmodels.c.obj: C:/Users/tgene/OneDrive\ -\ MOEC/Poker/raylib/src/rmodels.c
-raylib_build/raylib/CMakeFiles/raylib.dir/rmodels.c.obj: raylib_build/raylib/CMakeFiles/raylib.dir/compiler_depend.ts
-	@$(CMAKE_COMMAND) -E cmake_echo_color "--switch=$(COLOR)" --green --progress-dir="C:\Users\tgene\OneDrive - MOEC\Poker\build\CMakeFiles" --progress-num=$(CMAKE_PROGRESS_3) "Building C object raylib_build/raylib/CMakeFiles/raylib.dir/rmodels.c.obj"
-	cd /d C:\Users\tgene\ONEDRI~1\Poker\build\RAYLIB~1\raylib && C:\mingw64\bin\gcc.exe $(C_DEFINES) $(C_INCLUDES) $(C_FLAGS) -MD -MT raylib_build/raylib/CMakeFiles/raylib.dir/rmodels.c.obj -MF CMakeFiles\raylib.dir\rmodels.c.obj.d -o CMakeFiles\raylib.dir\rmodels.c.obj -c "C:\Users\tgene\OneDrive - MOEC\Poker\raylib\src\rmodels.c"
-
-raylib_build/raylib/CMakeFiles/raylib.dir/rmodels.c.i: cmake_force
-	@$(CMAKE_COMMAND) -E cmake_echo_color "--switch=$(COLOR)" --green "Preprocessing C source to CMakeFiles/raylib.dir/rmodels.c.i"
-	cd /d C:\Users\tgene\ONEDRI~1\Poker\build\RAYLIB~1\raylib && C:\mingw64\bin\gcc.exe $(C_DEFINES) $(C_INCLUDES) $(C_FLAGS) -E "C:\Users\tgene\OneDrive - MOEC\Poker\raylib\src\rmodels.c" > CMakeFiles\raylib.dir\rmodels.c.i
-
-raylib_build/raylib/CMakeFiles/raylib.dir/rmodels.c.s: cmake_force
-	@$(CMAKE_COMMAND) -E cmake_echo_color "--switch=$(COLOR)" --green "Compiling C source to assembly CMakeFiles/raylib.dir/rmodels.c.s"
-	cd /d C:\Users\tgene\ONEDRI~1\Poker\build\RAYLIB~1\raylib && C:\mingw64\bin\gcc.exe $(C_DEFINES) $(C_INCLUDES) $(C_FLAGS) -S "C:\Users\tgene\OneDrive - MOEC\Poker\raylib\src\rmodels.c" -o CMakeFiles\raylib.dir\rmodels.c.s
-
 raylib_build/raylib/CMakeFiles/raylib.dir/rshapes.c.obj: raylib_build/raylib/CMakeFiles/raylib.dir/flags.make
 raylib_build/raylib/CMakeFiles/raylib.dir/rshapes.c.obj: raylib_build/raylib/CMakeFiles/raylib.dir/includes_C.rsp
 raylib_build/raylib/CMakeFiles/raylib.dir/rshapes.c.obj: C:/Users/tgene/OneDrive\ -\ MOEC/Poker/raylib/src/rshapes.c
 raylib_build/raylib/CMakeFiles/raylib.dir/rshapes.c.obj: raylib_build/raylib/CMakeFiles/raylib.dir/compiler_depend.ts
-	@$(CMAKE_COMMAND) -E cmake_echo_color "--switch=$(COLOR)" --green --progress-dir="C:\Users\tgene\OneDrive - MOEC\Poker\build\CMakeFiles" --progress-num=$(CMAKE_PROGRESS_4) "Building C object raylib_build/raylib/CMakeFiles/raylib.dir/rshapes.c.obj"
+	@$(CMAKE_COMMAND) -E cmake_echo_color "--switch=$(COLOR)" --green --progress-dir="C:\Users\tgene\OneDrive - MOEC\Poker\build\CMakeFiles" --progress-num=$(CMAKE_PROGRESS_2) "Building C object raylib_build/raylib/CMakeFiles/raylib.dir/rshapes.c.obj"
 	cd /d C:\Users\tgene\ONEDRI~1\Poker\build\RAYLIB~1\raylib && C:\mingw64\bin\gcc.exe $(C_DEFINES) $(C_INCLUDES) $(C_FLAGS) -MD -MT raylib_build/raylib/CMakeFiles/raylib.dir/rshapes.c.obj -MF CMakeFiles\raylib.dir\rshapes.c.obj.d -o CMakeFiles\raylib.dir\rshapes.c.obj -c "C:\Users\tgene\OneDrive - MOEC\Poker\raylib\src\rshapes.c"
 
 raylib_build/raylib/CMakeFiles/raylib.dir/rshapes.c.i: cmake_force
@@ -135,7 +105,7 @@ raylib_build/raylib/CMakeFiles/raylib.dir/rtext.c.obj: raylib_build/raylib/CMake
 raylib_build/raylib/CMakeFiles/raylib.dir/rtext.c.obj: raylib_build/raylib/CMakeFiles/raylib.dir/includes_C.rsp
 raylib_build/raylib/CMakeFiles/raylib.dir/rtext.c.obj: C:/Users/tgene/OneDrive\ -\ MOEC/Poker/raylib/src/rtext.c
 raylib_build/raylib/CMakeFiles/raylib.dir/rtext.c.obj: raylib_build/raylib/CMakeFiles/raylib.dir/compiler_depend.ts
-	@$(CMAKE_COMMAND) -E cmake_echo_color "--switch=$(COLOR)" --green --progress-dir="C:\Users\tgene\OneDrive - MOEC\Poker\build\CMakeFiles" --progress-num=$(CMAKE_PROGRESS_5) "Building C object raylib_build/raylib/CMakeFiles/raylib.dir/rtext.c.obj"
+	@$(CMAKE_COMMAND) -E cmake_echo_color "--switch=$(COLOR)" --green --progress-dir="C:\Users\tgene\OneDrive - MOEC\Poker\build\CMakeFiles" --progress-num=$(CMAKE_PROGRESS_3) "Building C object raylib_build/raylib/CMakeFiles/raylib.dir/rtext.c.obj"
 	cd /d C:\Users\tgene\ONEDRI~1\Poker\build\RAYLIB~1\raylib && C:\mingw64\bin\gcc.exe $(C_DEFINES) $(C_INCLUDES) $(C_FLAGS) -MD -MT raylib_build/raylib/CMakeFiles/raylib.dir/rtext.c.obj -MF CMakeFiles\raylib.dir\rtext.c.obj.d -o CMakeFiles\raylib.dir\rtext.c.obj -c "C:\Users\tgene\OneDrive - MOEC\Poker\raylib\src\rtext.c"
 
 raylib_build/raylib/CMakeFiles/raylib.dir/rtext.c.i: cmake_force
@@ -150,7 +120,7 @@ raylib_build/raylib/CMakeFiles/raylib.dir/rtextures.c.obj: raylib_build/raylib/C
 raylib_build/raylib/CMakeFiles/raylib.dir/rtextures.c.obj: raylib_build/raylib/CMakeFiles/raylib.dir/includes_C.rsp
 raylib_build/raylib/CMakeFiles/raylib.dir/rtextures.c.obj: C:/Users/tgene/OneDrive\ -\ MOEC/Poker/raylib/src/rtextures.c
 raylib_build/raylib/CMakeFiles/raylib.dir/rtextures.c.obj: raylib_build/raylib/CMakeFiles/raylib.dir/compiler_depend.ts
-	@$(CMAKE_COMMAND) -E cmake_echo_color "--switch=$(COLOR)" --green --progress-dir="C:\Users\tgene\OneDrive - MOEC\Poker\build\CMakeFiles" --progress-num=$(CMAKE_PROGRESS_6) "Building C object raylib_build/raylib/CMakeFiles/raylib.dir/rtextures.c.obj"
+	@$(CMAKE_COMMAND) -E cmake_echo_color "--switch=$(COLOR)" --green --progress-dir="C:\Users\tgene\OneDrive - MOEC\Poker\build\CMakeFiles" --progress-num=$(CMAKE_PROGRESS_4) "Building C object raylib_build/raylib/CMakeFiles/raylib.dir/rtextures.c.obj"
 	cd /d C:\Users\tgene\ONEDRI~1\Poker\build\RAYLIB~1\raylib && C:\mingw64\bin\gcc.exe $(C_DEFINES) $(C_INCLUDES) $(C_FLAGS) -MD -MT raylib_build/raylib/CMakeFiles/raylib.dir/rtextures.c.obj -MF CMakeFiles\raylib.dir\rtextures.c.obj.d -o CMakeFiles\raylib.dir\rtextures.c.obj -c "C:\Users\tgene\OneDrive - MOEC\Poker\raylib\src\rtextures.c"
 
 raylib_build/raylib/CMakeFiles/raylib.dir/rtextures.c.i: cmake_force
@@ -161,14 +131,44 @@ raylib_build/raylib/CMakeFiles/raylib.dir/rtextures.c.s: cmake_force
 	@$(CMAKE_COMMAND) -E cmake_echo_color "--switch=$(COLOR)" --green "Compiling C source to assembly CMakeFiles/raylib.dir/rtextures.c.s"
 	cd /d C:\Users\tgene\ONEDRI~1\Poker\build\RAYLIB~1\raylib && C:\mingw64\bin\gcc.exe $(C_DEFINES) $(C_INCLUDES) $(C_FLAGS) -S "C:\Users\tgene\OneDrive - MOEC\Poker\raylib\src\rtextures.c" -o CMakeFiles\raylib.dir\rtextures.c.s
 
+raylib_build/raylib/CMakeFiles/raylib.dir/raudio.c.obj: raylib_build/raylib/CMakeFiles/raylib.dir/flags.make
+raylib_build/raylib/CMakeFiles/raylib.dir/raudio.c.obj: raylib_build/raylib/CMakeFiles/raylib.dir/includes_C.rsp
+raylib_build/raylib/CMakeFiles/raylib.dir/raudio.c.obj: C:/Users/tgene/OneDrive\ -\ MOEC/Poker/raylib/src/raudio.c
+raylib_build/raylib/CMakeFiles/raylib.dir/raudio.c.obj: raylib_build/raylib/CMakeFiles/raylib.dir/compiler_depend.ts
+	@$(CMAKE_COMMAND) -E cmake_echo_color "--switch=$(COLOR)" --green --progress-dir="C:\Users\tgene\OneDrive - MOEC\Poker\build\CMakeFiles" --progress-num=$(CMAKE_PROGRESS_5) "Building C object raylib_build/raylib/CMakeFiles/raylib.dir/raudio.c.obj"
+	cd /d C:\Users\tgene\ONEDRI~1\Poker\build\RAYLIB~1\raylib && C:\mingw64\bin\gcc.exe $(C_DEFINES) $(C_INCLUDES) $(C_FLAGS) -MD -MT raylib_build/raylib/CMakeFiles/raylib.dir/raudio.c.obj -MF CMakeFiles\raylib.dir\raudio.c.obj.d -o CMakeFiles\raylib.dir\raudio.c.obj -c "C:\Users\tgene\OneDrive - MOEC\Poker\raylib\src\raudio.c"
+
+raylib_build/raylib/CMakeFiles/raylib.dir/raudio.c.i: cmake_force
+	@$(CMAKE_COMMAND) -E cmake_echo_color "--switch=$(COLOR)" --green "Preprocessing C source to CMakeFiles/raylib.dir/raudio.c.i"
+	cd /d C:\Users\tgene\ONEDRI~1\Poker\build\RAYLIB~1\raylib && C:\mingw64\bin\gcc.exe $(C_DEFINES) $(C_INCLUDES) $(C_FLAGS) -E "C:\Users\tgene\OneDrive - MOEC\Poker\raylib\src\raudio.c" > CMakeFiles\raylib.dir\raudio.c.i
+
+raylib_build/raylib/CMakeFiles/raylib.dir/raudio.c.s: cmake_force
+	@$(CMAKE_COMMAND) -E cmake_echo_color "--switch=$(COLOR)" --green "Compiling C source to assembly CMakeFiles/raylib.dir/raudio.c.s"
+	cd /d C:\Users\tgene\ONEDRI~1\Poker\build\RAYLIB~1\raylib && C:\mingw64\bin\gcc.exe $(C_DEFINES) $(C_INCLUDES) $(C_FLAGS) -S "C:\Users\tgene\OneDrive - MOEC\Poker\raylib\src\raudio.c" -o CMakeFiles\raylib.dir\raudio.c.s
+
+raylib_build/raylib/CMakeFiles/raylib.dir/rmodels.c.obj: raylib_build/raylib/CMakeFiles/raylib.dir/flags.make
+raylib_build/raylib/CMakeFiles/raylib.dir/rmodels.c.obj: raylib_build/raylib/CMakeFiles/raylib.dir/includes_C.rsp
+raylib_build/raylib/CMakeFiles/raylib.dir/rmodels.c.obj: C:/Users/tgene/OneDrive\ -\ MOEC/Poker/raylib/src/rmodels.c
+raylib_build/raylib/CMakeFiles/raylib.dir/rmodels.c.obj: raylib_build/raylib/CMakeFiles/raylib.dir/compiler_depend.ts
+	@$(CMAKE_COMMAND) -E cmake_echo_color "--switch=$(COLOR)" --green --progress-dir="C:\Users\tgene\OneDrive - MOEC\Poker\build\CMakeFiles" --progress-num=$(CMAKE_PROGRESS_6) "Building C object raylib_build/raylib/CMakeFiles/raylib.dir/rmodels.c.obj"
+	cd /d C:\Users\tgene\ONEDRI~1\Poker\build\RAYLIB~1\raylib && C:\mingw64\bin\gcc.exe $(C_DEFINES) $(C_INCLUDES) $(C_FLAGS) -MD -MT raylib_build/raylib/CMakeFiles/raylib.dir/rmodels.c.obj -MF CMakeFiles\raylib.dir\rmodels.c.obj.d -o CMakeFiles\raylib.dir\rmodels.c.obj -c "C:\Users\tgene\OneDrive - MOEC\Poker\raylib\src\rmodels.c"
+
+raylib_build/raylib/CMakeFiles/raylib.dir/rmodels.c.i: cmake_force
+	@$(CMAKE_COMMAND) -E cmake_echo_color "--switch=$(COLOR)" --green "Preprocessing C source to CMakeFiles/raylib.dir/rmodels.c.i"
+	cd /d C:\Users\tgene\ONEDRI~1\Poker\build\RAYLIB~1\raylib && C:\mingw64\bin\gcc.exe $(C_DEFINES) $(C_INCLUDES) $(C_FLAGS) -E "C:\Users\tgene\OneDrive - MOEC\Poker\raylib\src\rmodels.c" > CMakeFiles\raylib.dir\rmodels.c.i
+
+raylib_build/raylib/CMakeFiles/raylib.dir/rmodels.c.s: cmake_force
+	@$(CMAKE_COMMAND) -E cmake_echo_color "--switch=$(COLOR)" --green "Compiling C source to assembly CMakeFiles/raylib.dir/rmodels.c.s"
+	cd /d C:\Users\tgene\ONEDRI~1\Poker\build\RAYLIB~1\raylib && C:\mingw64\bin\gcc.exe $(C_DEFINES) $(C_INCLUDES) $(C_FLAGS) -S "C:\Users\tgene\OneDrive - MOEC\Poker\raylib\src\rmodels.c" -o CMakeFiles\raylib.dir\rmodels.c.s
+
 # Object files for target raylib
 raylib_OBJECTS = \
-"CMakeFiles/raylib.dir/raudio.c.obj" \
 "CMakeFiles/raylib.dir/rcore.c.obj" \
-"CMakeFiles/raylib.dir/rmodels.c.obj" \
 "CMakeFiles/raylib.dir/rshapes.c.obj" \
 "CMakeFiles/raylib.dir/rtext.c.obj" \
-"CMakeFiles/raylib.dir/rtextures.c.obj"
+"CMakeFiles/raylib.dir/rtextures.c.obj" \
+"CMakeFiles/raylib.dir/raudio.c.obj" \
+"CMakeFiles/raylib.dir/rmodels.c.obj"
 
 # External object files for target raylib
 raylib_EXTERNAL_OBJECTS = \
@@ -194,12 +194,12 @@ raylib_EXTERNAL_OBJECTS = \
 "C:/Users/tgene/OneDrive - MOEC/Poker/build/raylib_build/raylib/external/glfw/src/CMakeFiles/glfw.dir/win32_window.c.obj" \
 "C:/Users/tgene/OneDrive - MOEC/Poker/build/raylib_build/raylib/external/glfw/src/CMakeFiles/glfw.dir/wgl_context.c.obj"
 
-raylib_build/raylib/libraylib.a: raylib_build/raylib/CMakeFiles/raylib.dir/raudio.c.obj
 raylib_build/raylib/libraylib.a: raylib_build/raylib/CMakeFiles/raylib.dir/rcore.c.obj
-raylib_build/raylib/libraylib.a: raylib_build/raylib/CMakeFiles/raylib.dir/rmodels.c.obj
 raylib_build/raylib/libraylib.a: raylib_build/raylib/CMakeFiles/raylib.dir/rshapes.c.obj
 raylib_build/raylib/libraylib.a: raylib_build/raylib/CMakeFiles/raylib.dir/rtext.c.obj
 raylib_build/raylib/libraylib.a: raylib_build/raylib/CMakeFiles/raylib.dir/rtextures.c.obj
+raylib_build/raylib/libraylib.a: raylib_build/raylib/CMakeFiles/raylib.dir/raudio.c.obj
+raylib_build/raylib/libraylib.a: raylib_build/raylib/CMakeFiles/raylib.dir/rmodels.c.obj
 raylib_build/raylib/libraylib.a: raylib_build/raylib/external/glfw/src/CMakeFiles/glfw.dir/context.c.obj
 raylib_build/raylib/libraylib.a: raylib_build/raylib/external/glfw/src/CMakeFiles/glfw.dir/init.c.obj
 raylib_build/raylib/libraylib.a: raylib_build/raylib/external/glfw/src/CMakeFiles/glfw.dir/input.c.obj

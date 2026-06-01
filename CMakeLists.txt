@@ -65,6 +65,7 @@ add_executable(client
   buttons.cpp
   uibuttons.cpp
   app_icon.rc
+  mainmenu.cpp
   ${SHARED_SOURCES}
 )
 

@@ -47,7 +47,7 @@
 						3
 					],
 					"hasInstallRule" : true,
-					"jsonFile" : "directory-raylib_build.raylib-Release-706e1ca07c616466a836.json",
+					"jsonFile" : "directory-raylib_build.raylib-Release-cbfa04356c49c440c6f2.json",
 					"minimumCMakeVersion" : 
 					{
 						"string" : "3.22"
@@ -148,7 +148,7 @@
 				{
 					"directoryIndex" : 0,
 					"id" : "client::@6890427a1f51a3e7e1df",
-					"jsonFile" : "target-client-Release-f1e3fbff2d516373491a.json",
+					"jsonFile" : "target-client-Release-35fdb31939b77cde3252.json",
 					"name" : "client",
 					"projectIndex" : 0
 				},
@@ -162,14 +162,14 @@
 				{
 					"directoryIndex" : 2,
 					"id" : "raylib::@52310b9926f245239ea7",
-					"jsonFile" : "target-raylib-Release-bf53a5f74dbfccb5c433.json",
+					"jsonFile" : "target-raylib-Release-8b62009734827be99a43.json",
 					"name" : "raylib",
 					"projectIndex" : 1
 				},
 				{
 					"directoryIndex" : 0,
 					"id" : "server::@6890427a1f51a3e7e1df",
-					"jsonFile" : "target-server-Release-f0e8fdeda7af468ddd46.json",
+					"jsonFile" : "target-server-Release-7f5ff7570facd2d5a6f3.json",
 					"name" : "server",
 					"projectIndex" : 0
 				},

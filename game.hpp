@@ -5,7 +5,14 @@
 #include "cards.h"
 #include "uibuttons.h"
 #include "chat.h"
+#include "mainmenu.hpp"
 static pos center = {VIRTUAL_WIDTH / 2, VIRTUAL_HEIGHT / 2};
+
+enum class ScreenState
+{
+    MainMenu,
+    InGame
+};
 
 struct seatLayout
 {
@@ -125,4 +132,8 @@ private:
 
     UiButton uiButton;
     Chat chat;
+
+    ScreenState screenState = ScreenState::MainMenu;
+    MainMenu mainMenu;
+    void tryJoin();
 };
