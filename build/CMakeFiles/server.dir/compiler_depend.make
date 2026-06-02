@@ -4082,6 +4082,8 @@ CMakeFiles/server.dir/server_helpers.cpp.obj: C:/Users/tgene/OneDrive\ -\ MOEC/P
   C:/mingw64/x86_64-w64-mingw32/include/basetsd.h \
   C:/mingw64/x86_64-w64-mingw32/include/bcrypt.h \
   C:/mingw64/x86_64-w64-mingw32/include/bemapiset.h \
+  C:/mingw64/x86_64-w64-mingw32/include/cguid.h \
+  C:/mingw64/x86_64-w64-mingw32/include/combaseapi.h \
   C:/mingw64/x86_64-w64-mingw32/include/concurrencysal.h \
   C:/mingw64/x86_64-w64-mingw32/include/consoleapi.h \
   C:/mingw64/x86_64-w64-mingw32/include/consoleapi2.h \
@@ -4095,6 +4097,7 @@ CMakeFiles/server.dir/server_helpers.cpp.obj: C:/Users/tgene/OneDrive\ -\ MOEC/P
   C:/mingw64/x86_64-w64-mingw32/include/ctype.h \
   C:/mingw64/x86_64-w64-mingw32/include/datetimeapi.h \
   C:/mingw64/x86_64-w64-mingw32/include/debugapi.h \
+  C:/mingw64/x86_64-w64-mingw32/include/dpapi.h \
   C:/mingw64/x86_64-w64-mingw32/include/driverspecs.h \
   C:/mingw64/x86_64-w64-mingw32/include/errhandlingapi.h \
   C:/mingw64/x86_64-w64-mingw32/include/errno.h \
@@ -4106,16 +4109,24 @@ CMakeFiles/server.dir/server_helpers.cpp.obj: C:/Users/tgene/OneDrive\ -\ MOEC/P
   C:/mingw64/x86_64-w64-mingw32/include/guiddef.h \
   C:/mingw64/x86_64-w64-mingw32/include/handleapi.h \
   C:/mingw64/x86_64-w64-mingw32/include/heapapi.h \
+  C:/mingw64/x86_64-w64-mingw32/include/ifdef.h \
   C:/mingw64/x86_64-w64-mingw32/include/imm.h \
   C:/mingw64/x86_64-w64-mingw32/include/in6addr.h \
   C:/mingw64/x86_64-w64-mingw32/include/inaddr.h \
   C:/mingw64/x86_64-w64-mingw32/include/interlockedapi.h \
   C:/mingw64/x86_64-w64-mingw32/include/io.h \
   C:/mingw64/x86_64-w64-mingw32/include/ioapiset.h \
+  C:/mingw64/x86_64-w64-mingw32/include/ipexport.h \
+  C:/mingw64/x86_64-w64-mingw32/include/iphlpapi.h \
+  C:/mingw64/x86_64-w64-mingw32/include/ipifcons.h \
+  C:/mingw64/x86_64-w64-mingw32/include/ipmib.h \
+  C:/mingw64/x86_64-w64-mingw32/include/iprtrmib.h \
+  C:/mingw64/x86_64-w64-mingw32/include/iptypes.h \
   C:/mingw64/x86_64-w64-mingw32/include/jobapi.h \
   C:/mingw64/x86_64-w64-mingw32/include/ktmtypes.h \
   C:/mingw64/x86_64-w64-mingw32/include/libloaderapi.h \
   C:/mingw64/x86_64-w64-mingw32/include/limits.h \
+  C:/mingw64/x86_64-w64-mingw32/include/lmcons.h \
   C:/mingw64/x86_64-w64-mingw32/include/locale.h \
   C:/mingw64/x86_64-w64-mingw32/include/malloc.h \
   C:/mingw64/x86_64-w64-mingw32/include/math.h \
@@ -4123,16 +4134,31 @@ CMakeFiles/server.dir/server_helpers.cpp.obj: C:/Users/tgene/OneDrive\ -\ MOEC/P
   C:/mingw64/x86_64-w64-mingw32/include/memoryapi.h \
   C:/mingw64/x86_64-w64-mingw32/include/minwinbase.h \
   C:/mingw64/x86_64-w64-mingw32/include/minwindef.h \
+  C:/mingw64/x86_64-w64-mingw32/include/mprapi.h \
   C:/mingw64/x86_64-w64-mingw32/include/mstcpip.h \
   C:/mingw64/x86_64-w64-mingw32/include/mswsock.h \
+  C:/mingw64/x86_64-w64-mingw32/include/msxml.h \
   C:/mingw64/x86_64-w64-mingw32/include/namedpipeapi.h \
   C:/mingw64/x86_64-w64-mingw32/include/namespaceapi.h \
+  C:/mingw64/x86_64-w64-mingw32/include/naptypes.h \
+  C:/mingw64/x86_64-w64-mingw32/include/ncrypt.h \
+  C:/mingw64/x86_64-w64-mingw32/include/netioapi.h \
+  C:/mingw64/x86_64-w64-mingw32/include/nldef.h \
+  C:/mingw64/x86_64-w64-mingw32/include/oaidl.h \
+  C:/mingw64/x86_64-w64-mingw32/include/objbase.h \
+  C:/mingw64/x86_64-w64-mingw32/include/objidl.h \
+  C:/mingw64/x86_64-w64-mingw32/include/objidlbase.h \
+  C:/mingw64/x86_64-w64-mingw32/include/ocidl.h \
+  C:/mingw64/x86_64-w64-mingw32/include/ole2.h \
+  C:/mingw64/x86_64-w64-mingw32/include/oleauto.h \
+  C:/mingw64/x86_64-w64-mingw32/include/oleidl.h \
   C:/mingw64/x86_64-w64-mingw32/include/poppack.h \
   C:/mingw64/x86_64-w64-mingw32/include/process.h \
   C:/mingw64/x86_64-w64-mingw32/include/processenv.h \
   C:/mingw64/x86_64-w64-mingw32/include/processthreadsapi.h \
   C:/mingw64/x86_64-w64-mingw32/include/processtopologyapi.h \
   C:/mingw64/x86_64-w64-mingw32/include/profileapi.h \
+  C:/mingw64/x86_64-w64-mingw32/include/propidl.h \
   C:/mingw64/x86_64-w64-mingw32/include/psdk_inc/_fd_types.h \
   C:/mingw64/x86_64-w64-mingw32/include/psdk_inc/_ip_mreq1.h \
   C:/mingw64/x86_64-w64-mingw32/include/psdk_inc/_ip_types.h \
@@ -4142,6 +4168,7 @@ CMakeFiles/server.dir/server_helpers.cpp.obj: C:/Users/tgene/OneDrive\ -\ MOEC/P
   C:/mingw64/x86_64-w64-mingw32/include/psdk_inc/_wsadata.h \
   C:/mingw64/x86_64-w64-mingw32/include/psdk_inc/_xmitfile.h \
   C:/mingw64/x86_64-w64-mingw32/include/psdk_inc/intrin-impl.h \
+  C:/mingw64/x86_64-w64-mingw32/include/pshpack1.h \
   C:/mingw64/x86_64-w64-mingw32/include/pshpack2.h \
   C:/mingw64/x86_64-w64-mingw32/include/pshpack4.h \
   C:/mingw64/x86_64-w64-mingw32/include/pshpack8.h \
@@ -4151,8 +4178,18 @@ CMakeFiles/server.dir/server_helpers.cpp.obj: C:/Users/tgene/OneDrive\ -\ MOEC/P
   C:/mingw64/x86_64-w64-mingw32/include/pthread_time.h \
   C:/mingw64/x86_64-w64-mingw32/include/pthread_unistd.h \
   C:/mingw64/x86_64-w64-mingw32/include/qos.h \
+  C:/mingw64/x86_64-w64-mingw32/include/ras.h \
   C:/mingw64/x86_64-w64-mingw32/include/realtimeapiset.h \
   C:/mingw64/x86_64-w64-mingw32/include/reason.h \
+  C:/mingw64/x86_64-w64-mingw32/include/rpc.h \
+  C:/mingw64/x86_64-w64-mingw32/include/rpcasync.h \
+  C:/mingw64/x86_64-w64-mingw32/include/rpcdce.h \
+  C:/mingw64/x86_64-w64-mingw32/include/rpcdcep.h \
+  C:/mingw64/x86_64-w64-mingw32/include/rpcndr.h \
+  C:/mingw64/x86_64-w64-mingw32/include/rpcnsi.h \
+  C:/mingw64/x86_64-w64-mingw32/include/rpcnsip.h \
+  C:/mingw64/x86_64-w64-mingw32/include/rpcnterr.h \
+  C:/mingw64/x86_64-w64-mingw32/include/rpcsal.h \
   C:/mingw64/x86_64-w64-mingw32/include/sal.h \
   C:/mingw64/x86_64-w64-mingw32/include/sched.h \
   C:/mingw64/x86_64-w64-mingw32/include/sdkddkver.h \
@@ -4166,6 +4203,7 @@ CMakeFiles/server.dir/server_helpers.cpp.obj: C:/Users/tgene/OneDrive\ -\ MOEC/P
   C:/mingw64/x86_64-w64-mingw32/include/securityappcontainer.h \
   C:/mingw64/x86_64-w64-mingw32/include/securitybaseapi.h \
   C:/mingw64/x86_64-w64-mingw32/include/semaphore.h \
+  C:/mingw64/x86_64-w64-mingw32/include/servprov.h \
   C:/mingw64/x86_64-w64-mingw32/include/signal.h \
   C:/mingw64/x86_64-w64-mingw32/include/specstrings.h \
   C:/mingw64/x86_64-w64-mingw32/include/stdarg.h \
@@ -4183,12 +4221,18 @@ CMakeFiles/server.dir/server_helpers.cpp.obj: C:/Users/tgene/OneDrive\ -\ MOEC/P
   C:/mingw64/x86_64-w64-mingw32/include/sys/types.h \
   C:/mingw64/x86_64-w64-mingw32/include/sysinfoapi.h \
   C:/mingw64/x86_64-w64-mingw32/include/systemtopologyapi.h \
+  C:/mingw64/x86_64-w64-mingw32/include/tcpestats.h \
+  C:/mingw64/x86_64-w64-mingw32/include/tcpmib.h \
   C:/mingw64/x86_64-w64-mingw32/include/threadpoolapiset.h \
   C:/mingw64/x86_64-w64-mingw32/include/threadpoollegacyapiset.h \
   C:/mingw64/x86_64-w64-mingw32/include/time.h \
   C:/mingw64/x86_64-w64-mingw32/include/timezoneapi.h \
   C:/mingw64/x86_64-w64-mingw32/include/tvout.h \
+  C:/mingw64/x86_64-w64-mingw32/include/udpmib.h \
   C:/mingw64/x86_64-w64-mingw32/include/unistd.h \
+  C:/mingw64/x86_64-w64-mingw32/include/unknwn.h \
+  C:/mingw64/x86_64-w64-mingw32/include/unknwnbase.h \
+  C:/mingw64/x86_64-w64-mingw32/include/urlmon.h \
   C:/mingw64/x86_64-w64-mingw32/include/utilapiset.h \
   C:/mingw64/x86_64-w64-mingw32/include/vadefs.h \
   C:/mingw64/x86_64-w64-mingw32/include/virtdisk.h \
@@ -4198,6 +4242,7 @@ CMakeFiles/server.dir/server_helpers.cpp.obj: C:/Users/tgene/OneDrive\ -\ MOEC/P
   C:/mingw64/x86_64-w64-mingw32/include/winbase.h \
   C:/mingw64/x86_64-w64-mingw32/include/wincon.h \
   C:/mingw64/x86_64-w64-mingw32/include/wincontypes.h \
+  C:/mingw64/x86_64-w64-mingw32/include/wincrypt.h \
   C:/mingw64/x86_64-w64-mingw32/include/windef.h \
   C:/mingw64/x86_64-w64-mingw32/include/windows.h \
   C:/mingw64/x86_64-w64-mingw32/include/winerror.h \
@@ -4215,12 +4260,42 @@ CMakeFiles/server.dir/server_helpers.cpp.obj: C:/Users/tgene/OneDrive\ -\ MOEC/P
   C:/mingw64/x86_64-w64-mingw32/include/ws2def.h \
   C:/mingw64/x86_64-w64-mingw32/include/ws2ipdef.h \
   C:/mingw64/x86_64-w64-mingw32/include/ws2tcpip.h \
+  C:/mingw64/x86_64-w64-mingw32/include/wtypes.h \
+  C:/mingw64/x86_64-w64-mingw32/include/wtypesbase.h \
   C:/Users/tgene/OneDrive\ -\ MOEC/Poker/client_in_server.hpp \
   C:/Users/tgene/OneDrive\ -\ MOEC/Poker/deck.h \
   C:/Users/tgene/OneDrive\ -\ MOEC/Poker/game_logic.hpp \
   C:/Users/tgene/OneDrive\ -\ MOEC/Poker/poker_networking.hpp \
   C:/Users/tgene/OneDrive\ -\ MOEC/Poker/server.h
 
+
+C:/mingw64/x86_64-w64-mingw32/include/urlmon.h:
+
+C:/mingw64/x86_64-w64-mingw32/include/unknwnbase.h:
+
+C:/mingw64/x86_64-w64-mingw32/include/tcpestats.h:
+
+C:/mingw64/x86_64-w64-mingw32/include/rpcdce.h:
+
+C:/mingw64/x86_64-w64-mingw32/include/rpc.h:
+
+C:/mingw64/x86_64-w64-mingw32/include/pshpack1.h:
+
+C:/mingw64/x86_64-w64-mingw32/include/propidl.h:
+
+C:/mingw64/x86_64-w64-mingw32/include/ocidl.h:
+
+C:/mingw64/x86_64-w64-mingw32/include/naptypes.h:
+
+C:/mingw64/x86_64-w64-mingw32/include/lmcons.h:
+
+C:/mingw64/x86_64-w64-mingw32/include/mprapi.h:
+
+C:/mingw64/x86_64-w64-mingw32/include/iphlpapi.h:
+
+C:/mingw64/x86_64-w64-mingw32/include/ipexport.h:
+
+C:/mingw64/x86_64-w64-mingw32/include/dpapi.h:
 
 C:/Users/tgene/OneDrive\ -\ MOEC/Poker/server.cpp:
 
@@ -4280,6 +4355,8 @@ C:/mingw64/x86_64-w64-mingw32/include/sec_api/string_s.h:
 
 C:/mingw64/x86_64-w64-mingw32/include/sec_api/stdlib_s.h:
 
+C:/mingw64/x86_64-w64-mingw32/include/servprov.h:
+
 C:/mingw64/x86_64-w64-mingw32/include/sdks/_mingw_ddk.h:
 
 C:/mingw64/x86_64-w64-mingw32/include/sched.h:
@@ -4338,6 +4415,8 @@ C:/mingw64/x86_64-w64-mingw32/include/corecrt_stdio_config.h:
 
 C:/mingw64/x86_64-w64-mingw32/include/consoleapi.h:
 
+C:/mingw64/x86_64-w64-mingw32/include/nldef.h:
+
 C:/mingw64/x86_64-w64-mingw32/include/basetsd.h:
 
 C:/mingw64/x86_64-w64-mingw32/include/assert.h:
@@ -4374,6 +4453,8 @@ C:/mingw64/x86_64-w64-mingw32/include/semaphore.h:
 
 C:/mingw64/lib/gcc/x86_64-w64-mingw32/15.2.0/include/sm3intrin.h:
 
+C:/mingw64/x86_64-w64-mingw32/include/netioapi.h:
+
 C:/mingw64/lib/gcc/x86_64-w64-mingw32/15.2.0/include/sgxintrin.h:
 
 C:/mingw64/lib/gcc/x86_64-w64-mingw32/15.2.0/include/pkuintrin.h:
@@ -4385,6 +4466,8 @@ C:/mingw64/lib/gcc/x86_64-w64-mingw32/15.2.0/include/mwaitintrin.h:
 C:/mingw64/lib/gcc/x86_64-w64-mingw32/15.2.0/include/mm_malloc.h:
 
 C:/mingw64/lib/gcc/x86_64-w64-mingw32/15.2.0/include/lwpintrin.h:
+
+C:/mingw64/x86_64-w64-mingw32/include/cguid.h:
 
 C:/mingw64/lib/gcc/x86_64-w64-mingw32/15.2.0/include/immintrin.h:
 
@@ -4403,6 +4486,8 @@ C:/mingw64/lib/gcc/x86_64-w64-mingw32/15.2.0/include/emmintrin.h:
 C:/mingw64/lib/gcc/x86_64-w64-mingw32/15.2.0/include/cmpccxaddintrin.h:
 
 C:/mingw64/lib/gcc/x86_64-w64-mingw32/15.2.0/include/cetintrin.h:
+
+C:/mingw64/x86_64-w64-mingw32/include/rpcasync.h:
 
 C:/mingw64/lib/gcc/x86_64-w64-mingw32/15.2.0/include/bmi2intrin.h:
 
@@ -4478,6 +4563,8 @@ C:/mingw64/x86_64-w64-mingw32/include/stdlib.h:
 
 C:/mingw64/include/c++/15.2.0/x86_64-w64-mingw32/bits/error_constants.h:
 
+C:/mingw64/x86_64-w64-mingw32/include/objbase.h:
+
 C:/mingw64/include/c++/15.2.0/x86_64-w64-mingw32/bits/c++locale.h:
 
 C:/mingw64/include/c++/15.2.0/x86_64-w64-mingw32/bits/c++io.h:
@@ -4495,6 +4582,8 @@ C:/mingw64/lib/gcc/x86_64-w64-mingw32/15.2.0/include/lzcntintrin.h:
 C:/mingw64/include/c++/15.2.0/typeinfo:
 
 C:/mingw64/include/c++/15.2.0/tuple:
+
+C:/mingw64/x86_64-w64-mingw32/include/iprtrmib.h:
 
 C:/mingw64/x86_64-w64-mingw32/include/processthreadsapi.h:
 
@@ -4582,6 +4671,8 @@ C:/mingw64/include/c++/15.2.0/functional:
 
 C:/mingw64/include/c++/15.2.0/format:
 
+C:/mingw64/x86_64-w64-mingw32/include/ifdef.h:
+
 C:/mingw64/include/c++/15.2.0/ext/string_conversions.h:
 
 C:/mingw64/include/c++/15.2.0/ext/numeric_traits.h:
@@ -4632,6 +4723,8 @@ C:/mingw64/lib/gcc/x86_64-w64-mingw32/15.2.0/include/amxtf32intrin.h:
 
 C:/mingw64/include/c++/15.2.0/cassert:
 
+C:/mingw64/x86_64-w64-mingw32/include/ras.h:
+
 C:/mingw64/x86_64-w64-mingw32/include/corecrt_startup.h:
 
 C:/mingw64/include/c++/15.2.0/bits/version.h:
@@ -4647,6 +4740,8 @@ C:/mingw64/include/c++/15.2.0/bits/utility.h:
 C:/mingw64/include/c++/15.2.0/bits/uses_allocator_args.h:
 
 C:/mingw64/include/c++/15.2.0/bits/uses_allocator.h:
+
+C:/mingw64/x86_64-w64-mingw32/include/ncrypt.h:
 
 C:/mingw64/lib/gcc/x86_64-w64-mingw32/15.2.0/include/amxavx512intrin.h:
 
@@ -4700,7 +4795,11 @@ C:/mingw64/include/c++/15.2.0/bits/std_function.h:
 
 C:/mingw64/include/c++/15.2.0/bits/std_abs.h:
 
+C:/mingw64/x86_64-w64-mingw32/include/rpcndr.h:
+
 C:/mingw64/include/c++/15.2.0/bits/shared_ptr_base.h:
+
+C:/mingw64/x86_64-w64-mingw32/include/rpcsal.h:
 
 C:/mingw64/include/c++/15.2.0/bits/refwrap.h:
 
@@ -4777,6 +4876,8 @@ C:/mingw64/include/c++/15.2.0/bits/std_mutex.h:
 C:/mingw64/include/c++/15.2.0/bits/invoke.h:
 
 C:/mingw64/include/c++/15.2.0/bits/hashtable.h:
+
+C:/mingw64/x86_64-w64-mingw32/include/wtypesbase.h:
 
 C:/mingw64/include/c++/15.2.0/bits/hash_bytes.h:
 
@@ -4902,6 +5003,8 @@ C:/mingw64/include/c++/15.2.0/bits/stl_iterator.h:
 
 C:/boost/boost_1_84_0/boost/asio/detail/wait_handler.hpp:
 
+C:/mingw64/x86_64-w64-mingw32/include/udpmib.h:
+
 C:/mingw64/lib/gcc/x86_64-w64-mingw32/15.2.0/include/avx10_2-512mediaintrin.h:
 
 C:/mingw64/include/c++/15.2.0/bits/stl_algo.h:
@@ -4988,6 +5091,8 @@ C:/boost/boost_1_84_0/boost/asio/local/detail/impl/endpoint.ipp:
 
 C:/boost/boost_1_84_0/boost/asio/detail/service_registry.hpp:
 
+C:/mingw64/x86_64-w64-mingw32/include/ipmib.h:
+
 C:/boost/boost_1_84_0/boost/asio/detail/select_interrupter.hpp:
 
 C:/mingw64/x86_64-w64-mingw32/include/_mingw_unicode.h:
@@ -5039,6 +5144,8 @@ C:/mingw64/include/c++/15.2.0/span:
 C:/boost/boost_1_84_0/boost/asio/is_applicable_property.hpp:
 
 C:/boost/boost_1_84_0/boost/asio/detail/null_event.hpp:
+
+C:/mingw64/x86_64-w64-mingw32/include/oleauto.h:
 
 C:/mingw64/lib/gcc/x86_64-w64-mingw32/15.2.0/include/mwaitxintrin.h:
 
@@ -5128,6 +5235,8 @@ C:/boost/boost_1_84_0/boost/asio/associated_allocator.hpp:
 
 C:/boost/boost_1_84_0/boost/asio/impl/use_awaitable.hpp:
 
+C:/mingw64/x86_64-w64-mingw32/include/rpcnterr.h:
+
 C:/boost/boost_1_84_0/boost/asio/prefer.hpp:
 
 C:/boost/boost_1_84_0/boost/asio/error.hpp:
@@ -5173,6 +5282,8 @@ C:/mingw64/x86_64-w64-mingw32/include/sec_api/stralign_s.h:
 C:/mingw64/lib/gcc/x86_64-w64-mingw32/15.2.0/include/popcntintrin.h:
 
 C:/boost/boost_1_84_0/boost/asio/buffers_iterator.hpp:
+
+C:/mingw64/x86_64-w64-mingw32/include/combaseapi.h:
 
 C:/boost/boost_1_84_0/boost/asio/detail/config.hpp:
 
@@ -5256,6 +5367,8 @@ C:/boost/boost_1_84_0/boost/asio/detail/scoped_lock.hpp:
 
 C:/boost/boost_1_84_0/boost/align/detail/is_alignment.hpp:
 
+C:/mingw64/x86_64-w64-mingw32/include/msxml.h:
+
 C:/mingw64/include/c++/15.2.0/bits/stl_function.h:
 
 C:/boost/boost_1_84_0/boost/system/detail/generic_category_message.hpp:
@@ -5326,6 +5439,8 @@ C:/mingw64/lib/gcc/x86_64-w64-mingw32/15.2.0/include/f16cintrin.h:
 
 C:/boost/boost_1_84_0/boost/asio/detail/win_fd_set_adapter.hpp:
 
+C:/mingw64/x86_64-w64-mingw32/include/unknwn.h:
+
 C:/mingw64/lib/gcc/x86_64-w64-mingw32/15.2.0/include/avx512vpopcntdqintrin.h:
 
 C:/mingw64/include/c++/15.2.0/system_error:
@@ -5339,6 +5454,8 @@ C:/mingw64/lib/gcc/x86_64-w64-mingw32/15.2.0/include/xtestintrin.h:
 C:/boost/boost_1_84_0/boost/predef/os/ios.h:
 
 C:/boost/boost_1_84_0/boost/asio/detail/win_iocp_socket_service_base.hpp:
+
+C:/mingw64/x86_64-w64-mingw32/include/rpcdcep.h:
 
 C:/mingw64/lib/gcc/x86_64-w64-mingw32/15.2.0/include/avx512vlintrin.h:
 
@@ -5416,6 +5533,8 @@ C:/mingw64/lib/gcc/x86_64-w64-mingw32/15.2.0/include/mm3dnow.h:
 
 C:/boost/boost_1_84_0/boost/asio/any_completion_handler.hpp:
 
+C:/mingw64/x86_64-w64-mingw32/include/wtypes.h:
+
 C:/boost/boost_1_84_0/boost/system/detail/system_category_impl.hpp:
 
 C:/mingw64/lib/gcc/x86_64-w64-mingw32/15.2.0/include/rtmintrin.h:
@@ -5481,6 +5600,8 @@ C:/boost/boost_1_84_0/boost/asio/detail/impl/scheduler.ipp:
 C:/boost/boost_1_84_0/boost/asio/buffered_read_stream.hpp:
 
 C:/boost/boost_1_84_0/boost/asio/ip/v6_only.hpp:
+
+C:/mingw64/x86_64-w64-mingw32/include/oaidl.h:
 
 C:/boost/boost_1_84_0/boost/asio/basic_seq_packet_socket.hpp:
 
@@ -5553,6 +5674,8 @@ C:/boost/boost_1_84_0/boost/asio/deferred.hpp:
 C:/boost/boost_1_84_0/boost/asio/bind_executor.hpp:
 
 C:/boost/boost_1_84_0/boost/asio/any_io_executor.hpp:
+
+C:/mingw64/x86_64-w64-mingw32/include/ole2.h:
 
 C:/boost/boost_1_84_0/boost/predef/platform/mingw64.h:
 
@@ -5736,6 +5859,8 @@ C:/mingw64/x86_64-w64-mingw32/include/guiddef.h:
 
 C:/boost/boost_1_84_0/boost/asio/detail/conditionally_enabled_event.hpp:
 
+C:/mingw64/x86_64-w64-mingw32/include/objidl.h:
+
 C:/boost/boost_1_84_0/boost/asio/bind_cancellation_slot.hpp:
 
 C:/mingw64/include/c++/15.2.0/bit:
@@ -5914,6 +6039,8 @@ C:/boost/boost_1_84_0/boost/system/detail/snprintf.hpp:
 
 C:/boost/boost_1_84_0/boost/asio/impl/multiple_exceptions.ipp:
 
+C:/mingw64/x86_64-w64-mingw32/include/iptypes.h:
+
 C:/boost/boost_1_84_0/boost/system/error_category.hpp:
 
 C:/mingw64/lib/gcc/x86_64-w64-mingw32/15.2.0/include/amxfp16intrin.h:
@@ -5947,6 +6074,8 @@ C:/boost/boost_1_84_0/boost/asio/impl/use_future.hpp:
 C:/mingw64/include/c++/15.2.0/unordered_map:
 
 C:/boost/boost_1_84_0/boost/config.hpp:
+
+C:/mingw64/x86_64-w64-mingw32/include/tcpmib.h:
 
 C:/boost/boost_1_84_0/boost/asio/impl/write_at.hpp:
 
@@ -6038,6 +6167,8 @@ C:/mingw64/include/c++/15.2.0/bits/unicode.h:
 
 C:/boost/boost_1_84_0/boost/asio/posix/basic_stream_descriptor.hpp:
 
+C:/mingw64/x86_64-w64-mingw32/include/wincrypt.h:
+
 C:/mingw64/x86_64-w64-mingw32/include/ws2ipdef.h:
 
 C:/boost/boost_1_84_0/boost/asio/posix/descriptor.hpp:
@@ -6098,6 +6229,8 @@ C:/mingw64/x86_64-w64-mingw32/include/concurrencysal.h:
 
 C:/boost/boost_1_84_0/boost/asio/signal_set_base.hpp:
 
+C:/mingw64/x86_64-w64-mingw32/include/objidlbase.h:
+
 C:/boost/boost_1_84_0/boost/asio/steady_timer.hpp:
 
 C:/boost/boost_1_84_0/boost/asio/detail/win_object_handle_service.hpp:
@@ -6130,6 +6263,8 @@ C:/boost/boost_1_84_0/boost/predef/platform/android.h:
 
 C:/boost/boost_1_84_0/boost/asio/traits/query_free.hpp:
 
+C:/mingw64/x86_64-w64-mingw32/include/rpcnsi.h:
+
 C:/boost/boost_1_84_0/boost/asio/traits/query_member.hpp:
 
 C:/boost/boost_1_84_0/boost/asio/ip/resolver_base.hpp:
@@ -6143,6 +6278,10 @@ C:/mingw64/lib/gcc/x86_64-w64-mingw32/15.2.0/include/avx512vp2intersectintrin.h:
 C:/boost/boost_1_84_0/boost/asio/traits/static_query.hpp:
 
 C:/boost/boost_1_84_0/boost/asio/traits/static_require.hpp:
+
+C:/mingw64/x86_64-w64-mingw32/include/rpcnsip.h:
+
+C:/mingw64/x86_64-w64-mingw32/include/ipifcons.h:
 
 C:/boost/boost_1_84_0/boost/asio/detail/dependent_type.hpp:
 
@@ -6277,6 +6416,8 @@ C:/boost/boost_1_84_0/boost/asio/ip/impl/network_v6.ipp:
 C:/boost/boost_1_84_0/boost/asio/require_concept.hpp:
 
 C:/boost/boost_1_84_0/boost/system/errc.hpp:
+
+C:/mingw64/x86_64-w64-mingw32/include/oleidl.h:
 
 C:/boost/boost_1_84_0/boost/asio/traits/require_concept_free.hpp:
 

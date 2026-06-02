@@ -98,7 +98,7 @@ set_target_properties(server PROPERTIES OUTPUT_NAME "AllInPokerServer")
 
 # Windows networking libs
 if (WIN32)
-  target_link_libraries(server PRIVATE ws2_32 mswsock)
+  target_link_libraries(server PRIVATE ws2_32 mswsock iphlpapi)
   target_link_libraries(client PRIVATE ws2_32 mswsock)
 
   target_compile_definitions(server PRIVATE

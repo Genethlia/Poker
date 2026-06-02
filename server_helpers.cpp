@@ -1,4 +1,9 @@
+#include <winsock2.h>
+#include <iphlpapi.h>
+#include <ws2tcpip.h>
+
 #include "server.h"
+
 using namespace std;
 
 int Server::countInHand()
@@ -167,6 +172,76 @@ string Server::findNameById(int id)
     if (p)
         return p->display_name();
     return "Unknown";
+}
+
+string Server::getLocalIp()
+{
+    ULONG bufferSize = 15000;
+    vector<char> buffer(bufferSize);
+
+    IP_ADAPTER_ADDRESSES *addresses =
+        reinterpret_cast<IP_ADAPTER_ADDRESSES *>(buffer.data());
+
+    DWORD result = GetAdaptersAddresses(
+        AF_INET,
+        GAA_FLAG_SKIP_ANYCAST |
+            GAA_FLAG_SKIP_MULTICAST |
+            GAA_FLAG_SKIP_DNS_SERVER,
+        nullptr,
+        addresses,
+        &bufferSize);
+
+    if (result == ERROR_BUFFER_OVERFLOW)
+    {
+        buffer.resize(bufferSize);
+        addresses = reinterpret_cast<IP_ADAPTER_ADDRESSES *>(buffer.data());
+
+        result = GetAdaptersAddresses(
+            AF_INET,
+            GAA_FLAG_SKIP_ANYCAST |
+                GAA_FLAG_SKIP_MULTICAST |
+                GAA_FLAG_SKIP_DNS_SERVER,
+            nullptr,
+            addresses,
+            &bufferSize);
+    }
+
+    if (result != NO_ERROR)
+    {
+        cerr << "GetAdaptersAddresses failed. Error: " << result << "\n";
+        return "127.0.0.1";
+    }
+
+    for (IP_ADAPTER_ADDRESSES *adapter = addresses; adapter != nullptr; adapter = adapter->Next)
+    {
+        if (adapter->OperStatus != IfOperStatusUp)
+            continue;
+
+        for (IP_ADAPTER_UNICAST_ADDRESS *addr = adapter->FirstUnicastAddress;
+             addr != nullptr;
+             addr = addr->Next)
+        {
+            sockaddr_in *ipv4 = reinterpret_cast<sockaddr_in *>(addr->Address.lpSockaddr);
+
+            char ip[INET_ADDRSTRLEN];
+            inet_ntop(AF_INET, &(ipv4->sin_addr), ip, INET_ADDRSTRLEN);
+
+            string ipString = ip;
+
+            if (ipString == "127.0.0.1")
+                continue;
+
+            // Prefer normal LAN IPs
+            if (ipString.rfind("192.168.", 0) == 0 ||
+                ipString.rfind("10.", 0) == 0 ||
+                ipString.rfind("172.", 0) == 0)
+            {
+                return ipString;
+            }
+        }
+    }
+
+    return "127.0.0.1";
 }
 
 shared_ptr<Client> Server::find_client_by_id(int id)

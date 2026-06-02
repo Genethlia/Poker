@@ -19,7 +19,8 @@ void Server::start()
             io,
             tcp::endpoint(tcp::v4(), 6767));
 
-        cout << "Server running on port 6767...\n";
+        cout << "Server IP: " << getLocalIp() << endl;
+        cout << "Port: 6767\n";
 
         function<void()> accept_loop;
 

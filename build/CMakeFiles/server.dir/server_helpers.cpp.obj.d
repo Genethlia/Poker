@@ -1,306 +1,41 @@
 CMakeFiles/server.dir/server_helpers.cpp.obj: \
  C:\Users\tgene\OneDrive\ -\ MOEC\Poker\server_helpers.cpp \
- C:\Users\tgene\OneDrive\ -\ MOEC\Poker\server.h \
- C:\Users\tgene\OneDrive\ -\ MOEC\Poker\poker_networking.hpp \
- C:/boost/boost_1_84_0/boost/asio.hpp \
- C:/boost/boost_1_84_0/boost/asio/any_completion_executor.hpp \
- C:/boost/boost_1_84_0/boost/asio/detail/config.hpp \
- C:/boost/boost_1_84_0/boost/config.hpp \
- C:/boost/boost_1_84_0/boost/config/user.hpp \
- C:/boost/boost_1_84_0/boost/config/detail/select_compiler_config.hpp \
- C:/boost/boost_1_84_0/boost/config/compiler/gcc.hpp \
- C:/mingw64/include/c++/15.2.0/cstddef \
- C:/mingw64/include/c++/15.2.0/x86_64-w64-mingw32/bits/c++config.h \
- C:/mingw64/include/c++/15.2.0/x86_64-w64-mingw32/bits/os_defines.h \
- C:/mingw64/include/c++/15.2.0/x86_64-w64-mingw32/bits/cpu_defines.h \
- C:/mingw64/include/c++/15.2.0/pstl/pstl_config.h \
- C:/mingw64/lib/gcc/x86_64-w64-mingw32/15.2.0/include/stddef.h \
- C:/mingw64/x86_64-w64-mingw32/include/stddef.h \
- C:/mingw64/x86_64-w64-mingw32/include/crtdefs.h \
- C:/mingw64/x86_64-w64-mingw32/include/corecrt.h \
+ C:/mingw64/x86_64-w64-mingw32/include/winsock2.h \
+ C:/mingw64/x86_64-w64-mingw32/include/_mingw_unicode.h \
+ C:/mingw64/x86_64-w64-mingw32/include/windows.h \
  C:/mingw64/x86_64-w64-mingw32/include/_mingw.h \
  C:/mingw64/x86_64-w64-mingw32/include/_mingw_mac.h \
  C:/mingw64/x86_64-w64-mingw32/include/_mingw_secapi.h \
  C:/mingw64/x86_64-w64-mingw32/include/vadefs.h \
  C:/mingw64/x86_64-w64-mingw32/include/sdks/_mingw_ddk.h \
- C:/mingw64/include/c++/15.2.0/bits/version.h \
- C:/boost/boost_1_84_0/boost/config/detail/select_stdlib_config.hpp \
- C:/mingw64/include/c++/15.2.0/version \
- C:/boost/boost_1_84_0/boost/config/stdlib/libstdcpp3.hpp \
- C:/boost/boost_1_84_0/boost/config/detail/select_platform_config.hpp \
- C:/boost/boost_1_84_0/boost/config/platform/win32.hpp \
- C:/boost/boost_1_84_0/boost/config/detail/suffix.hpp \
- C:/boost/boost_1_84_0/boost/config/helper_macros.hpp \
- C:/boost/boost_1_84_0/boost/config/detail/cxx_composite.hpp \
- C:/boost/boost_1_84_0/boost/version.hpp \
- C:/mingw64/x86_64-w64-mingw32/include/winapifamily.h \
- C:/boost/boost_1_84_0/boost/asio/execution.hpp \
- C:/boost/boost_1_84_0/boost/asio/execution/allocator.hpp \
- C:/boost/boost_1_84_0/boost/asio/detail/type_traits.hpp \
- C:/mingw64/include/c++/15.2.0/type_traits \
- C:/boost/boost_1_84_0/boost/asio/execution/executor.hpp \
- C:/boost/boost_1_84_0/boost/asio/execution/invocable_archetype.hpp \
- C:/boost/boost_1_84_0/boost/asio/detail/push_options.hpp \
- C:/boost/boost_1_84_0/boost/asio/detail/pop_options.hpp \
- C:/boost/boost_1_84_0/boost/asio/traits/equality_comparable.hpp \
- C:/boost/boost_1_84_0/boost/asio/traits/execute_member.hpp \
- C:/boost/boost_1_84_0/boost/asio/is_applicable_property.hpp \
- C:/boost/boost_1_84_0/boost/asio/traits/query_static_constexpr_member.hpp \
- C:/boost/boost_1_84_0/boost/asio/traits/static_query.hpp \
- C:/boost/boost_1_84_0/boost/asio/execution/any_executor.hpp \
- C:/mingw64/include/c++/15.2.0/new \
- C:/mingw64/include/c++/15.2.0/bits/exception.h \
- C:/mingw64/include/c++/15.2.0/typeinfo \
- C:/mingw64/include/c++/15.2.0/bits/hash_bytes.h \
- C:/boost/boost_1_84_0/boost/asio/detail/assert.hpp \
- C:/boost/boost_1_84_0/boost/assert.hpp \
- C:/mingw64/x86_64-w64-mingw32/include/assert.h \
- C:/mingw64/include/c++/15.2.0/stdlib.h \
- C:/mingw64/include/c++/15.2.0/cstdlib \
- C:/mingw64/x86_64-w64-mingw32/include/stdlib.h \
- C:/mingw64/x86_64-w64-mingw32/include/corecrt_wstdlib.h \
- C:/mingw64/lib/gcc/x86_64-w64-mingw32/15.2.0/include/limits.h \
- C:/mingw64/lib/gcc/x86_64-w64-mingw32/15.2.0/include/syslimits.h \
- C:/mingw64/x86_64-w64-mingw32/include/limits.h \
- C:/mingw64/x86_64-w64-mingw32/include/sec_api/stdlib_s.h \
- C:/mingw64/x86_64-w64-mingw32/include/malloc.h \
- C:/mingw64/lib/gcc/x86_64-w64-mingw32/15.2.0/include/mm_malloc.h \
- C:/mingw64/x86_64-w64-mingw32/include/errno.h \
- C:/mingw64/include/c++/15.2.0/bits/std_abs.h \
- C:/boost/boost_1_84_0/boost/asio/detail/atomic_count.hpp \
- C:/mingw64/include/c++/15.2.0/atomic \
- C:/mingw64/include/c++/15.2.0/bits/atomic_base.h \
- C:/mingw64/include/c++/15.2.0/bits/atomic_lockfree_defines.h \
- C:/mingw64/include/c++/15.2.0/bits/move.h \
- C:/mingw64/include/c++/15.2.0/bits/atomic_wait.h \
- C:/mingw64/include/c++/15.2.0/cstdint \
- C:/mingw64/lib/gcc/x86_64-w64-mingw32/15.2.0/include/stdint.h \
- C:/mingw64/x86_64-w64-mingw32/include/stdint.h \
- C:/mingw64/include/c++/15.2.0/bits/functional_hash.h \
- C:/mingw64/include/c++/15.2.0/x86_64-w64-mingw32/bits/gthr.h \
- C:/mingw64/include/c++/15.2.0/x86_64-w64-mingw32/bits/gthr-default.h \
- C:/mingw64/x86_64-w64-mingw32/include/pthread.h \
- C:/mingw64/x86_64-w64-mingw32/include/sys/types.h \
- C:/mingw64/x86_64-w64-mingw32/include/_mingw_off_t.h \
- C:/mingw64/x86_64-w64-mingw32/include/process.h \
- C:/mingw64/x86_64-w64-mingw32/include/corecrt_startup.h \
- C:/mingw64/x86_64-w64-mingw32/include/signal.h \
- C:/mingw64/x86_64-w64-mingw32/include/pthread_signal.h \
- C:/mingw64/x86_64-w64-mingw32/include/time.h \
- C:/mingw64/x86_64-w64-mingw32/include/sys/timeb.h \
- C:/mingw64/x86_64-w64-mingw32/include/sec_api/sys/timeb_s.h \
- C:/mingw64/x86_64-w64-mingw32/include/_timeval.h \
- C:/mingw64/x86_64-w64-mingw32/include/pthread_time.h \
- C:/mingw64/x86_64-w64-mingw32/include/pthread_compat.h \
- C:/mingw64/x86_64-w64-mingw32/include/sched.h \
- C:/mingw64/x86_64-w64-mingw32/include/pthread_unistd.h \
- C:/mingw64/include/c++/15.2.0/ext/numeric_traits.h \
- C:/mingw64/include/c++/15.2.0/bits/cpp_type_traits.h \
- C:/mingw64/include/c++/15.2.0/ext/type_traits.h \
- C:/mingw64/include/c++/15.2.0/bits/std_mutex.h \
- C:/mingw64/include/c++/15.2.0/bits/functexcept.h \
- C:/mingw64/include/c++/15.2.0/bits/exception_defines.h \
- C:/boost/boost_1_84_0/boost/asio/detail/cstddef.hpp \
- C:/boost/boost_1_84_0/boost/asio/detail/executor_function.hpp \
- C:/boost/boost_1_84_0/boost/asio/detail/handler_alloc_helpers.hpp \
- C:/boost/boost_1_84_0/boost/asio/detail/memory.hpp \
- C:/mingw64/include/c++/15.2.0/memory \
- C:/mingw64/include/c++/15.2.0/bits/memoryfwd.h \
- C:/mingw64/include/c++/15.2.0/bits/allocator.h \
- C:/mingw64/include/c++/15.2.0/x86_64-w64-mingw32/bits/c++allocator.h \
- C:/mingw64/include/c++/15.2.0/bits/new_allocator.h \
- C:/mingw64/include/c++/15.2.0/bits/stl_tempbuf.h \
- C:/mingw64/include/c++/15.2.0/bits/stl_construct.h \
- C:/mingw64/include/c++/15.2.0/bits/stl_iterator_base_types.h \
- C:/mingw64/include/c++/15.2.0/bits/iterator_concepts.h \
- C:/mingw64/include/c++/15.2.0/concepts \
- C:/mingw64/include/c++/15.2.0/bits/ptr_traits.h \
- C:/mingw64/include/c++/15.2.0/bits/ranges_cmp.h \
- C:/mingw64/include/c++/15.2.0/bits/stl_iterator_base_funcs.h \
- C:/mingw64/include/c++/15.2.0/bits/concept_check.h \
- C:/mingw64/include/c++/15.2.0/debug/assertions.h \
- C:/mingw64/include/c++/15.2.0/bits/stl_pair.h \
- C:/mingw64/include/c++/15.2.0/bits/utility.h \
- C:/mingw64/include/c++/15.2.0/compare \
- C:/mingw64/include/c++/15.2.0/bits/stl_uninitialized.h \
- C:/mingw64/include/c++/15.2.0/bits/stl_algobase.h \
- C:/mingw64/include/c++/15.2.0/bits/stl_iterator.h \
- C:/mingw64/include/c++/15.2.0/debug/debug.h \
- C:/mingw64/include/c++/15.2.0/bits/predefined_ops.h \
- C:/mingw64/include/c++/15.2.0/bit \
- C:/mingw64/include/c++/15.2.0/ext/alloc_traits.h \
- C:/mingw64/include/c++/15.2.0/bits/alloc_traits.h \
- C:/mingw64/include/c++/15.2.0/bits/stl_raw_storage_iter.h \
- C:/mingw64/include/c++/15.2.0/bits/align.h \
- C:/mingw64/include/c++/15.2.0/bits/uses_allocator.h \
- C:/mingw64/include/c++/15.2.0/bits/unique_ptr.h \
- C:/mingw64/include/c++/15.2.0/tuple \
- C:/mingw64/include/c++/15.2.0/bits/invoke.h \
- C:/mingw64/include/c++/15.2.0/bits/ranges_util.h \
- C:/mingw64/include/c++/15.2.0/bits/ranges_base.h \
- C:/mingw64/include/c++/15.2.0/initializer_list \
- C:/mingw64/include/c++/15.2.0/bits/max_size_type.h \
- C:/mingw64/include/c++/15.2.0/numbers \
- C:/mingw64/include/c++/15.2.0/bits/stl_function.h \
- C:/mingw64/include/c++/15.2.0/backward/binders.h \
- C:/mingw64/include/c++/15.2.0/bits/ostream.h \
- C:/mingw64/include/c++/15.2.0/bits/requires_hosted.h \
- C:/mingw64/include/c++/15.2.0/ios C:/mingw64/include/c++/15.2.0/iosfwd \
- C:/mingw64/include/c++/15.2.0/bits/stringfwd.h \
- C:/mingw64/include/c++/15.2.0/bits/postypes.h \
- C:/mingw64/include/c++/15.2.0/cwchar \
- C:/mingw64/x86_64-w64-mingw32/include/wchar.h \
- C:/mingw64/x86_64-w64-mingw32/include/corecrt_stdio_config.h \
- C:/mingw64/x86_64-w64-mingw32/include/corecrt_wctype.h \
- C:/mingw64/x86_64-w64-mingw32/include/_mingw_stat64.h \
- C:/mingw64/x86_64-w64-mingw32/include/swprintf.inl \
- C:/mingw64/x86_64-w64-mingw32/include/sec_api/wchar_s.h \
- C:/mingw64/include/c++/15.2.0/exception \
- C:/mingw64/include/c++/15.2.0/bits/exception_ptr.h \
- C:/mingw64/include/c++/15.2.0/bits/cxxabi_init_exception.h \
- C:/mingw64/include/c++/15.2.0/bits/nested_exception.h \
- C:/mingw64/include/c++/15.2.0/bits/char_traits.h \
- C:/mingw64/include/c++/15.2.0/bits/localefwd.h \
- C:/mingw64/include/c++/15.2.0/x86_64-w64-mingw32/bits/c++locale.h \
- C:/mingw64/include/c++/15.2.0/clocale \
- C:/mingw64/x86_64-w64-mingw32/include/locale.h \
- C:/mingw64/x86_64-w64-mingw32/include/stdio.h \
- C:/mingw64/x86_64-w64-mingw32/include/sec_api/stdio_s.h \
- C:/mingw64/include/c++/15.2.0/cctype \
- C:/mingw64/x86_64-w64-mingw32/include/ctype.h \
- C:/mingw64/include/c++/15.2.0/bits/ios_base.h \
- C:/mingw64/include/c++/15.2.0/ext/atomicity.h \
- C:/mingw64/include/c++/15.2.0/x86_64-w64-mingw32/bits/atomic_word.h \
- C:/mingw64/include/c++/15.2.0/bits/locale_classes.h \
- C:/mingw64/include/c++/15.2.0/string \
- C:/mingw64/include/c++/15.2.0/bits/ostream_insert.h \
- C:/mingw64/include/c++/15.2.0/bits/cxxabi_forced.h \
- C:/mingw64/include/c++/15.2.0/bits/refwrap.h \
- C:/mingw64/include/c++/15.2.0/bits/range_access.h \
- C:/mingw64/include/c++/15.2.0/bits/basic_string.h \
- C:/mingw64/include/c++/15.2.0/string_view \
- C:/mingw64/include/c++/15.2.0/bits/string_view.tcc \
- C:/mingw64/include/c++/15.2.0/ext/string_conversions.h \
- C:/mingw64/include/c++/15.2.0/cstdio \
- C:/mingw64/include/c++/15.2.0/cerrno \
- C:/mingw64/include/c++/15.2.0/bits/charconv.h \
- C:/mingw64/include/c++/15.2.0/bits/basic_string.tcc \
- C:/mingw64/include/c++/15.2.0/bits/memory_resource.h \
- C:/mingw64/include/c++/15.2.0/bits/uses_allocator_args.h \
- C:/mingw64/include/c++/15.2.0/bits/locale_classes.tcc \
- C:/mingw64/include/c++/15.2.0/system_error \
- C:/mingw64/include/c++/15.2.0/x86_64-w64-mingw32/bits/error_constants.h \
- C:/mingw64/include/c++/15.2.0/stdexcept \
- C:/mingw64/include/c++/15.2.0/streambuf \
- C:/mingw64/include/c++/15.2.0/bits/streambuf.tcc \
- C:/mingw64/include/c++/15.2.0/bits/basic_ios.h \
- C:/mingw64/include/c++/15.2.0/bits/locale_facets.h \
- C:/mingw64/include/c++/15.2.0/cwctype \
- C:/mingw64/x86_64-w64-mingw32/include/wctype.h \
- C:/mingw64/include/c++/15.2.0/x86_64-w64-mingw32/bits/ctype_base.h \
- C:/mingw64/include/c++/15.2.0/bits/streambuf_iterator.h \
- C:/mingw64/include/c++/15.2.0/x86_64-w64-mingw32/bits/ctype_inline.h \
- C:/mingw64/include/c++/15.2.0/bits/locale_facets.tcc \
- C:/mingw64/include/c++/15.2.0/bits/basic_ios.tcc \
- C:/mingw64/include/c++/15.2.0/bits/shared_ptr.h \
- C:/mingw64/include/c++/15.2.0/bits/shared_ptr_base.h \
- C:/mingw64/include/c++/15.2.0/bits/allocated_ptr.h \
- C:/mingw64/include/c++/15.2.0/ext/aligned_buffer.h \
- C:/mingw64/include/c++/15.2.0/ext/concurrence.h \
- C:/mingw64/include/c++/15.2.0/bits/shared_ptr_atomic.h \
- C:/mingw64/include/c++/15.2.0/backward/auto_ptr.h \
- C:/mingw64/include/c++/15.2.0/bits/ranges_uninitialized.h \
- C:/mingw64/include/c++/15.2.0/bits/ranges_algobase.h \
- C:/mingw64/include/c++/15.2.0/pstl/glue_memory_defs.h \
- C:/mingw64/include/c++/15.2.0/pstl/execution_defs.h \
- C:/boost/boost_1_84_0/boost/asio/detail/cstdint.hpp \
- C:/boost/boost_1_84_0/boost/asio/detail/throw_exception.hpp \
- C:/boost/boost_1_84_0/boost/throw_exception.hpp \
- C:/boost/boost_1_84_0/boost/exception/exception.hpp \
- C:/boost/boost_1_84_0/boost/assert/source_location.hpp \
- C:/boost/boost_1_84_0/boost/cstdint.hpp \
- C:/mingw64/include/c++/15.2.0/cstring \
- C:/mingw64/x86_64-w64-mingw32/include/string.h \
- C:/mingw64/x86_64-w64-mingw32/include/sec_api/string_s.h \
- C:/mingw64/include/c++/15.2.0/source_location \
- C:/boost/boost_1_84_0/boost/config/workaround.hpp \
- C:/mingw64/include/c++/15.2.0/utility \
- C:/mingw64/include/c++/15.2.0/bits/stl_relops.h \
- C:/boost/boost_1_84_0/boost/align/aligned_alloc.hpp \
- C:/mingw64/x86_64-w64-mingw32/include/unistd.h \
- C:/mingw64/x86_64-w64-mingw32/include/io.h \
- C:/mingw64/x86_64-w64-mingw32/include/getopt.h \
- C:/boost/boost_1_84_0/boost/align/detail/aligned_alloc_mingw.hpp \
- C:/boost/boost_1_84_0/boost/align/detail/is_alignment.hpp \
- C:/boost/boost_1_84_0/boost/asio/detail/recycling_allocator.hpp \
- C:/boost/boost_1_84_0/boost/asio/detail/thread_context.hpp \
- C:/mingw64/include/c++/15.2.0/climits \
- C:/boost/boost_1_84_0/boost/asio/detail/call_stack.hpp \
- C:/boost/boost_1_84_0/boost/asio/detail/noncopyable.hpp \
- C:/boost/boost_1_84_0/boost/asio/detail/tss_ptr.hpp \
- C:/boost/boost_1_84_0/boost/asio/detail/keyword_tss_ptr.hpp \
- C:/boost/boost_1_84_0/boost/asio/detail/impl/thread_context.ipp \
- C:/boost/boost_1_84_0/boost/asio/detail/thread_info_base.hpp \
- C:/boost/boost_1_84_0/boost/asio/multiple_exceptions.hpp \
- C:/boost/boost_1_84_0/boost/asio/impl/multiple_exceptions.ipp \
- C:/boost/boost_1_84_0/boost/asio/associated_allocator.hpp \
- C:/boost/boost_1_84_0/boost/asio/associator.hpp \
- C:/boost/boost_1_84_0/boost/asio/detail/functional.hpp \
- C:/mingw64/include/c++/15.2.0/functional \
- C:/mingw64/include/c++/15.2.0/bits/std_function.h \
- C:/mingw64/include/c++/15.2.0/unordered_map \
- C:/mingw64/include/c++/15.2.0/bits/unordered_map.h \
- C:/mingw64/include/c++/15.2.0/bits/hashtable.h \
- C:/mingw64/include/c++/15.2.0/bits/hashtable_policy.h \
- C:/mingw64/include/c++/15.2.0/bits/enable_special_members.h \
- C:/mingw64/include/c++/15.2.0/bits/node_handle.h \
- C:/mingw64/include/c++/15.2.0/bits/erase_if.h \
- C:/mingw64/include/c++/15.2.0/vector \
- C:/mingw64/include/c++/15.2.0/bits/stl_vector.h \
- C:/mingw64/include/c++/15.2.0/bits/stl_bvector.h \
- C:/mingw64/include/c++/15.2.0/bits/vector.tcc \
- C:/mingw64/include/c++/15.2.0/array \
- C:/boost/boost_1_84_0/boost/asio/detail/non_const_lvalue.hpp \
- C:/boost/boost_1_84_0/boost/asio/detail/scoped_ptr.hpp \
- C:/boost/boost_1_84_0/boost/asio/execution/bad_executor.hpp \
- C:/boost/boost_1_84_0/boost/asio/execution/impl/bad_executor.ipp \
- C:/boost/boost_1_84_0/boost/asio/execution/blocking.hpp \
- C:/boost/boost_1_84_0/boost/asio/prefer.hpp \
- C:/boost/boost_1_84_0/boost/asio/traits/prefer_free.hpp \
- C:/boost/boost_1_84_0/boost/asio/traits/prefer_member.hpp \
- C:/boost/boost_1_84_0/boost/asio/traits/require_free.hpp \
- C:/boost/boost_1_84_0/boost/asio/traits/require_member.hpp \
- C:/boost/boost_1_84_0/boost/asio/traits/static_require.hpp \
- C:/boost/boost_1_84_0/boost/asio/query.hpp \
- C:/boost/boost_1_84_0/boost/asio/traits/query_member.hpp \
- C:/boost/boost_1_84_0/boost/asio/traits/query_free.hpp \
- C:/boost/boost_1_84_0/boost/asio/require.hpp \
- C:/boost/boost_1_84_0/boost/asio/execution/blocking_adaptation.hpp \
- C:/boost/boost_1_84_0/boost/asio/detail/event.hpp \
- C:/boost/boost_1_84_0/boost/asio/detail/win_event.hpp \
- C:/boost/boost_1_84_0/boost/asio/detail/socket_types.hpp \
- C:/mingw64/x86_64-w64-mingw32/include/winsock2.h \
- C:/mingw64/x86_64-w64-mingw32/include/_mingw_unicode.h \
- C:/mingw64/x86_64-w64-mingw32/include/windows.h \
  C:/mingw64/x86_64-w64-mingw32/include/sdkddkver.h \
  C:/mingw64/x86_64-w64-mingw32/include/excpt.h \
+ C:/mingw64/x86_64-w64-mingw32/include/crtdefs.h \
+ C:/mingw64/x86_64-w64-mingw32/include/corecrt.h \
  C:/mingw64/lib/gcc/x86_64-w64-mingw32/15.2.0/include/stdarg.h \
  C:/mingw64/x86_64-w64-mingw32/include/stdarg.h \
  C:/mingw64/x86_64-w64-mingw32/include/_mingw_stdarg.h \
  C:/mingw64/x86_64-w64-mingw32/include/windef.h \
+ C:/mingw64/x86_64-w64-mingw32/include/winapifamily.h \
  C:/mingw64/x86_64-w64-mingw32/include/minwindef.h \
  C:/mingw64/x86_64-w64-mingw32/include/specstrings.h \
  C:/mingw64/x86_64-w64-mingw32/include/sal.h \
  C:/mingw64/x86_64-w64-mingw32/include/concurrencysal.h \
  C:/mingw64/x86_64-w64-mingw32/include/driverspecs.h \
  C:/mingw64/x86_64-w64-mingw32/include/winnt.h \
+ C:/mingw64/x86_64-w64-mingw32/include/ctype.h \
+ C:/mingw64/x86_64-w64-mingw32/include/corecrt_wctype.h \
  C:/mingw64/x86_64-w64-mingw32/include/apiset.h \
  C:/mingw64/x86_64-w64-mingw32/include/psdk_inc/intrin-impl.h \
  C:/mingw64/x86_64-w64-mingw32/include/basetsd.h \
  C:/mingw64/x86_64-w64-mingw32/include/guiddef.h \
+ C:/mingw64/x86_64-w64-mingw32/include/string.h \
+ C:/mingw64/x86_64-w64-mingw32/include/sec_api/string_s.h \
  C:/mingw64/lib/gcc/x86_64-w64-mingw32/15.2.0/include/x86intrin.h \
  C:/mingw64/lib/gcc/x86_64-w64-mingw32/15.2.0/include/x86gprintrin.h \
  C:/mingw64/lib/gcc/x86_64-w64-mingw32/15.2.0/include/ia32intrin.h \
+ C:/mingw64/lib/gcc/x86_64-w64-mingw32/15.2.0/include/stddef.h \
+ C:/mingw64/x86_64-w64-mingw32/include/stddef.h \
  C:/mingw64/lib/gcc/x86_64-w64-mingw32/15.2.0/include/adxintrin.h \
  C:/mingw64/lib/gcc/x86_64-w64-mingw32/15.2.0/include/bmiintrin.h \
  C:/mingw64/lib/gcc/x86_64-w64-mingw32/15.2.0/include/bmi2intrin.h \
@@ -341,6 +76,22 @@ CMakeFiles/server.dir/server_helpers.cpp.obj: \
  C:/mingw64/lib/gcc/x86_64-w64-mingw32/15.2.0/include/immintrin.h \
  C:/mingw64/lib/gcc/x86_64-w64-mingw32/15.2.0/include/mmintrin.h \
  C:/mingw64/lib/gcc/x86_64-w64-mingw32/15.2.0/include/xmmintrin.h \
+ C:/mingw64/lib/gcc/x86_64-w64-mingw32/15.2.0/include/mm_malloc.h \
+ C:/mingw64/include/c++/15.2.0/stdlib.h \
+ C:/mingw64/include/c++/15.2.0/cstdlib \
+ C:/mingw64/include/c++/15.2.0/x86_64-w64-mingw32/bits/c++config.h \
+ C:/mingw64/include/c++/15.2.0/x86_64-w64-mingw32/bits/os_defines.h \
+ C:/mingw64/include/c++/15.2.0/x86_64-w64-mingw32/bits/cpu_defines.h \
+ C:/mingw64/include/c++/15.2.0/pstl/pstl_config.h \
+ C:/mingw64/x86_64-w64-mingw32/include/stdlib.h \
+ C:/mingw64/x86_64-w64-mingw32/include/corecrt_wstdlib.h \
+ C:/mingw64/lib/gcc/x86_64-w64-mingw32/15.2.0/include/limits.h \
+ C:/mingw64/lib/gcc/x86_64-w64-mingw32/15.2.0/include/syslimits.h \
+ C:/mingw64/x86_64-w64-mingw32/include/limits.h \
+ C:/mingw64/x86_64-w64-mingw32/include/sec_api/stdlib_s.h \
+ C:/mingw64/x86_64-w64-mingw32/include/malloc.h \
+ C:/mingw64/include/c++/15.2.0/bits/std_abs.h \
+ C:/mingw64/x86_64-w64-mingw32/include/errno.h \
  C:/mingw64/lib/gcc/x86_64-w64-mingw32/15.2.0/include/emmintrin.h \
  C:/mingw64/lib/gcc/x86_64-w64-mingw32/15.2.0/include/pmmintrin.h \
  C:/mingw64/lib/gcc/x86_64-w64-mingw32/15.2.0/include/tmmintrin.h \
@@ -459,6 +210,7 @@ CMakeFiles/server.dir/server_helpers.cpp.obj: \
  C:/mingw64/x86_64-w64-mingw32/include/fltwinerror.h \
  C:/mingw64/x86_64-w64-mingw32/include/timezoneapi.h \
  C:/mingw64/x86_64-w64-mingw32/include/wingdi.h \
+ C:/mingw64/x86_64-w64-mingw32/include/pshpack1.h \
  C:/mingw64/x86_64-w64-mingw32/include/winuser.h \
  C:/mingw64/x86_64-w64-mingw32/include/tvout.h \
  C:/mingw64/x86_64-w64-mingw32/include/winnls.h \
@@ -481,6 +233,7 @@ CMakeFiles/server.dir/server_helpers.cpp.obj: \
  C:/mingw64/x86_64-w64-mingw32/include/mcx.h \
  C:/mingw64/x86_64-w64-mingw32/include/imm.h \
  C:/mingw64/x86_64-w64-mingw32/include/psdk_inc/_ws1_undef.h \
+ C:/mingw64/x86_64-w64-mingw32/include/_timeval.h \
  C:/mingw64/x86_64-w64-mingw32/include/_bsd_types.h \
  C:/mingw64/x86_64-w64-mingw32/include/inaddr.h \
  C:/mingw64/x86_64-w64-mingw32/include/psdk_inc/_socket_types.h \
@@ -490,11 +243,306 @@ CMakeFiles/server.dir/server_helpers.cpp.obj: \
  C:/mingw64/x86_64-w64-mingw32/include/ws2def.h \
  C:/mingw64/x86_64-w64-mingw32/include/psdk_inc/_wsa_errnos.h \
  C:/mingw64/x86_64-w64-mingw32/include/qos.h \
+ C:/mingw64/x86_64-w64-mingw32/include/iphlpapi.h \
+ C:/mingw64/x86_64-w64-mingw32/include/iprtrmib.h \
+ C:/mingw64/x86_64-w64-mingw32/include/mprapi.h \
+ C:/mingw64/x86_64-w64-mingw32/include/lmcons.h \
+ C:/mingw64/x86_64-w64-mingw32/include/ras.h \
+ C:/mingw64/x86_64-w64-mingw32/include/in6addr.h \
+ C:/mingw64/x86_64-w64-mingw32/include/naptypes.h \
+ C:/mingw64/x86_64-w64-mingw32/include/rpc.h \
+ C:/mingw64/x86_64-w64-mingw32/include/rpcdce.h \
+ C:/mingw64/x86_64-w64-mingw32/include/rpcdcep.h \
+ C:/mingw64/x86_64-w64-mingw32/include/rpcnsi.h \
+ C:/mingw64/x86_64-w64-mingw32/include/rpcnterr.h \
+ C:/mingw64/x86_64-w64-mingw32/include/rpcasync.h \
+ C:/mingw64/x86_64-w64-mingw32/include/rpcndr.h \
+ C:/mingw64/x86_64-w64-mingw32/include/rpcnsip.h \
+ C:/mingw64/x86_64-w64-mingw32/include/rpcsal.h \
+ C:/mingw64/x86_64-w64-mingw32/include/ole2.h \
+ C:/mingw64/x86_64-w64-mingw32/include/objbase.h \
+ C:/mingw64/x86_64-w64-mingw32/include/combaseapi.h \
+ C:/mingw64/x86_64-w64-mingw32/include/wtypesbase.h \
+ C:/mingw64/x86_64-w64-mingw32/include/unknwnbase.h \
+ C:/mingw64/x86_64-w64-mingw32/include/objidlbase.h \
+ C:/mingw64/x86_64-w64-mingw32/include/cguid.h \
+ C:/mingw64/x86_64-w64-mingw32/include/objidl.h \
+ C:/mingw64/x86_64-w64-mingw32/include/unknwn.h \
+ C:/mingw64/x86_64-w64-mingw32/include/wtypes.h \
+ C:/mingw64/x86_64-w64-mingw32/include/urlmon.h \
+ C:/mingw64/x86_64-w64-mingw32/include/oleidl.h \
+ C:/mingw64/x86_64-w64-mingw32/include/servprov.h \
+ C:/mingw64/x86_64-w64-mingw32/include/msxml.h \
+ C:/mingw64/x86_64-w64-mingw32/include/oaidl.h \
+ C:/mingw64/x86_64-w64-mingw32/include/propidl.h \
+ C:/mingw64/x86_64-w64-mingw32/include/oleauto.h \
+ C:/mingw64/x86_64-w64-mingw32/include/ocidl.h \
+ C:/mingw64/x86_64-w64-mingw32/include/wincrypt.h \
+ C:/mingw64/x86_64-w64-mingw32/include/bcrypt.h \
+ C:/mingw64/x86_64-w64-mingw32/include/ncrypt.h \
+ C:/mingw64/x86_64-w64-mingw32/include/dpapi.h \
+ C:/mingw64/x86_64-w64-mingw32/include/ipmib.h \
+ C:/mingw64/x86_64-w64-mingw32/include/nldef.h \
+ C:/mingw64/x86_64-w64-mingw32/include/ipifcons.h \
+ C:/mingw64/x86_64-w64-mingw32/include/udpmib.h \
+ C:/mingw64/x86_64-w64-mingw32/include/tcpmib.h \
+ C:/mingw64/x86_64-w64-mingw32/include/ipexport.h \
+ C:/mingw64/x86_64-w64-mingw32/include/iptypes.h \
+ C:/mingw64/x86_64-w64-mingw32/include/time.h \
+ C:/mingw64/x86_64-w64-mingw32/include/sys/timeb.h \
+ C:/mingw64/x86_64-w64-mingw32/include/sec_api/sys/timeb_s.h \
+ C:/mingw64/x86_64-w64-mingw32/include/pthread_time.h \
+ C:/mingw64/x86_64-w64-mingw32/include/pthread_compat.h \
+ C:/mingw64/x86_64-w64-mingw32/include/ifdef.h \
+ C:/mingw64/x86_64-w64-mingw32/include/tcpestats.h \
+ C:/mingw64/x86_64-w64-mingw32/include/netioapi.h \
  C:/mingw64/x86_64-w64-mingw32/include/ws2tcpip.h \
  C:/mingw64/x86_64-w64-mingw32/include/ws2ipdef.h \
- C:/mingw64/x86_64-w64-mingw32/include/in6addr.h \
  C:/mingw64/x86_64-w64-mingw32/include/psdk_inc/_ip_mreq1.h \
  C:/mingw64/x86_64-w64-mingw32/include/mstcpip.h \
+ C:\Users\tgene\OneDrive\ -\ MOEC\Poker\server.h \
+ C:\Users\tgene\OneDrive\ -\ MOEC\Poker\poker_networking.hpp \
+ C:/boost/boost_1_84_0/boost/asio.hpp \
+ C:/boost/boost_1_84_0/boost/asio/any_completion_executor.hpp \
+ C:/boost/boost_1_84_0/boost/asio/detail/config.hpp \
+ C:/boost/boost_1_84_0/boost/config.hpp \
+ C:/boost/boost_1_84_0/boost/config/user.hpp \
+ C:/boost/boost_1_84_0/boost/config/detail/select_compiler_config.hpp \
+ C:/boost/boost_1_84_0/boost/config/compiler/gcc.hpp \
+ C:/mingw64/include/c++/15.2.0/cstddef \
+ C:/mingw64/include/c++/15.2.0/bits/version.h \
+ C:/boost/boost_1_84_0/boost/config/detail/select_stdlib_config.hpp \
+ C:/mingw64/include/c++/15.2.0/version \
+ C:/boost/boost_1_84_0/boost/config/stdlib/libstdcpp3.hpp \
+ C:/boost/boost_1_84_0/boost/config/detail/select_platform_config.hpp \
+ C:/boost/boost_1_84_0/boost/config/platform/win32.hpp \
+ C:/boost/boost_1_84_0/boost/config/detail/suffix.hpp \
+ C:/boost/boost_1_84_0/boost/config/helper_macros.hpp \
+ C:/boost/boost_1_84_0/boost/config/detail/cxx_composite.hpp \
+ C:/boost/boost_1_84_0/boost/version.hpp \
+ C:/boost/boost_1_84_0/boost/asio/execution.hpp \
+ C:/boost/boost_1_84_0/boost/asio/execution/allocator.hpp \
+ C:/boost/boost_1_84_0/boost/asio/detail/type_traits.hpp \
+ C:/mingw64/include/c++/15.2.0/type_traits \
+ C:/boost/boost_1_84_0/boost/asio/execution/executor.hpp \
+ C:/boost/boost_1_84_0/boost/asio/execution/invocable_archetype.hpp \
+ C:/boost/boost_1_84_0/boost/asio/detail/push_options.hpp \
+ C:/boost/boost_1_84_0/boost/asio/detail/pop_options.hpp \
+ C:/boost/boost_1_84_0/boost/asio/traits/equality_comparable.hpp \
+ C:/boost/boost_1_84_0/boost/asio/traits/execute_member.hpp \
+ C:/boost/boost_1_84_0/boost/asio/is_applicable_property.hpp \
+ C:/boost/boost_1_84_0/boost/asio/traits/query_static_constexpr_member.hpp \
+ C:/boost/boost_1_84_0/boost/asio/traits/static_query.hpp \
+ C:/boost/boost_1_84_0/boost/asio/execution/any_executor.hpp \
+ C:/mingw64/include/c++/15.2.0/new \
+ C:/mingw64/include/c++/15.2.0/bits/exception.h \
+ C:/mingw64/include/c++/15.2.0/typeinfo \
+ C:/mingw64/include/c++/15.2.0/bits/hash_bytes.h \
+ C:/boost/boost_1_84_0/boost/asio/detail/assert.hpp \
+ C:/boost/boost_1_84_0/boost/assert.hpp \
+ C:/mingw64/x86_64-w64-mingw32/include/assert.h \
+ C:/boost/boost_1_84_0/boost/asio/detail/atomic_count.hpp \
+ C:/mingw64/include/c++/15.2.0/atomic \
+ C:/mingw64/include/c++/15.2.0/bits/atomic_base.h \
+ C:/mingw64/include/c++/15.2.0/bits/atomic_lockfree_defines.h \
+ C:/mingw64/include/c++/15.2.0/bits/move.h \
+ C:/mingw64/include/c++/15.2.0/bits/atomic_wait.h \
+ C:/mingw64/include/c++/15.2.0/cstdint \
+ C:/mingw64/lib/gcc/x86_64-w64-mingw32/15.2.0/include/stdint.h \
+ C:/mingw64/x86_64-w64-mingw32/include/stdint.h \
+ C:/mingw64/include/c++/15.2.0/bits/functional_hash.h \
+ C:/mingw64/include/c++/15.2.0/x86_64-w64-mingw32/bits/gthr.h \
+ C:/mingw64/include/c++/15.2.0/x86_64-w64-mingw32/bits/gthr-default.h \
+ C:/mingw64/x86_64-w64-mingw32/include/pthread.h \
+ C:/mingw64/x86_64-w64-mingw32/include/sys/types.h \
+ C:/mingw64/x86_64-w64-mingw32/include/_mingw_off_t.h \
+ C:/mingw64/x86_64-w64-mingw32/include/process.h \
+ C:/mingw64/x86_64-w64-mingw32/include/corecrt_startup.h \
+ C:/mingw64/x86_64-w64-mingw32/include/signal.h \
+ C:/mingw64/x86_64-w64-mingw32/include/pthread_signal.h \
+ C:/mingw64/x86_64-w64-mingw32/include/sched.h \
+ C:/mingw64/x86_64-w64-mingw32/include/pthread_unistd.h \
+ C:/mingw64/include/c++/15.2.0/ext/numeric_traits.h \
+ C:/mingw64/include/c++/15.2.0/bits/cpp_type_traits.h \
+ C:/mingw64/include/c++/15.2.0/ext/type_traits.h \
+ C:/mingw64/include/c++/15.2.0/bits/std_mutex.h \
+ C:/mingw64/include/c++/15.2.0/bits/functexcept.h \
+ C:/mingw64/include/c++/15.2.0/bits/exception_defines.h \
+ C:/boost/boost_1_84_0/boost/asio/detail/cstddef.hpp \
+ C:/boost/boost_1_84_0/boost/asio/detail/executor_function.hpp \
+ C:/boost/boost_1_84_0/boost/asio/detail/handler_alloc_helpers.hpp \
+ C:/boost/boost_1_84_0/boost/asio/detail/memory.hpp \
+ C:/mingw64/include/c++/15.2.0/memory \
+ C:/mingw64/include/c++/15.2.0/bits/memoryfwd.h \
+ C:/mingw64/include/c++/15.2.0/bits/allocator.h \
+ C:/mingw64/include/c++/15.2.0/x86_64-w64-mingw32/bits/c++allocator.h \
+ C:/mingw64/include/c++/15.2.0/bits/new_allocator.h \
+ C:/mingw64/include/c++/15.2.0/bits/stl_tempbuf.h \
+ C:/mingw64/include/c++/15.2.0/bits/stl_construct.h \
+ C:/mingw64/include/c++/15.2.0/bits/stl_iterator_base_types.h \
+ C:/mingw64/include/c++/15.2.0/bits/iterator_concepts.h \
+ C:/mingw64/include/c++/15.2.0/concepts \
+ C:/mingw64/include/c++/15.2.0/bits/ptr_traits.h \
+ C:/mingw64/include/c++/15.2.0/bits/ranges_cmp.h \
+ C:/mingw64/include/c++/15.2.0/bits/stl_iterator_base_funcs.h \
+ C:/mingw64/include/c++/15.2.0/bits/concept_check.h \
+ C:/mingw64/include/c++/15.2.0/debug/assertions.h \
+ C:/mingw64/include/c++/15.2.0/bits/stl_pair.h \
+ C:/mingw64/include/c++/15.2.0/bits/utility.h \
+ C:/mingw64/include/c++/15.2.0/compare \
+ C:/mingw64/include/c++/15.2.0/bits/stl_uninitialized.h \
+ C:/mingw64/include/c++/15.2.0/bits/stl_algobase.h \
+ C:/mingw64/include/c++/15.2.0/bits/stl_iterator.h \
+ C:/mingw64/include/c++/15.2.0/debug/debug.h \
+ C:/mingw64/include/c++/15.2.0/bits/predefined_ops.h \
+ C:/mingw64/include/c++/15.2.0/bit \
+ C:/mingw64/include/c++/15.2.0/ext/alloc_traits.h \
+ C:/mingw64/include/c++/15.2.0/bits/alloc_traits.h \
+ C:/mingw64/include/c++/15.2.0/bits/stl_raw_storage_iter.h \
+ C:/mingw64/include/c++/15.2.0/bits/align.h \
+ C:/mingw64/include/c++/15.2.0/bits/uses_allocator.h \
+ C:/mingw64/include/c++/15.2.0/bits/unique_ptr.h \
+ C:/mingw64/include/c++/15.2.0/tuple \
+ C:/mingw64/include/c++/15.2.0/bits/invoke.h \
+ C:/mingw64/include/c++/15.2.0/bits/ranges_util.h \
+ C:/mingw64/include/c++/15.2.0/bits/ranges_base.h \
+ C:/mingw64/include/c++/15.2.0/initializer_list \
+ C:/mingw64/include/c++/15.2.0/bits/max_size_type.h \
+ C:/mingw64/include/c++/15.2.0/numbers \
+ C:/mingw64/include/c++/15.2.0/bits/stl_function.h \
+ C:/mingw64/include/c++/15.2.0/backward/binders.h \
+ C:/mingw64/include/c++/15.2.0/bits/ostream.h \
+ C:/mingw64/include/c++/15.2.0/bits/requires_hosted.h \
+ C:/mingw64/include/c++/15.2.0/ios C:/mingw64/include/c++/15.2.0/iosfwd \
+ C:/mingw64/include/c++/15.2.0/bits/stringfwd.h \
+ C:/mingw64/include/c++/15.2.0/bits/postypes.h \
+ C:/mingw64/include/c++/15.2.0/cwchar \
+ C:/mingw64/x86_64-w64-mingw32/include/wchar.h \
+ C:/mingw64/x86_64-w64-mingw32/include/corecrt_stdio_config.h \
+ C:/mingw64/x86_64-w64-mingw32/include/_mingw_stat64.h \
+ C:/mingw64/x86_64-w64-mingw32/include/swprintf.inl \
+ C:/mingw64/x86_64-w64-mingw32/include/sec_api/wchar_s.h \
+ C:/mingw64/include/c++/15.2.0/exception \
+ C:/mingw64/include/c++/15.2.0/bits/exception_ptr.h \
+ C:/mingw64/include/c++/15.2.0/bits/cxxabi_init_exception.h \
+ C:/mingw64/include/c++/15.2.0/bits/nested_exception.h \
+ C:/mingw64/include/c++/15.2.0/bits/char_traits.h \
+ C:/mingw64/include/c++/15.2.0/bits/localefwd.h \
+ C:/mingw64/include/c++/15.2.0/x86_64-w64-mingw32/bits/c++locale.h \
+ C:/mingw64/include/c++/15.2.0/clocale \
+ C:/mingw64/x86_64-w64-mingw32/include/locale.h \
+ C:/mingw64/x86_64-w64-mingw32/include/stdio.h \
+ C:/mingw64/x86_64-w64-mingw32/include/sec_api/stdio_s.h \
+ C:/mingw64/include/c++/15.2.0/cctype \
+ C:/mingw64/include/c++/15.2.0/bits/ios_base.h \
+ C:/mingw64/include/c++/15.2.0/ext/atomicity.h \
+ C:/mingw64/include/c++/15.2.0/x86_64-w64-mingw32/bits/atomic_word.h \
+ C:/mingw64/include/c++/15.2.0/bits/locale_classes.h \
+ C:/mingw64/include/c++/15.2.0/string \
+ C:/mingw64/include/c++/15.2.0/bits/ostream_insert.h \
+ C:/mingw64/include/c++/15.2.0/bits/cxxabi_forced.h \
+ C:/mingw64/include/c++/15.2.0/bits/refwrap.h \
+ C:/mingw64/include/c++/15.2.0/bits/range_access.h \
+ C:/mingw64/include/c++/15.2.0/bits/basic_string.h \
+ C:/mingw64/include/c++/15.2.0/string_view \
+ C:/mingw64/include/c++/15.2.0/bits/string_view.tcc \
+ C:/mingw64/include/c++/15.2.0/ext/string_conversions.h \
+ C:/mingw64/include/c++/15.2.0/cstdio \
+ C:/mingw64/include/c++/15.2.0/cerrno \
+ C:/mingw64/include/c++/15.2.0/bits/charconv.h \
+ C:/mingw64/include/c++/15.2.0/bits/basic_string.tcc \
+ C:/mingw64/include/c++/15.2.0/bits/memory_resource.h \
+ C:/mingw64/include/c++/15.2.0/bits/uses_allocator_args.h \
+ C:/mingw64/include/c++/15.2.0/bits/locale_classes.tcc \
+ C:/mingw64/include/c++/15.2.0/system_error \
+ C:/mingw64/include/c++/15.2.0/x86_64-w64-mingw32/bits/error_constants.h \
+ C:/mingw64/include/c++/15.2.0/stdexcept \
+ C:/mingw64/include/c++/15.2.0/streambuf \
+ C:/mingw64/include/c++/15.2.0/bits/streambuf.tcc \
+ C:/mingw64/include/c++/15.2.0/bits/basic_ios.h \
+ C:/mingw64/include/c++/15.2.0/bits/locale_facets.h \
+ C:/mingw64/include/c++/15.2.0/cwctype \
+ C:/mingw64/x86_64-w64-mingw32/include/wctype.h \
+ C:/mingw64/include/c++/15.2.0/x86_64-w64-mingw32/bits/ctype_base.h \
+ C:/mingw64/include/c++/15.2.0/bits/streambuf_iterator.h \
+ C:/mingw64/include/c++/15.2.0/x86_64-w64-mingw32/bits/ctype_inline.h \
+ C:/mingw64/include/c++/15.2.0/bits/locale_facets.tcc \
+ C:/mingw64/include/c++/15.2.0/bits/basic_ios.tcc \
+ C:/mingw64/include/c++/15.2.0/bits/shared_ptr.h \
+ C:/mingw64/include/c++/15.2.0/bits/shared_ptr_base.h \
+ C:/mingw64/include/c++/15.2.0/bits/allocated_ptr.h \
+ C:/mingw64/include/c++/15.2.0/ext/aligned_buffer.h \
+ C:/mingw64/include/c++/15.2.0/ext/concurrence.h \
+ C:/mingw64/include/c++/15.2.0/bits/shared_ptr_atomic.h \
+ C:/mingw64/include/c++/15.2.0/backward/auto_ptr.h \
+ C:/mingw64/include/c++/15.2.0/bits/ranges_uninitialized.h \
+ C:/mingw64/include/c++/15.2.0/bits/ranges_algobase.h \
+ C:/mingw64/include/c++/15.2.0/pstl/glue_memory_defs.h \
+ C:/mingw64/include/c++/15.2.0/pstl/execution_defs.h \
+ C:/boost/boost_1_84_0/boost/asio/detail/cstdint.hpp \
+ C:/boost/boost_1_84_0/boost/asio/detail/throw_exception.hpp \
+ C:/boost/boost_1_84_0/boost/throw_exception.hpp \
+ C:/boost/boost_1_84_0/boost/exception/exception.hpp \
+ C:/boost/boost_1_84_0/boost/assert/source_location.hpp \
+ C:/boost/boost_1_84_0/boost/cstdint.hpp \
+ C:/mingw64/include/c++/15.2.0/cstring \
+ C:/mingw64/include/c++/15.2.0/source_location \
+ C:/boost/boost_1_84_0/boost/config/workaround.hpp \
+ C:/mingw64/include/c++/15.2.0/utility \
+ C:/mingw64/include/c++/15.2.0/bits/stl_relops.h \
+ C:/boost/boost_1_84_0/boost/align/aligned_alloc.hpp \
+ C:/mingw64/x86_64-w64-mingw32/include/unistd.h \
+ C:/mingw64/x86_64-w64-mingw32/include/io.h \
+ C:/mingw64/x86_64-w64-mingw32/include/getopt.h \
+ C:/boost/boost_1_84_0/boost/align/detail/aligned_alloc_mingw.hpp \
+ C:/boost/boost_1_84_0/boost/align/detail/is_alignment.hpp \
+ C:/boost/boost_1_84_0/boost/asio/detail/recycling_allocator.hpp \
+ C:/boost/boost_1_84_0/boost/asio/detail/thread_context.hpp \
+ C:/mingw64/include/c++/15.2.0/climits \
+ C:/boost/boost_1_84_0/boost/asio/detail/call_stack.hpp \
+ C:/boost/boost_1_84_0/boost/asio/detail/noncopyable.hpp \
+ C:/boost/boost_1_84_0/boost/asio/detail/tss_ptr.hpp \
+ C:/boost/boost_1_84_0/boost/asio/detail/keyword_tss_ptr.hpp \
+ C:/boost/boost_1_84_0/boost/asio/detail/impl/thread_context.ipp \
+ C:/boost/boost_1_84_0/boost/asio/detail/thread_info_base.hpp \
+ C:/boost/boost_1_84_0/boost/asio/multiple_exceptions.hpp \
+ C:/boost/boost_1_84_0/boost/asio/impl/multiple_exceptions.ipp \
+ C:/boost/boost_1_84_0/boost/asio/associated_allocator.hpp \
+ C:/boost/boost_1_84_0/boost/asio/associator.hpp \
+ C:/boost/boost_1_84_0/boost/asio/detail/functional.hpp \
+ C:/mingw64/include/c++/15.2.0/functional \
+ C:/mingw64/include/c++/15.2.0/bits/std_function.h \
+ C:/mingw64/include/c++/15.2.0/unordered_map \
+ C:/mingw64/include/c++/15.2.0/bits/unordered_map.h \
+ C:/mingw64/include/c++/15.2.0/bits/hashtable.h \
+ C:/mingw64/include/c++/15.2.0/bits/hashtable_policy.h \
+ C:/mingw64/include/c++/15.2.0/bits/enable_special_members.h \
+ C:/mingw64/include/c++/15.2.0/bits/node_handle.h \
+ C:/mingw64/include/c++/15.2.0/bits/erase_if.h \
+ C:/mingw64/include/c++/15.2.0/vector \
+ C:/mingw64/include/c++/15.2.0/bits/stl_vector.h \
+ C:/mingw64/include/c++/15.2.0/bits/stl_bvector.h \
+ C:/mingw64/include/c++/15.2.0/bits/vector.tcc \
+ C:/mingw64/include/c++/15.2.0/array \
+ C:/boost/boost_1_84_0/boost/asio/detail/non_const_lvalue.hpp \
+ C:/boost/boost_1_84_0/boost/asio/detail/scoped_ptr.hpp \
+ C:/boost/boost_1_84_0/boost/asio/execution/bad_executor.hpp \
+ C:/boost/boost_1_84_0/boost/asio/execution/impl/bad_executor.ipp \
+ C:/boost/boost_1_84_0/boost/asio/execution/blocking.hpp \
+ C:/boost/boost_1_84_0/boost/asio/prefer.hpp \
+ C:/boost/boost_1_84_0/boost/asio/traits/prefer_free.hpp \
+ C:/boost/boost_1_84_0/boost/asio/traits/prefer_member.hpp \
+ C:/boost/boost_1_84_0/boost/asio/traits/require_free.hpp \
+ C:/boost/boost_1_84_0/boost/asio/traits/require_member.hpp \
+ C:/boost/boost_1_84_0/boost/asio/traits/static_require.hpp \
+ C:/boost/boost_1_84_0/boost/asio/query.hpp \
+ C:/boost/boost_1_84_0/boost/asio/traits/query_member.hpp \
+ C:/boost/boost_1_84_0/boost/asio/traits/query_free.hpp \
+ C:/boost/boost_1_84_0/boost/asio/require.hpp \
+ C:/boost/boost_1_84_0/boost/asio/execution/blocking_adaptation.hpp \
+ C:/boost/boost_1_84_0/boost/asio/detail/event.hpp \
+ C:/boost/boost_1_84_0/boost/asio/detail/win_event.hpp \
+ C:/boost/boost_1_84_0/boost/asio/detail/socket_types.hpp \
  C:/mingw64/x86_64-w64-mingw32/include/mswsock.h \
  C:/mingw64/x86_64-w64-mingw32/include/psdk_inc/_xmitfile.h \
  C:/boost/boost_1_84_0/boost/asio/detail/old_win_sdk_compat.hpp \
@@ -858,7 +906,6 @@ CMakeFiles/server.dir/server_helpers.cpp.obj: \
  C:/boost/boost_1_84_0/boost/asio/connect_pipe.hpp \
  C:/boost/boost_1_84_0/boost/asio/impl/connect_pipe.hpp \
  C:/boost/boost_1_84_0/boost/asio/impl/connect_pipe.ipp \
- C:/mingw64/x86_64-w64-mingw32/include/bcrypt.h \
  C:/boost/boost_1_84_0/boost/asio/consign.hpp \
  C:/boost/boost_1_84_0/boost/asio/impl/consign.hpp \
  C:/boost/boost_1_84_0/boost/asio/coroutine.hpp \

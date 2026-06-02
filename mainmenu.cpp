@@ -3,6 +3,9 @@
 void MainMenu::Init(Font *mainFont)
 {
     this->mainFont = mainFont;
+    nameBox = GetVirtualCenteredRectangle(500, 350, 60);
+    ipBox = GetVirtualCenteredRectangle(500, 450, 60);
+    joinButton = GetVirtualCenteredRectangle(280, 560, 70);
 }
 
 void MainMenu::Update()
@@ -48,9 +51,6 @@ void MainMenu::Update()
     }
 
     Vector2 mouse = GetVirtualMousePosition();
-    Rectangle nameBox = {650, 350, 500, 60};
-    Rectangle ipBox = {650, 450, 500, 60};
-    Rectangle joinButton = {760, 560, 280, 70};
 
     if (IsMouseButtonPressed(MOUSE_LEFT_BUTTON))
     {
@@ -73,30 +73,29 @@ void MainMenu::Update()
 
 void MainMenu::Draw()
 {
-    DrawTextEx(*mainFont, "POKER", {760, 160}, 80, 2, GOLD);
+    DrawMainMenuTextCenteredWithMainFont("POKER", 160, 80, GOLD);
 
-    DrawTextEx(*mainFont, "Name", {650, 310}, 28, 1, WHITE);
-    DrawRectangleRounded({650, 350, 500, 60}, 0.2f, 8, Fade(BLACK, 0.7f));
-    DrawRectangleLinesEx({650, 350, 500, 60}, 3, typingName ? GOLD : GRAY);
-    DrawTextEx(*mainFont, name.c_str(), {670, 365}, 28, 1, WHITE);
-
-    DrawTextEx(*mainFont, "Server IP", {650, 410}, 28, 1, WHITE);
-    DrawRectangleRounded({650, 450, 500, 60}, 0.2f, 8, Fade(BLACK, 0.7f));
-    DrawRectangleLinesEx({650, 450, 500, 60}, 3, typingIP ? GOLD : GRAY);
-    DrawTextEx(*mainFont, IP.c_str(), {670, 465}, 28, 1, WHITE);
-
-    Rectangle joinButton = {760, 560, 280, 70};
-    Vector2 mouse = GetMousePosition();
+    Vector2 mouse = GetVirtualMousePosition();
     bool hovered = CheckCollisionPointRec(mouse, joinButton);
+
+    DrawMainMenuTextCenteredWithMainFont("Name", 310, 28, WHITE);
+    DrawRectangleRounded(nameBox, 0.2f, 8, Fade(BLACK, 0.7f));
+    DrawRectangleLinesEx(nameBox, 3, typingName ? GOLD : GRAY);
+    DrawMainMenuTextCenteredWithMainFont(name, nameBox.y + 15, 28, WHITE);
+
+    DrawMainMenuTextCenteredWithMainFont("Server IP", 415, 28, WHITE);
+    DrawRectangleRounded(ipBox, 0.2f, 8, Fade(BLACK, 0.7f));
+    DrawRectangleLinesEx(ipBox, 3, typingIP ? GOLD : GRAY);
+    DrawMainMenuTextCenteredWithMainFont(IP, ipBox.y + 15, 28, WHITE);
 
     DrawRectangleRounded(joinButton, 0.25f, 10, hovered ? GOLD : DARKGRAY);
     DrawTextCentered(joinButton, "JOIN GAME", 32, *mainFont, hovered ? BLACK : WHITE);
 
-    DrawTextEx(*mainFont, "TAB to switch field, ENTER to join", {650, 660}, 24, 1, LIGHTGRAY);
+    DrawMainMenuTextCenteredWithMainFont("TAB to switch field, ENTER to join", 660, 24, LIGHTGRAY);
 
     if (!errorMessage.empty())
     {
-        DrawTextEx(*mainFont, errorMessage.c_str(), {650, 720}, 24, 1, RED);
+        DrawMainMenuTextCenteredWithMainFont(errorMessage, 720, 24, RED);
     }
 }
 
@@ -123,4 +122,12 @@ std::string MainMenu::getServerIP() const
 void MainMenu::setErrorMessage(const std::string &error)
 {
     errorMessage = error;
+}
+
+void MainMenu::DrawMainMenuTextCenteredWithMainFont(const std::string &text, float y, float fontSize, Color color)
+{
+    if (!mainFont)
+        return;
+
+    DrawMainMenuTextCentered(text, y, fontSize, *mainFont, color);
 }

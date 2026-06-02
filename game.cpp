@@ -680,7 +680,7 @@ void Game::tryJoin()
     }
     catch (const exception &e)
     {
-        mainMenu.setErrorMessage("Failed to connect: " + string(e.what()));
+        mainMenu.setErrorMessage("Failed to connect: Server anavailable");
         screenState = ScreenState::MainMenu;
     }
 }

@@ -214,7 +214,15 @@ void PokerClient::stop()
 
 void PokerClient::write_line(const string &s)
 {
-    boost::asio::write(socket, boost::asio::buffer(s));
+    try
+    {
+        boost::asio::write(socket, boost::asio::buffer(s));
+    }
+    catch (const std::exception &e)
+    {
+        cerr << "Error sending message to server: " << e.what() << '\n';
+        stop();
+    }
 }
 void PokerClient::readerLoop()
 {
@@ -273,206 +281,248 @@ std::deque<PokerClient::chatMessage> PokerClient::getAndClearChatMessages()
 
 void PokerClient::handle_line(const string &line)
 {
-    lock_guard<std::mutex> lock(stateMutex);
-    lock_guard<std::mutex> lock2(popUpMessagesMutex);
-    MessageServerToClient msg = deserialize_server(line);
+
     bool createPopUp = true;
-    switch (msg.type)
+    bool shouldRequestState = false;
+    bool shouldRequestMapUpdates = false;
+    bool shouldSendRejectAck = false;
+
+    MessageServerToClient msg;
+
+    try
     {
-    case MessageTypeServerToClient::Welcome:
+        msg = deserialize_server(line);
+    }
+    catch (const std::exception &e)
     {
-        state.playerNames.clear();
-        state.playerMoney.clear();
-        state.isSpectator.clear();
-        state.isSeated.clear();
-        for (auto &[id, name] : msg.playerNames)
+        cerr << "Error deserializing message from server: " << e.what() << '\n';
+        cerr << "Message content: " << line << "\n";
+        return;
+    }
+
+    {
+        lock_guard<std::mutex> lock(stateMutex);
+        switch (msg.type)
         {
-            if (msg.playerMoney.find(id) != msg.playerMoney.end())
-                state.playerMoney[id] = msg.playerMoney[id];
-            if (msg.playerNames.find(id) != msg.playerNames.end())
-                state.playerNames[id] = msg.playerNames[id];
-            if (msg.isSpectatorMap.find(id) != msg.isSpectatorMap.end())
-                state.isSpectator[id] = msg.isSpectatorMap[id];
-            if (msg.isSeatedMap.find(id) != msg.isSeatedMap.end())
-                state.isSeated[id] = msg.isSeatedMap[id];
-            if (msg.betThisRoundMap.find(id) != msg.betThisRoundMap.end())
-                state.betThisRound[id] = msg.betThisRoundMap[id];
-        }
-        state.myId = msg.playerId;
-        rebuildPlayerPositions();
-        createPopUp = false;
-        break;
-    }
-    case MessageTypeServerToClient::PlayerJoined:
-    {
-        state.playerNames[msg.playerId] = msg.name;
-        state.playerMoney[msg.playerId] = 1000; // Initialize player money for the new player
-        state.isSpectator[msg.playerId] = msg.isSpectator;
-        state.isSeated[msg.playerId] = msg.isSeated;
-        rebuildPlayerPositions();
-        break;
-    }
-    case MessageTypeServerToClient::PlayerLeft:
-    {
-        state.playerNames.erase(msg.playerId);
-        state.playerMoney.erase(msg.playerId); // Remove player money for the player who left
-        state.isSpectator.erase(msg.playerId); // Remove spectator status for the player who left
-        state.isSeated.erase(msg.playerId);    // Remove seated status for the player who left
-        rebuildPlayerPositions();
-        break;
-    }
-    case MessageTypeServerToClient::PlayerReady:
-    {
-        break;
-    }
-    case MessageTypeServerToClient::ChatFrom:
-    {
-        chatMessages.push_back(PokerClient::chatMessage(msg.playerId, msg.chatText));
-        break;
-    }
-    case MessageTypeServerToClient::GameState:
-    {
-        state.gameState = msg.gameState;
-        state.potAmount = msg.potAmount; // Update pot amount in the client state
-        if (msg.gameState == GameState::PreFlop && !gameRunning)
+        case MessageTypeServerToClient::Welcome:
         {
-            newGame();
-        }
-        createPopUp = false;
-        break;
-    }
-    case MessageTypeServerToClient::ActionResult:
-    {
-        break;
-    }
-    case MessageTypeServerToClient::CommunityCard:
-    {
-        state.communityCards.push_back(extractCardValueSuit(msg));
-        createPopUp = false;
-        break;
-    }
-    case MessageTypeServerToClient::PlayerHand:
-    {
-        auto temp = extractCardValueSuit(msg);
-        cout << "Received hand card for player " << msg.playerId << ": Value = " << temp.value << ", Suit = " << temp.suit << "\n";
-        if (msg.playerId == state.myId)
-        {
-            state.myCards.push_back(temp);
-        }
-        else
-        {
-            state.opponentCards.push_back({msg.playerId, temp});
-        }
-        createPopUp = false;
-        break;
-    }
-    case MessageTypeServerToClient::PotUpdate:
-    {
-        state.potAmount = msg.potAmount; // Update the client state with the new pot amount
-        createPopUp = false;
-        break;
-    }
-    case MessageTypeServerToClient::Showdown:
-    {
-        gameRunning = false;
-        requestUnorderedMapUpdates();
-        break;
-    }
-    case MessageTypeServerToClient::BettingUpdate:
-    {
-        state.toAct = msg.toAct; // Update the client state with the new player to act
-        if (state.myId != msg.toAct)
+            state.playerNames.clear();
+            state.playerMoney.clear();
+            state.isSpectator.clear();
+            state.isSeated.clear();
+            for (auto &[id, name] : msg.playerNames)
+            {
+                if (msg.playerMoney.find(id) != msg.playerMoney.end())
+                    state.playerMoney[id] = msg.playerMoney[id];
+                if (msg.playerNames.find(id) != msg.playerNames.end())
+                    state.playerNames[id] = msg.playerNames[id];
+                if (msg.isSpectatorMap.find(id) != msg.isSpectatorMap.end())
+                    state.isSpectator[id] = msg.isSpectatorMap[id];
+                if (msg.isSeatedMap.find(id) != msg.isSeatedMap.end())
+                    state.isSeated[id] = msg.isSeatedMap[id];
+                if (msg.betThisRoundMap.find(id) != msg.betThisRoundMap.end())
+                    state.betThisRound[id] = msg.betThisRoundMap[id];
+            }
+            state.myId = msg.playerId;
+            rebuildPlayerPositions();
             createPopUp = false;
-        state.toCall = msg.toCall;             // Update the client state with the new amount to call
-        state.currentBet = msg.currentBet;     // Update the client state with the new current bet
-        state.minRaise = msg.minRaise;         // Update the client state with the new minimum raise
-        state.potAmount = msg.potAmount;       // Update the client state with the new pot amount
-        state.dealerId = msg.dealerId;         // Update the client state with the new dealer ID
-        state.smallBlindId = msg.smallBlindId; // Update the client state with the new small blind ID
-        state.bigBlindId = msg.bigBlindId;     // Update the client state with the new big blind ID
-        requestUnorderedMapUpdates();
-        break;
+            break;
+        }
+        case MessageTypeServerToClient::PlayerJoined:
+        {
+            state.playerNames[msg.playerId] = msg.name;
+            state.playerMoney[msg.playerId] = 1000; // Initialize player money for the new player
+            state.isSpectator[msg.playerId] = msg.isSpectator;
+            state.isSeated[msg.playerId] = msg.isSeated;
+            rebuildPlayerPositions();
+            break;
+        }
+        case MessageTypeServerToClient::PlayerLeft:
+        {
+            state.playerNames.erase(msg.playerId);
+            state.playerMoney.erase(msg.playerId); // Remove player money for the player who left
+            state.isSpectator.erase(msg.playerId); // Remove spectator status for the player who left
+            state.isSeated.erase(msg.playerId);    // Remove seated status for the player who left
+            rebuildPlayerPositions();
+            break;
+        }
+        case MessageTypeServerToClient::PlayerReady:
+        {
+            break;
+        }
+        case MessageTypeServerToClient::ChatFrom:
+        {
+            break;
+        }
+        case MessageTypeServerToClient::GameState:
+        {
+            state.gameState = msg.gameState;
+            state.potAmount = msg.potAmount; // Update pot amount in the client state
+            if (msg.gameState == GameState::PreFlop && !gameRunning)
+            {
+                newGame();
+            }
+            createPopUp = false;
+            break;
+        }
+        case MessageTypeServerToClient::ActionResult:
+        {
+            break;
+        }
+        case MessageTypeServerToClient::CommunityCard:
+        {
+            state.communityCards.push_back(extractCardValueSuit(msg));
+            createPopUp = false;
+            break;
+        }
+        case MessageTypeServerToClient::PlayerHand:
+        {
+            auto temp = extractCardValueSuit(msg);
+            cout << "Received hand card for player " << msg.playerId << ": Value = " << temp.value << ", Suit = " << temp.suit << "\n";
+            if (msg.playerId == state.myId)
+            {
+                state.myCards.push_back(temp);
+            }
+            else
+            {
+                state.opponentCards.push_back({msg.playerId, temp});
+            }
+            createPopUp = false;
+            break;
+        }
+        case MessageTypeServerToClient::PotUpdate:
+        {
+            state.potAmount = msg.potAmount; // Update the client state with the new pot amount
+            createPopUp = false;
+            break;
+        }
+        case MessageTypeServerToClient::Showdown:
+        {
+            gameRunning = false;
+            shouldRequestMapUpdates = true;
+            break;
+        }
+        case MessageTypeServerToClient::BettingUpdate:
+        {
+            state.toAct = msg.toAct; // Update the client state with the new player to act
+            if (state.myId != msg.toAct)
+                createPopUp = false;
+            state.toCall = msg.toCall;             // Update the client state with the new amount to call
+            state.currentBet = msg.currentBet;     // Update the client state with the new current bet
+            state.minRaise = msg.minRaise;         // Update the client state with the new minimum raise
+            state.potAmount = msg.potAmount;       // Update the client state with the new pot amount
+            state.dealerId = msg.dealerId;         // Update the client state with the new dealer ID
+            state.smallBlindId = msg.smallBlindId; // Update the client state with the new small blind ID
+            state.bigBlindId = msg.bigBlindId;     // Update the client state with the new big blind ID
+            shouldRequestMapUpdates = true;
+            break;
+        }
+        case MessageTypeServerToClient::Reject:
+        {
+            if (msg.rejectionReason == reason_for_rejection::TooManyPlayers)
+            {
+                running = false;
+                cout << "Connection rejected: Too many players in the game.\n";
+            }
+            else if (msg.rejectionReason == reason_for_rejection::GameInProgress)
+            {
+                running = false;
+                cout << "Connection rejected: Game already in progress.\n";
+            }
+            shouldSendRejectAck = true;
+            createPopUp = false;
+            break;
+        }
+        case MessageTypeServerToClient::NewPlayerUpdateGraphics:
+        {
+            state.opponentCards.clear();
+            state.communityCards.clear();
+            state.idToShowCardsOf.clear();
+            state.toAct = msg.toAct;               // Update the client state with the new player to act
+            state.toCall = msg.toCall;             // Update the client state with the new amount to call
+            state.currentBet = msg.currentBet;     // Update the client state with the new current bet
+            state.minRaise = msg.minRaise;         // Update the client state with the new minimum raise
+            state.dealerId = msg.dealerId;         // Update the client state with the new dealer ID
+            state.smallBlindId = msg.smallBlindId; // Update the client state with the new small blind ID
+            state.bigBlindId = msg.bigBlindId;     // Update the client state with the new big blind ID
+            for (auto &[id, hand] : msg.playerHands)
+            {
+                state.opponentCards.push_back({id, hand.first});
+                state.opponentCards.push_back({id, hand.second});
+            }
+            for (auto &card : msg.communityCards)
+            {
+                state.communityCards.push_back(card);
+            }
+            gameRunning = true;
+            createPopUp = false;
+            shouldRequestState = true;
+            shouldRequestMapUpdates = true;
+            break;
+        }
+        case MessageTypeServerToClient::UnorderedMapUpdate:
+        {
+            createPopUp = false;
+            state.playerMoney = msg.playerMoney;
+            state.playerNames = msg.playerNames;
+            state.isSpectator = msg.isSpectatorMap;
+            state.isSeated = msg.isSeatedMap;
+            state.betThisRound = msg.betThisRoundMap;
+            rebuildPlayerPositions();
+            break;
+        }
+        case MessageTypeServerToClient::ShowCardsOf:
+        {
+            createPopUp = false;
+            state.idToShowCardsOf.push_back(msg.playerId);
+            break;
+        }
+        case MessageTypeServerToClient::SpectatingUpdate:
+        {
+            createPopUp = false;
+            state.isSpectator[msg.playerId] = msg.isSpectator;
+            state.isSeated[msg.playerId] = msg.isSeated;
+            rebuildPlayerPositions();
+            break;
+        }
+        default:
+            createPopUp = false;
+            cout << "Unknown message type received.\n";
+            cout << "Message content: " << line << "\n";
+            break;
+        }
     }
-    case MessageTypeServerToClient::Reject:
+    if (msg.type == MessageTypeServerToClient::ChatFrom)
     {
-        if (msg.rejectionReason == reason_for_rejection::TooManyPlayers)
+        lock_guard<std::mutex> lock(chatMessagesMutex);
+        chatMessages.push_back(PokerClient::chatMessage(msg.playerId, msg.chatText));
+    }
+
+    if (createPopUp)
+    {
+        pop temp;
         {
-            running = false;
-            cout << "Connection rejected: Too many players in the game.\n";
+            lock_guard<std::mutex> stateLock(stateMutex);
+            temp = createPopUpMessage(msg);
         }
-        else if (msg.rejectionReason == reason_for_rejection::GameInProgress)
         {
-            running = false;
-            cout << "Connection rejected: Game already in progress.\n";
+            lock_guard<std::mutex> popLock(popUpMessagesMutex);
+            popUpMessages.push_back(temp);
         }
+    }
+    if (shouldRequestState)
+    {
+        requestState();
+    }
+    if (shouldRequestMapUpdates)
+    {
+        requestUnorderedMapUpdates();
+    }
+    if (shouldSendRejectAck)
+    {
         MessageClientToServer ack;
         ack.type = MessageTypeClientToServer::RejectAck;
         write_line(serialize_client(ack));
-        createPopUp = false;
-        break;
-    }
-    case MessageTypeServerToClient::NewPlayerUpdateGraphics:
-    {
-        state.opponentCards.clear();
-        state.communityCards.clear();
-        state.idToShowCardsOf.clear();
-        state.toAct = msg.toAct;               // Update the client state with the new player to act
-        state.toCall = msg.toCall;             // Update the client state with the new amount to call
-        state.currentBet = msg.currentBet;     // Update the client state with the new current bet
-        state.minRaise = msg.minRaise;         // Update the client state with the new minimum raise
-        state.dealerId = msg.dealerId;         // Update the client state with the new dealer ID
-        state.smallBlindId = msg.smallBlindId; // Update the client state with the new small blind ID
-        state.bigBlindId = msg.bigBlindId;     // Update the client state with the new big blind ID
-        for (auto &[id, hand] : msg.playerHands)
-        {
-            state.opponentCards.push_back({id, hand.first});
-            state.opponentCards.push_back({id, hand.second});
-        }
-        for (auto &card : msg.communityCards)
-        {
-            state.communityCards.push_back(card);
-        }
-        gameRunning = true;
-        createPopUp = false;
-        requestState();
-        requestUnorderedMapUpdates();
-        break;
-    }
-    case MessageTypeServerToClient::UnorderedMapUpdate:
-    {
-        createPopUp = false;
-        state.playerMoney = msg.playerMoney;
-        state.playerNames = msg.playerNames;
-        state.isSpectator = msg.isSpectatorMap;
-        state.isSeated = msg.isSeatedMap;
-        state.betThisRound = msg.betThisRoundMap;
-        rebuildPlayerPositions();
-        break;
-    }
-    case MessageTypeServerToClient::ShowCardsOf:
-    {
-        createPopUp = false;
-        state.idToShowCardsOf.push_back(msg.playerId);
-        break;
-    }
-    case MessageTypeServerToClient::SpectatingUpdate:
-    {
-        createPopUp = false;
-        state.isSpectator[msg.playerId] = msg.isSpectator;
-        state.isSeated[msg.playerId] = msg.isSeated;
-        rebuildPlayerPositions();
-        break;
-    }
-    default:
-        createPopUp = false;
-        cout << "Unknown message type received.\n";
-        cout << "Message content: " << line << "\n";
-        break;
-    }
-    if (createPopUp)
-    {
-        auto temp = createPopUpMessage(msg);
-        popUpMessages.push_back(temp);
     }
 }
 

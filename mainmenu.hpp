@@ -19,6 +19,8 @@ public:
 
     void setErrorMessage(const std::string &error);
 
+    void DrawMainMenuTextCenteredWithMainFont(const std::string &text, float y, float fontSize, Color color = BLACK);
+
 private:
     Font *mainFont;
 
@@ -29,4 +31,8 @@ private:
     bool typingName = true;
     bool typingIP = false;
     bool joinRequestSent = false;
+
+    Rectangle nameBox;
+    Rectangle ipBox;
+    Rectangle joinButton;
 };

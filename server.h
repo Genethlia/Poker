@@ -1,7 +1,6 @@
 #include "poker_networking.hpp"
 #include "client_in_server.hpp"
 #include "deck.h"
-
 class Server
 {
 public:
@@ -27,6 +26,7 @@ private:
     ServerState state;
     Deck deck;
     bool gameInProgress = false;
+    string getLocalIp();
 
     shared_ptr<Client> find_client_by_id(int id);
     std::vector<shared_ptr<Client>> activePlayers();
