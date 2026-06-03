@@ -1,6 +1,8 @@
+#pragma once
 #include "poker_networking.hpp"
 #include "client_in_server.hpp"
 #include "deck.h"
+#include <optional>
 class Server
 {
 public:
@@ -13,6 +15,7 @@ public:
     void StartBettingRound();
     void AdvanceBetting();
     void onPlayerAction(int playerId, PlayerActionType action, int actionAmount);
+    void do_accept();
 
 private:
     struct SidePot
@@ -22,11 +25,13 @@ private:
     };
 
     boost::asio::io_context io;
+    std::optional<tcp::acceptor> acceptor;
     boost::asio::steady_timer nextGameTimer{io};
     ServerState state;
     Deck deck;
     bool gameInProgress = false;
-    string getLocalIp();
+    std::string getLocalIp();
+    std::string ipToRoomCode(const std::string &ip);
 
     shared_ptr<Client> find_client_by_id(int id);
     std::vector<shared_ptr<Client>> activePlayers();

@@ -3,7 +3,6 @@ using namespace std;
 
 Server::Server()
 {
-    start();
 }
 Server::~Server()
 {
@@ -15,43 +14,16 @@ void Server::start()
     try
     {
 
-        tcp::acceptor acceptor(
-            io,
-            tcp::endpoint(tcp::v4(), 6767));
+        io.restart();
+        acceptor.reset();
+        acceptor.emplace(io, tcp::endpoint(tcp::v4(), 6767));
 
+        state.roomCode = ipToRoomCode(getLocalIp());
         cout << "Server IP: " << getLocalIp() << endl;
+        cout << "Room Code: " << state.roomCode << endl;
         cout << "Port: 6767\n";
 
-        function<void()> accept_loop;
-
-        accept_loop = [&]()
-        {
-            acceptor.async_accept(
-                [&](boost::system::error_code ec, tcp::socket socket)
-                {
-                    if (!ec)
-                    {
-                        auto client =
-                            make_shared<Client>(move(socket), &state);
-
-                        client->play_game_ptr = [this]()
-                        { this->play_game(); };
-                        client->on_action_ptr = [this](int playerId, PlayerActionType action, int actionAmount)
-                        { this->onPlayerAction(playerId, action, actionAmount); };
-                        client->on_disconnect_ptr = [this](int playerId)
-                        { this->handleDisconnect(playerId); };
-
-                        state.clients.insert(client);
-                        client->start();
-
-                        cout << "Client connected. Total: "
-                             << state.clients.size() << endl;
-                    }
-                    accept_loop();
-                });
-        };
-
-        accept_loop();
+        do_accept();
         io.run();
     }
     catch (exception &e)
@@ -62,6 +34,22 @@ void Server::start()
 
 void Server::end()
 {
+    boost::system::error_code ec;
+
+    if (acceptor && acceptor->is_open())
+        acceptor->close(ec);
+
+    for (auto &client : state.clients)
+    {
+        if (client)
+        {
+            client->connected = false;
+            client->socket.close(ec);
+        }
+    }
+
+    state.clients.clear();
+
     io.stop();
 }
 void Server::play_game()
@@ -438,6 +426,53 @@ void Server::onPlayerAction(int playerId, PlayerActionType action, int actionAmo
     AdvanceBetting();
 }
 
+void Server::do_accept()
+{
+    if (!acceptor || !acceptor->is_open() || io.stopped())
+        return;
+
+    acceptor->async_accept(
+        [this](boost::system::error_code ec, tcp::socket socket)
+        {
+            if (ec)
+            {
+                if (ec == boost::asio::error::operation_aborted)
+                {
+                    cout << "Server accept stopped.\n";
+                    return;
+                }
+
+                cout << "Accept error: " << ec.message() << endl;
+                return;
+            }
+
+            auto client = make_shared<Client>(move(socket), &state);
+
+            client->play_game_ptr = [this]()
+            {
+                this->play_game();
+            };
+
+            client->on_action_ptr = [this](int playerId, PlayerActionType action, int actionAmount)
+            {
+                this->onPlayerAction(playerId, action, actionAmount);
+            };
+
+            client->on_disconnect_ptr = [this](int playerId)
+            {
+                this->handleDisconnect(playerId);
+            };
+
+            state.clients.insert(client);
+            client->start();
+
+            cout << "Client connected. Total: "
+                 << state.clients.size() << endl;
+
+            do_accept();
+        });
+}
+
 void Server::promoteWaitingPlayers()
 {
     int activePlayers = 0;
@@ -677,9 +712,4 @@ void Server::removeDisconnectedClients()
         state.clients.erase(c);
         cout << "Removed client " << c->display_name() << " from server.\n";
     }
-}
-
-int main()
-{
-    Server server;
 }

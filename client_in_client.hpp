@@ -51,6 +51,7 @@ public:
     void sendAction(PlayerActionType action, int amount = 0);
     void startGame();
     void sendChat(const std::string &chat);
+    void resetLocalState();
 
     std::string nameOf(int id);
     std::string nameOfUnsafe(int id);
@@ -58,8 +59,10 @@ public:
 
     struct ClientState
     {
+
         std::unordered_map<int, std::string> playerNames;
         int myId = -1;
+        std::string roomCode = "xxxxxxxx";
 
         GameState gameState = GameState::WaitingForPlayers;
         int potAmount = 0;

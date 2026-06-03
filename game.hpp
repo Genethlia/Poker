@@ -6,7 +6,7 @@
 #include "uibuttons.h"
 #include "chat.h"
 #include "mainmenu.hpp"
-static pos center = {VIRTUAL_WIDTH / 2, VIRTUAL_HEIGHT / 2};
+#include "server.h"
 
 enum class ScreenState
 {
@@ -51,6 +51,7 @@ private:
     void resetForNewGame();
     void drawChat();
     void updateChat();
+    void drawCodeAndSpectators();
 
     PokerClient client = PokerClient();
     PokerClient::ClientState currentState;
@@ -70,6 +71,7 @@ private:
 
     struct VisualState
     {
+        VisualState();
         std::vector<Card> myCards{};
         std::vector<std::pair<int, Card>> opponentCards{};
         std::vector<Card> communityCards{};
@@ -136,4 +138,15 @@ private:
     ScreenState screenState = ScreenState::MainMenu;
     MainMenu mainMenu;
     void tryJoin();
+    void tryHost();
+
+    Server server;
+    thread serverThread;
+
+    std::string roomCodeToIP(std::string roomCode);
+
+    bool isHosting = false;
+
+    void leaveToMainMenu();
+    void stopHostedServerIfNeeded();
 };

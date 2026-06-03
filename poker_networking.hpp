@@ -115,6 +115,7 @@ struct MessageServerToClient
     std::unordered_map<int, hand> playerHands = {};
 
     std::string chatText = "";
+    std::string roomCode = "xxxxxxxx";
 
     GameState gameState = GameState::WaitingForPlayers;
 
@@ -242,7 +243,7 @@ inline std::string serialize_server(const MessageServerToClient &m)
     switch (m.type)
     {
     case MessageTypeServerToClient::Welcome:
-        out << "WELCOME " << m.playerId << " " << m.name << " " << m.playerSum;
+        out << "WELCOME " << m.playerId << " " << m.name << " " << m.roomCode << " " << m.playerSum;
         for (auto it = m.playerNames.begin(); it != m.playerNames.end(); it++)
         {
             out << " " << it->first << " " << it->second;
@@ -375,7 +376,7 @@ inline MessageServerToClient deserialize_server(const std::string &line)
     {
     case 'W': // WELCOME
         msg.type = MessageTypeServerToClient::Welcome;
-        in >> msg.playerId >> msg.name >> msg.playerSum;
+        in >> msg.playerId >> msg.name >> msg.roomCode >> msg.playerSum;
         for (int i = 0; i < msg.playerSum; i++)
         {
             int id;

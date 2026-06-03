@@ -54,6 +54,8 @@ struct ServerState
 
     GameState gameState = GameState::WaitingForPlayers;
 
+    std::string roomCode;
+
     void broadcast_all(const std::string &msg);
 
     void send_to(const std::string &msg, int id);
@@ -94,8 +96,9 @@ public:
     int betThisRound = 0;
     int totalBetThisHand = 0;
 
-private:
     tcp::socket socket;
+
+private:
     boost::asio::streambuf inbuf;
     ServerState *serverState;
     std::string name;

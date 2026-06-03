@@ -14,8 +14,11 @@ public:
     bool shouldJoin() const;
     void clearJoinRequest();
 
+    bool shouldHost() const;
+    void clearHostRequest();
+
     std::string getPlayerName() const;
-    std::string getServerIP() const;
+    std::string getCode() const;
 
     void setErrorMessage(const std::string &error);
 
@@ -25,14 +28,16 @@ private:
     Font *mainFont;
 
     std::string name;
-    std::string IP;
+    std::string code;
     std::string errorMessage;
 
     bool typingName = true;
-    bool typingIP = false;
+    bool typingCode = false;
     bool joinRequestSent = false;
+    bool hostGame = false;
 
     Rectangle nameBox;
-    Rectangle ipBox;
+    Rectangle codeBox;
     Rectangle joinButton;
+    Rectangle hostButton;
 };

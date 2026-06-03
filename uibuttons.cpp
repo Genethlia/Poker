@@ -153,3 +153,11 @@ void UiButton::Update()
         allInButton.Update();
     }
 }
+
+void UiButton::reset()
+{
+    sendReady = false;
+    raiseAmount = 0;
+    buttonInteractionFlag = false;
+    quick = quickBetButtonPressed::None;
+}

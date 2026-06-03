@@ -209,6 +209,7 @@ void Client::handle_line(const string &line)
             welcomeMesg.playerId = id;
             welcomeMesg.playerSum = joinedPlayers + 1;
             welcomeMesg.name = name;
+            welcomeMesg.roomCode = serverState->roomCode;
             welcomeMesg.playerNames = serverState->buildNameSnapshot();
             welcomeMesg.playerMoney = serverState->buildMoneySnapshot();
             welcomeMesg.isSpectatorMap = serverState->buildSpectatorSnapshot();
@@ -222,7 +223,7 @@ void Client::handle_line(const string &line)
             response.isSpectator = spectator;
             response.isSeated = seated;
 
-            if (serverState->gameState != GameState::WaitingForPlayers)
+            if (serverState->gameState != GameState::WaitingForPlayers && serverState->gameState != GameState::Showdown)
             {
                 MessageServerToClient graphicsUpdateMsg;
                 graphicsUpdateMsg.type = MessageTypeServerToClient::NewPlayerUpdateGraphics;
@@ -257,7 +258,8 @@ void Client::handle_line(const string &line)
                 .playerMoney = serverState->buildMoneySnapshot(),
                 .isSpectatorMap = serverState->buildSpectatorSnapshot(),
                 .isSeatedMap = serverState->buildSeatedSnapshot(),
-                .betThisRoundMap = serverState->buildBetThisRoundSnapshot()})));
+                .betThisRoundMap = serverState->buildBetThisRoundSnapshot(),
+                .roomCode = serverState->roomCode})));
 
         response.type = MessageTypeServerToClient::PlayerJoined;
         response.playerId = id;

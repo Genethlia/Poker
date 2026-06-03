@@ -11,6 +11,11 @@ Game::Game()
 Game::~Game()
 {
     client.stop();
+    server.end();
+
+    if (serverThread.joinable())
+        serverThread.join();
+
     UnloadRenderTexture(target);
     UnloadFont(cardFont);
     UnloadFont(mainFont);
@@ -19,21 +24,6 @@ Game::~Game()
 
 void Game::start()
 {
-    // std::cout << "Enter your name: ";
-    // std::getline(std::cin, playerName);
-    // while (playerName.empty())
-    // {
-    //     std::cout << "Name cannot be empty. Please enter your name: ";
-    //     std::getline(std::cin, playerName);
-    // }
-
-    // std::cout << "Enter server IP (default: 127.0.0.1): ";
-    // std::string serverIP;
-    // std::getline(std::cin, serverIP);
-    // if (serverIP.empty() || !authenticateIP(serverIP))
-    // {
-    //     serverIP = "127.0.0.1";
-    // }
 
     SetConfigFlags(FLAG_WINDOW_RESIZABLE);
     InitWindow(VIRTUAL_WIDTH, VIRTUAL_HEIGHT, "Poker Game");
@@ -110,9 +100,19 @@ void Game::update()
             tryJoin();
             mainMenu.clearJoinRequest();
         }
+        else if (mainMenu.shouldHost())
+        {
+            tryHost();
+            mainMenu.clearHostRequest();
+        }
     }
     else
     {
+        if (IsKeyPressed(KEY_TAB))
+        {
+            leaveToMainMenu();
+            return;
+        }
         updateGameState();
         clearCardsIfNecessary();
         updatePopUpMessages();
@@ -129,7 +129,7 @@ void Game::update()
 
         if (!client.running)
         {
-            screenState = ScreenState::MainMenu;
+            leaveToMainMenu();
             mainMenu.setErrorMessage("Disconnected from server. Please try joining again.");
         }
     }
@@ -244,6 +244,17 @@ void Game::drawSinglePlayer(int id)
     }
 }
 
+Game::VisualState::VisualState()
+{
+    myCards = {};
+    opponentCards = {};
+    communityCards = {};
+    idToShowCardsOf = {};
+
+    gameState = GameState::WaitingForPlayers;
+    showdownTimerStartTime = 0.0;
+}
+
 void Game::VisualState::updateCards()
 {
     for (auto &card : myCards)
@@ -277,6 +288,7 @@ void Game::draw()
         drawInput();
         drawChat();
         drawPopUpMessages();
+        drawCodeAndSpectators();
         uiButton.Draw();
     }
 }
@@ -476,6 +488,24 @@ void Game::updateChat()
     chat.Update();
 }
 
+void Game::drawCodeAndSpectators()
+{
+    int spectatorCount = 0;
+    for (auto &[id, isSpectator] : currentState.isSpectator)
+    {
+        if (isSpectator)
+            spectatorCount++;
+    }
+    string roomCodeText = TextFormat("Room Code: %s", currentState.roomCode.c_str());
+    float textWidth = MeasureTextEx(mainFont, roomCodeText.c_str(), 20, 1.0f).x;
+    DrawTextEx(mainFont, roomCodeText.c_str(), {VIRTUAL_WIDTH - textWidth - 30.0f, 70}, 20, 1.0f, WHITE);
+    if (spectatorCount > 0)
+    {
+        string spectatorText = TextFormat("Spectators: %d", spectatorCount);
+        DrawTextCentered({VIRTUAL_WIDTH - textWidth - 30.0f, 30.0f, textWidth, 20.0f}, spectatorText.c_str(), 20, mainFont, WHITE);
+    }
+}
+
 Color Game::getColorForPopUpMessageType(popUpMessageType type)
 {
     switch (type)
@@ -655,14 +685,26 @@ string Game::getPlayerName(int id)
 
 void Game::tryJoin()
 {
+    client.stop();
+    client.resetLocalState();
+
+    currentState = PokerClient::ClientState{};
+    visualState = VisualState{};
+    uiButton.reset();
+    popUpMessages.clear();
+    playerMoneyChips.clear();
+    DrawnCount.clear();
+
     std::string name = mainMenu.getPlayerName();
-    std::string serverIP = mainMenu.getServerIP();
+    std::string code = mainMenu.getCode();
 
     if (name.empty())
     {
         mainMenu.setErrorMessage("Name cannot be empty.");
         return;
     }
+
+    std::string serverIP = roomCodeToIP(code);
 
     if (serverIP.empty() || !authenticateIP(serverIP))
     {
@@ -671,6 +713,7 @@ void Game::tryJoin()
 
     try
     {
+        isHosting = false;
         playerName = name;
         client.connect_to(serverIP, "6767");
         client.join_us(playerName);
@@ -680,9 +723,104 @@ void Game::tryJoin()
     }
     catch (const exception &e)
     {
-        mainMenu.setErrorMessage("Failed to connect: Server anavailable");
+        mainMenu.setErrorMessage("Failed to connect: False room code");
         screenState = ScreenState::MainMenu;
     }
+}
+
+void Game::tryHost()
+{
+    client.stop();
+    client.resetLocalState();
+
+    currentState = PokerClient::ClientState{};
+    visualState = VisualState{};
+    uiButton.reset();
+    popUpMessages.clear();
+    playerMoneyChips.clear();
+    DrawnCount.clear();
+
+    stopHostedServerIfNeeded();
+
+    std::string name = mainMenu.getPlayerName();
+    if (name.empty())
+    {
+        mainMenu.setErrorMessage("Name cannot be empty. ");
+        return;
+    }
+    try
+    {
+        serverThread = thread([this]()
+                              { server.start(); });
+        this_thread::sleep_for(chrono::milliseconds(100)); // Give the server a moment to start
+
+        isHosting = true;
+        playerName = name;
+        client.connect_to("127.0.0.1", "6767");
+        client.join_us(playerName);
+        client.start();
+
+        screenState = ScreenState::InGame;
+    }
+    catch (const exception &e)
+    {
+        isHosting = false;
+        mainMenu.setErrorMessage("Failed to start server: " + string(e.what()));
+        screenState = ScreenState::MainMenu;
+        return;
+    }
+}
+
+std::string Game::roomCodeToIP(std::string roomCode)
+{
+    if (roomCode.size() != 8)
+        return "";
+
+    string ip;
+
+    for (int i = 0; i < 8; i += 2)
+    {
+        int A = roomCode[i] - 'A';
+        int B = roomCode[i + 1] - 'A';
+        if (A < 0 || A > 15 || B < 0 || B > 15)
+            return "";
+
+        int num = A * 16 + B;
+
+        ip += to_string(num);
+        if (i < 6)
+            ip += '.';
+    }
+    return ip;
+}
+
+void Game::leaveToMainMenu()
+{
+    client.leaveGame();
+    client.resetLocalState();
+
+    stopHostedServerIfNeeded();
+
+    currentState = PokerClient::ClientState();
+    visualState = VisualState();
+    popUpMessages.clear();
+    playerMoneyChips.clear();
+    DrawnCount.clear();
+
+    screenState = ScreenState::MainMenu;
+    mainMenu.setErrorMessage("");
+}
+
+void Game::stopHostedServerIfNeeded()
+{
+    if (!isHosting)
+        return;
+
+    server.end();
+    if (serverThread.joinable())
+        serverThread.join();
+
+    isHosting = false;
 }
 
 void Game::updatePopUpMessages()

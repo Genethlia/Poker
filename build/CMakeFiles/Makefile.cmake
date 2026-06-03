@@ -115,8 +115,7 @@ set(CMAKE_MAKEFILE_PRODUCTS
 
 # Dependency information for all targets:
 set(CMAKE_DEPEND_INFO_FILES
-  "CMakeFiles/server.dir/DependInfo.cmake"
-  "CMakeFiles/client.dir/DependInfo.cmake"
+  "CMakeFiles/AllInPoker.dir/DependInfo.cmake"
   "raylib_build/raylib/CMakeFiles/raylib.dir/DependInfo.cmake"
   "raylib_build/raylib/external/glfw/src/CMakeFiles/glfw.dir/DependInfo.cmake"
   "raylib_build/raylib/external/glfw/src/CMakeFiles/update_mappings.dir/DependInfo.cmake"

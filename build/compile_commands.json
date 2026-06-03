@@ -1,87 +1,81 @@
 [
 {
   "directory": "C:/Users/tgene/OneDrive - MOEC/Poker/build",
-  "command": "C:\\mingw64\\bin\\g++.exe -DNOMINMAX -DWIN32_LEAN_AND_MEAN -D_WIN32_WINNT=0x0A00 @CMakeFiles/server.dir/includes_CXX.rsp -O3 -DNDEBUG -std=gnu++20 -Wall -Wextra -Wpedantic -o CMakeFiles\\server.dir\\server.cpp.obj -c \"C:\\Users\\tgene\\OneDrive - MOEC\\Poker\\server.cpp\"",
+  "command": "C:\\mingw64\\bin\\g++.exe -DGRAPHICS_API_OPENGL_33 -DNOMINMAX -DPLATFORM_DESKTOP -DWIN32_LEAN_AND_MEAN -D_WIN32_WINNT=0x0A00 @CMakeFiles/AllInPoker.dir/includes_CXX.rsp -O3 -DNDEBUG -std=gnu++20 -Wall -Wextra -Wpedantic -o CMakeFiles\\AllInPoker.dir\\main.cpp.obj -c \"C:\\Users\\tgene\\OneDrive - MOEC\\Poker\\main.cpp\"",
+  "file": "C:/Users/tgene/OneDrive - MOEC/Poker/main.cpp",
+  "output": "CMakeFiles/AllInPoker.dir/main.cpp.obj"
+},
+{
+  "directory": "C:/Users/tgene/OneDrive - MOEC/Poker/build",
+  "command": "C:\\mingw64\\bin\\g++.exe -DGRAPHICS_API_OPENGL_33 -DNOMINMAX -DPLATFORM_DESKTOP -DWIN32_LEAN_AND_MEAN -D_WIN32_WINNT=0x0A00 @CMakeFiles/AllInPoker.dir/includes_CXX.rsp -O3 -DNDEBUG -std=gnu++20 -Wall -Wextra -Wpedantic -o CMakeFiles\\AllInPoker.dir\\server.cpp.obj -c \"C:\\Users\\tgene\\OneDrive - MOEC\\Poker\\server.cpp\"",
   "file": "C:/Users/tgene/OneDrive - MOEC/Poker/server.cpp",
-  "output": "CMakeFiles/server.dir/server.cpp.obj"
+  "output": "CMakeFiles/AllInPoker.dir/server.cpp.obj"
 },
 {
   "directory": "C:/Users/tgene/OneDrive - MOEC/Poker/build",
-  "command": "C:\\mingw64\\bin\\g++.exe -DNOMINMAX -DWIN32_LEAN_AND_MEAN -D_WIN32_WINNT=0x0A00 @CMakeFiles/server.dir/includes_CXX.rsp -O3 -DNDEBUG -std=gnu++20 -Wall -Wextra -Wpedantic -o CMakeFiles\\server.dir\\client_in_server.cpp.obj -c \"C:\\Users\\tgene\\OneDrive - MOEC\\Poker\\client_in_server.cpp\"",
+  "command": "C:\\mingw64\\bin\\g++.exe -DGRAPHICS_API_OPENGL_33 -DNOMINMAX -DPLATFORM_DESKTOP -DWIN32_LEAN_AND_MEAN -D_WIN32_WINNT=0x0A00 @CMakeFiles/AllInPoker.dir/includes_CXX.rsp -O3 -DNDEBUG -std=gnu++20 -Wall -Wextra -Wpedantic -o CMakeFiles\\AllInPoker.dir\\client_in_server.cpp.obj -c \"C:\\Users\\tgene\\OneDrive - MOEC\\Poker\\client_in_server.cpp\"",
   "file": "C:/Users/tgene/OneDrive - MOEC/Poker/client_in_server.cpp",
-  "output": "CMakeFiles/server.dir/client_in_server.cpp.obj"
+  "output": "CMakeFiles/AllInPoker.dir/client_in_server.cpp.obj"
 },
 {
   "directory": "C:/Users/tgene/OneDrive - MOEC/Poker/build",
-  "command": "C:\\mingw64\\bin\\g++.exe -DNOMINMAX -DWIN32_LEAN_AND_MEAN -D_WIN32_WINNT=0x0A00 @CMakeFiles/server.dir/includes_CXX.rsp -O3 -DNDEBUG -std=gnu++20 -Wall -Wextra -Wpedantic -o CMakeFiles\\server.dir\\server_helpers.cpp.obj -c \"C:\\Users\\tgene\\OneDrive - MOEC\\Poker\\server_helpers.cpp\"",
+  "command": "C:\\mingw64\\bin\\g++.exe -DGRAPHICS_API_OPENGL_33 -DNOMINMAX -DPLATFORM_DESKTOP -DWIN32_LEAN_AND_MEAN -D_WIN32_WINNT=0x0A00 @CMakeFiles/AllInPoker.dir/includes_CXX.rsp -O3 -DNDEBUG -std=gnu++20 -Wall -Wextra -Wpedantic -o CMakeFiles\\AllInPoker.dir\\server_helpers.cpp.obj -c \"C:\\Users\\tgene\\OneDrive - MOEC\\Poker\\server_helpers.cpp\"",
   "file": "C:/Users/tgene/OneDrive - MOEC/Poker/server_helpers.cpp",
-  "output": "CMakeFiles/server.dir/server_helpers.cpp.obj"
+  "output": "CMakeFiles/AllInPoker.dir/server_helpers.cpp.obj"
 },
 {
   "directory": "C:/Users/tgene/OneDrive - MOEC/Poker/build",
-  "command": "C:\\mingw64\\bin\\g++.exe -DNOMINMAX -DWIN32_LEAN_AND_MEAN -D_WIN32_WINNT=0x0A00 @CMakeFiles/server.dir/includes_CXX.rsp -O3 -DNDEBUG -std=gnu++20 -Wall -Wextra -Wpedantic -o CMakeFiles\\server.dir\\deck.cpp.obj -c \"C:\\Users\\tgene\\OneDrive - MOEC\\Poker\\deck.cpp\"",
-  "file": "C:/Users/tgene/OneDrive - MOEC/Poker/deck.cpp",
-  "output": "CMakeFiles/server.dir/deck.cpp.obj"
-},
-{
-  "directory": "C:/Users/tgene/OneDrive - MOEC/Poker/build",
-  "command": "C:\\mingw64\\bin\\g++.exe -DGRAPHICS_API_OPENGL_33 -DNOMINMAX -DPLATFORM_DESKTOP -DWIN32_LEAN_AND_MEAN -D_WIN32_WINNT=0x0A00 @CMakeFiles/client.dir/includes_CXX.rsp -O3 -DNDEBUG -std=gnu++20 -Wall -Wextra -Wpedantic -o CMakeFiles\\client.dir\\client.cpp.obj -c \"C:\\Users\\tgene\\OneDrive - MOEC\\Poker\\client.cpp\"",
-  "file": "C:/Users/tgene/OneDrive - MOEC/Poker/client.cpp",
-  "output": "CMakeFiles/client.dir/client.cpp.obj"
-},
-{
-  "directory": "C:/Users/tgene/OneDrive - MOEC/Poker/build",
-  "command": "C:\\mingw64\\bin\\g++.exe -DGRAPHICS_API_OPENGL_33 -DNOMINMAX -DPLATFORM_DESKTOP -DWIN32_LEAN_AND_MEAN -D_WIN32_WINNT=0x0A00 @CMakeFiles/client.dir/includes_CXX.rsp -O3 -DNDEBUG -std=gnu++20 -Wall -Wextra -Wpedantic -o CMakeFiles\\client.dir\\client_in_client.cpp.obj -c \"C:\\Users\\tgene\\OneDrive - MOEC\\Poker\\client_in_client.cpp\"",
+  "command": "C:\\mingw64\\bin\\g++.exe -DGRAPHICS_API_OPENGL_33 -DNOMINMAX -DPLATFORM_DESKTOP -DWIN32_LEAN_AND_MEAN -D_WIN32_WINNT=0x0A00 @CMakeFiles/AllInPoker.dir/includes_CXX.rsp -O3 -DNDEBUG -std=gnu++20 -Wall -Wextra -Wpedantic -o CMakeFiles\\AllInPoker.dir\\client_in_client.cpp.obj -c \"C:\\Users\\tgene\\OneDrive - MOEC\\Poker\\client_in_client.cpp\"",
   "file": "C:/Users/tgene/OneDrive - MOEC/Poker/client_in_client.cpp",
-  "output": "CMakeFiles/client.dir/client_in_client.cpp.obj"
+  "output": "CMakeFiles/AllInPoker.dir/client_in_client.cpp.obj"
 },
 {
   "directory": "C:/Users/tgene/OneDrive - MOEC/Poker/build",
-  "command": "C:\\mingw64\\bin\\g++.exe -DGRAPHICS_API_OPENGL_33 -DNOMINMAX -DPLATFORM_DESKTOP -DWIN32_LEAN_AND_MEAN -D_WIN32_WINNT=0x0A00 @CMakeFiles/client.dir/includes_CXX.rsp -O3 -DNDEBUG -std=gnu++20 -Wall -Wextra -Wpedantic -o CMakeFiles\\client.dir\\game.cpp.obj -c \"C:\\Users\\tgene\\OneDrive - MOEC\\Poker\\game.cpp\"",
+  "command": "C:\\mingw64\\bin\\g++.exe -DGRAPHICS_API_OPENGL_33 -DNOMINMAX -DPLATFORM_DESKTOP -DWIN32_LEAN_AND_MEAN -D_WIN32_WINNT=0x0A00 @CMakeFiles/AllInPoker.dir/includes_CXX.rsp -O3 -DNDEBUG -std=gnu++20 -Wall -Wextra -Wpedantic -o CMakeFiles\\AllInPoker.dir\\game.cpp.obj -c \"C:\\Users\\tgene\\OneDrive - MOEC\\Poker\\game.cpp\"",
   "file": "C:/Users/tgene/OneDrive - MOEC/Poker/game.cpp",
-  "output": "CMakeFiles/client.dir/game.cpp.obj"
+  "output": "CMakeFiles/AllInPoker.dir/game.cpp.obj"
 },
 {
   "directory": "C:/Users/tgene/OneDrive - MOEC/Poker/build",
-  "command": "C:\\mingw64\\bin\\g++.exe -DGRAPHICS_API_OPENGL_33 -DNOMINMAX -DPLATFORM_DESKTOP -DWIN32_LEAN_AND_MEAN -D_WIN32_WINNT=0x0A00 @CMakeFiles/client.dir/includes_CXX.rsp -O3 -DNDEBUG -std=gnu++20 -Wall -Wextra -Wpedantic -o CMakeFiles\\client.dir\\chat.cpp.obj -c \"C:\\Users\\tgene\\OneDrive - MOEC\\Poker\\chat.cpp\"",
+  "command": "C:\\mingw64\\bin\\g++.exe -DGRAPHICS_API_OPENGL_33 -DNOMINMAX -DPLATFORM_DESKTOP -DWIN32_LEAN_AND_MEAN -D_WIN32_WINNT=0x0A00 @CMakeFiles/AllInPoker.dir/includes_CXX.rsp -O3 -DNDEBUG -std=gnu++20 -Wall -Wextra -Wpedantic -o CMakeFiles\\AllInPoker.dir\\chat.cpp.obj -c \"C:\\Users\\tgene\\OneDrive - MOEC\\Poker\\chat.cpp\"",
   "file": "C:/Users/tgene/OneDrive - MOEC/Poker/chat.cpp",
-  "output": "CMakeFiles/client.dir/chat.cpp.obj"
+  "output": "CMakeFiles/AllInPoker.dir/chat.cpp.obj"
 },
 {
   "directory": "C:/Users/tgene/OneDrive - MOEC/Poker/build",
-  "command": "C:\\mingw64\\bin\\g++.exe -DGRAPHICS_API_OPENGL_33 -DNOMINMAX -DPLATFORM_DESKTOP -DWIN32_LEAN_AND_MEAN -D_WIN32_WINNT=0x0A00 @CMakeFiles/client.dir/includes_CXX.rsp -O3 -DNDEBUG -std=gnu++20 -Wall -Wextra -Wpedantic -o CMakeFiles\\client.dir\\cards.cpp.obj -c \"C:\\Users\\tgene\\OneDrive - MOEC\\Poker\\cards.cpp\"",
+  "command": "C:\\mingw64\\bin\\g++.exe -DGRAPHICS_API_OPENGL_33 -DNOMINMAX -DPLATFORM_DESKTOP -DWIN32_LEAN_AND_MEAN -D_WIN32_WINNT=0x0A00 @CMakeFiles/AllInPoker.dir/includes_CXX.rsp -O3 -DNDEBUG -std=gnu++20 -Wall -Wextra -Wpedantic -o CMakeFiles\\AllInPoker.dir\\cards.cpp.obj -c \"C:\\Users\\tgene\\OneDrive - MOEC\\Poker\\cards.cpp\"",
   "file": "C:/Users/tgene/OneDrive - MOEC/Poker/cards.cpp",
-  "output": "CMakeFiles/client.dir/cards.cpp.obj"
+  "output": "CMakeFiles/AllInPoker.dir/cards.cpp.obj"
 },
 {
   "directory": "C:/Users/tgene/OneDrive - MOEC/Poker/build",
-  "command": "C:\\mingw64\\bin\\g++.exe -DGRAPHICS_API_OPENGL_33 -DNOMINMAX -DPLATFORM_DESKTOP -DWIN32_LEAN_AND_MEAN -D_WIN32_WINNT=0x0A00 @CMakeFiles/client.dir/includes_CXX.rsp -O3 -DNDEBUG -std=gnu++20 -Wall -Wextra -Wpedantic -o CMakeFiles\\client.dir\\images.cpp.obj -c \"C:\\Users\\tgene\\OneDrive - MOEC\\Poker\\images.cpp\"",
+  "command": "C:\\mingw64\\bin\\g++.exe -DGRAPHICS_API_OPENGL_33 -DNOMINMAX -DPLATFORM_DESKTOP -DWIN32_LEAN_AND_MEAN -D_WIN32_WINNT=0x0A00 @CMakeFiles/AllInPoker.dir/includes_CXX.rsp -O3 -DNDEBUG -std=gnu++20 -Wall -Wextra -Wpedantic -o CMakeFiles\\AllInPoker.dir\\images.cpp.obj -c \"C:\\Users\\tgene\\OneDrive - MOEC\\Poker\\images.cpp\"",
   "file": "C:/Users/tgene/OneDrive - MOEC/Poker/images.cpp",
-  "output": "CMakeFiles/client.dir/images.cpp.obj"
+  "output": "CMakeFiles/AllInPoker.dir/images.cpp.obj"
 },
 {
   "directory": "C:/Users/tgene/OneDrive - MOEC/Poker/build",
-  "command": "C:\\mingw64\\bin\\g++.exe -DGRAPHICS_API_OPENGL_33 -DNOMINMAX -DPLATFORM_DESKTOP -DWIN32_LEAN_AND_MEAN -D_WIN32_WINNT=0x0A00 @CMakeFiles/client.dir/includes_CXX.rsp -O3 -DNDEBUG -std=gnu++20 -Wall -Wextra -Wpedantic -o CMakeFiles\\client.dir\\buttons.cpp.obj -c \"C:\\Users\\tgene\\OneDrive - MOEC\\Poker\\buttons.cpp\"",
+  "command": "C:\\mingw64\\bin\\g++.exe -DGRAPHICS_API_OPENGL_33 -DNOMINMAX -DPLATFORM_DESKTOP -DWIN32_LEAN_AND_MEAN -D_WIN32_WINNT=0x0A00 @CMakeFiles/AllInPoker.dir/includes_CXX.rsp -O3 -DNDEBUG -std=gnu++20 -Wall -Wextra -Wpedantic -o CMakeFiles\\AllInPoker.dir\\buttons.cpp.obj -c \"C:\\Users\\tgene\\OneDrive - MOEC\\Poker\\buttons.cpp\"",
   "file": "C:/Users/tgene/OneDrive - MOEC/Poker/buttons.cpp",
-  "output": "CMakeFiles/client.dir/buttons.cpp.obj"
+  "output": "CMakeFiles/AllInPoker.dir/buttons.cpp.obj"
 },
 {
   "directory": "C:/Users/tgene/OneDrive - MOEC/Poker/build",
-  "command": "C:\\mingw64\\bin\\g++.exe -DGRAPHICS_API_OPENGL_33 -DNOMINMAX -DPLATFORM_DESKTOP -DWIN32_LEAN_AND_MEAN -D_WIN32_WINNT=0x0A00 @CMakeFiles/client.dir/includes_CXX.rsp -O3 -DNDEBUG -std=gnu++20 -Wall -Wextra -Wpedantic -o CMakeFiles\\client.dir\\uibuttons.cpp.obj -c \"C:\\Users\\tgene\\OneDrive - MOEC\\Poker\\uibuttons.cpp\"",
+  "command": "C:\\mingw64\\bin\\g++.exe -DGRAPHICS_API_OPENGL_33 -DNOMINMAX -DPLATFORM_DESKTOP -DWIN32_LEAN_AND_MEAN -D_WIN32_WINNT=0x0A00 @CMakeFiles/AllInPoker.dir/includes_CXX.rsp -O3 -DNDEBUG -std=gnu++20 -Wall -Wextra -Wpedantic -o CMakeFiles\\AllInPoker.dir\\uibuttons.cpp.obj -c \"C:\\Users\\tgene\\OneDrive - MOEC\\Poker\\uibuttons.cpp\"",
   "file": "C:/Users/tgene/OneDrive - MOEC/Poker/uibuttons.cpp",
-  "output": "CMakeFiles/client.dir/uibuttons.cpp.obj"
+  "output": "CMakeFiles/AllInPoker.dir/uibuttons.cpp.obj"
 },
 {
   "directory": "C:/Users/tgene/OneDrive - MOEC/Poker/build",
-  "command": "C:\\mingw64\\bin\\g++.exe -DGRAPHICS_API_OPENGL_33 -DNOMINMAX -DPLATFORM_DESKTOP -DWIN32_LEAN_AND_MEAN -D_WIN32_WINNT=0x0A00 @CMakeFiles/client.dir/includes_CXX.rsp -O3 -DNDEBUG -std=gnu++20 -Wall -Wextra -Wpedantic -o CMakeFiles\\client.dir\\mainmenu.cpp.obj -c \"C:\\Users\\tgene\\OneDrive - MOEC\\Poker\\mainmenu.cpp\"",
+  "command": "C:\\mingw64\\bin\\g++.exe -DGRAPHICS_API_OPENGL_33 -DNOMINMAX -DPLATFORM_DESKTOP -DWIN32_LEAN_AND_MEAN -D_WIN32_WINNT=0x0A00 @CMakeFiles/AllInPoker.dir/includes_CXX.rsp -O3 -DNDEBUG -std=gnu++20 -Wall -Wextra -Wpedantic -o CMakeFiles\\AllInPoker.dir\\mainmenu.cpp.obj -c \"C:\\Users\\tgene\\OneDrive - MOEC\\Poker\\mainmenu.cpp\"",
   "file": "C:/Users/tgene/OneDrive - MOEC/Poker/mainmenu.cpp",
-  "output": "CMakeFiles/client.dir/mainmenu.cpp.obj"
+  "output": "CMakeFiles/AllInPoker.dir/mainmenu.cpp.obj"
 },
 {
   "directory": "C:/Users/tgene/OneDrive - MOEC/Poker/build",
-  "command": "C:\\mingw64\\bin\\g++.exe -DGRAPHICS_API_OPENGL_33 -DNOMINMAX -DPLATFORM_DESKTOP -DWIN32_LEAN_AND_MEAN -D_WIN32_WINNT=0x0A00 @CMakeFiles/client.dir/includes_CXX.rsp -O3 -DNDEBUG -std=gnu++20 -Wall -Wextra -Wpedantic -o CMakeFiles\\client.dir\\deck.cpp.obj -c \"C:\\Users\\tgene\\OneDrive - MOEC\\Poker\\deck.cpp\"",
+  "command": "C:\\mingw64\\bin\\g++.exe -DGRAPHICS_API_OPENGL_33 -DNOMINMAX -DPLATFORM_DESKTOP -DWIN32_LEAN_AND_MEAN -D_WIN32_WINNT=0x0A00 @CMakeFiles/AllInPoker.dir/includes_CXX.rsp -O3 -DNDEBUG -std=gnu++20 -Wall -Wextra -Wpedantic -o CMakeFiles\\AllInPoker.dir\\deck.cpp.obj -c \"C:\\Users\\tgene\\OneDrive - MOEC\\Poker\\deck.cpp\"",
   "file": "C:/Users/tgene/OneDrive - MOEC/Poker/deck.cpp",
-  "output": "CMakeFiles/client.dir/deck.cpp.obj"
+  "output": "CMakeFiles/AllInPoker.dir/deck.cpp.obj"
 },
 {
   "directory": "C:/Users/tgene/OneDrive - MOEC/Poker/build/raylib_build/raylib",

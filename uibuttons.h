@@ -10,6 +10,7 @@ public:
     void Init(PokerClient *client, deque<PokerClient::popUpMessage> *popUpMessages, GameState *gamestate, PokerClient::ClientState *currentState, Font *buttonFont);
     void Draw();
     void Update();
+    void reset();
 
 private:
     PokerClient *client;

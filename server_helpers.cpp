@@ -244,6 +244,20 @@ string Server::getLocalIp()
     return "127.0.0.1";
 }
 
+std::string Server::ipToRoomCode(const std::string &ip)
+{
+    stringstream ss(ip);
+    string part;
+    stringstream code;
+
+    while (getline(ss, part, '.'))
+    {
+        int num = stoi(part);
+        code << char('A' + num / 16) << char('A' + num % 16);
+    }
+    return code.str();
+}
+
 shared_ptr<Client> Server::find_client_by_id(int id)
 {
     for (auto &client : state.clients)

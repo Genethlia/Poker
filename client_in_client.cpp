@@ -106,6 +106,11 @@ PokerClient::~PokerClient()
 }
 void PokerClient::connect_to(const string &host, const string &port)
 {
+    boost::system::error_code ec;
+    if (socket.is_open())
+        socket.close(ec);
+
+    socket = tcp::socket(io);
     tcp::resolver resolver(io);
     auto endpoints = resolver.resolve(host, port);
     boost::asio::connect(socket, endpoints);
@@ -194,6 +199,23 @@ void PokerClient::sendChat(const string &chat)
     msg.chatText = chat;
 
     write_line(serialize_client(msg));
+}
+
+void PokerClient::resetLocalState()
+{
+    {
+        lock_guard<mutex> lock(stateMutex);
+        state = ClientState();
+    }
+    {
+        lock_guard<mutex> lock(popUpMessagesMutex);
+        popUpMessages.clear();
+    }
+    {
+        lock_guard<mutex> lock(chatMessagesMutex);
+        chatMessages.clear();
+    }
+    gameRunning = false;
 }
 
 void PokerClient::stop()
@@ -324,6 +346,7 @@ void PokerClient::handle_line(const string &line)
                     state.betThisRound[id] = msg.betThisRoundMap[id];
             }
             state.myId = msg.playerId;
+            state.roomCode = msg.roomCode;
             rebuildPlayerPositions();
             createPopUp = false;
             break;

@@ -86,8 +86,8 @@ package_source/fast: package_source
 
 # Special rule for the target edit_cache
 edit_cache:
-	@$(CMAKE_COMMAND) -E cmake_echo_color "--switch=$(COLOR)" --cyan "Running CMake cache editor..."
-	"C:\Program Files\CMake\bin\cmake-gui.exe" -S$(CMAKE_SOURCE_DIR) -B$(CMAKE_BINARY_DIR)
+	@$(CMAKE_COMMAND) -E cmake_echo_color "--switch=$(COLOR)" --cyan "No interactive CMake dialog available..."
+	C:\mingw64\bin\cmake.exe -E echo "No interactive CMake dialog available."
 .PHONY : edit_cache
 
 # Special rule for the target edit_cache
@@ -181,30 +181,17 @@ depend:
 .PHONY : depend
 
 #=============================================================================
-# Target rules for targets named server
+# Target rules for targets named AllInPoker
 
 # Build rule for target.
-server: cmake_check_build_system
-	$(MAKE) $(MAKESILENT) -f CMakeFiles\Makefile2 server
-.PHONY : server
+AllInPoker: cmake_check_build_system
+	$(MAKE) $(MAKESILENT) -f CMakeFiles\Makefile2 AllInPoker
+.PHONY : AllInPoker
 
 # fast build rule for target.
-server/fast:
-	$(MAKE) $(MAKESILENT) -f CMakeFiles\server.dir\build.make CMakeFiles/server.dir/build
-.PHONY : server/fast
-
-#=============================================================================
-# Target rules for targets named client
-
-# Build rule for target.
-client: cmake_check_build_system
-	$(MAKE) $(MAKESILENT) -f CMakeFiles\Makefile2 client
-.PHONY : client
-
-# fast build rule for target.
-client/fast:
-	$(MAKE) $(MAKESILENT) -f CMakeFiles\client.dir\build.make CMakeFiles/client.dir/build
-.PHONY : client/fast
+AllInPoker/fast:
+	$(MAKE) $(MAKESILENT) -f CMakeFiles\AllInPoker.dir\build.make CMakeFiles/AllInPoker.dir/build
+.PHONY : AllInPoker/fast
 
 #=============================================================================
 # Target rules for targets named raylib
@@ -250,7 +237,7 @@ app_icon.obj: app_icon.rc.obj
 
 # target to build an object file
 app_icon.rc.obj:
-	$(MAKE) $(MAKESILENT) -f CMakeFiles\client.dir\build.make CMakeFiles/client.dir/app_icon.rc.obj
+	$(MAKE) $(MAKESILENT) -f CMakeFiles\AllInPoker.dir\build.make CMakeFiles/AllInPoker.dir/app_icon.rc.obj
 .PHONY : app_icon.rc.obj
 
 buttons.obj: buttons.cpp.obj
@@ -258,7 +245,7 @@ buttons.obj: buttons.cpp.obj
 
 # target to build an object file
 buttons.cpp.obj:
-	$(MAKE) $(MAKESILENT) -f CMakeFiles\client.dir\build.make CMakeFiles/client.dir/buttons.cpp.obj
+	$(MAKE) $(MAKESILENT) -f CMakeFiles\AllInPoker.dir\build.make CMakeFiles/AllInPoker.dir/buttons.cpp.obj
 .PHONY : buttons.cpp.obj
 
 buttons.i: buttons.cpp.i
@@ -266,7 +253,7 @@ buttons.i: buttons.cpp.i
 
 # target to preprocess a source file
 buttons.cpp.i:
-	$(MAKE) $(MAKESILENT) -f CMakeFiles\client.dir\build.make CMakeFiles/client.dir/buttons.cpp.i
+	$(MAKE) $(MAKESILENT) -f CMakeFiles\AllInPoker.dir\build.make CMakeFiles/AllInPoker.dir/buttons.cpp.i
 .PHONY : buttons.cpp.i
 
 buttons.s: buttons.cpp.s
@@ -274,7 +261,7 @@ buttons.s: buttons.cpp.s
 
 # target to generate assembly for a file
 buttons.cpp.s:
-	$(MAKE) $(MAKESILENT) -f CMakeFiles\client.dir\build.make CMakeFiles/client.dir/buttons.cpp.s
+	$(MAKE) $(MAKESILENT) -f CMakeFiles\AllInPoker.dir\build.make CMakeFiles/AllInPoker.dir/buttons.cpp.s
 .PHONY : buttons.cpp.s
 
 cards.obj: cards.cpp.obj
@@ -282,7 +269,7 @@ cards.obj: cards.cpp.obj
 
 # target to build an object file
 cards.cpp.obj:
-	$(MAKE) $(MAKESILENT) -f CMakeFiles\client.dir\build.make CMakeFiles/client.dir/cards.cpp.obj
+	$(MAKE) $(MAKESILENT) -f CMakeFiles\AllInPoker.dir\build.make CMakeFiles/AllInPoker.dir/cards.cpp.obj
 .PHONY : cards.cpp.obj
 
 cards.i: cards.cpp.i
@@ -290,7 +277,7 @@ cards.i: cards.cpp.i
 
 # target to preprocess a source file
 cards.cpp.i:
-	$(MAKE) $(MAKESILENT) -f CMakeFiles\client.dir\build.make CMakeFiles/client.dir/cards.cpp.i
+	$(MAKE) $(MAKESILENT) -f CMakeFiles\AllInPoker.dir\build.make CMakeFiles/AllInPoker.dir/cards.cpp.i
 .PHONY : cards.cpp.i
 
 cards.s: cards.cpp.s
@@ -298,7 +285,7 @@ cards.s: cards.cpp.s
 
 # target to generate assembly for a file
 cards.cpp.s:
-	$(MAKE) $(MAKESILENT) -f CMakeFiles\client.dir\build.make CMakeFiles/client.dir/cards.cpp.s
+	$(MAKE) $(MAKESILENT) -f CMakeFiles\AllInPoker.dir\build.make CMakeFiles/AllInPoker.dir/cards.cpp.s
 .PHONY : cards.cpp.s
 
 chat.obj: chat.cpp.obj
@@ -306,7 +293,7 @@ chat.obj: chat.cpp.obj
 
 # target to build an object file
 chat.cpp.obj:
-	$(MAKE) $(MAKESILENT) -f CMakeFiles\client.dir\build.make CMakeFiles/client.dir/chat.cpp.obj
+	$(MAKE) $(MAKESILENT) -f CMakeFiles\AllInPoker.dir\build.make CMakeFiles/AllInPoker.dir/chat.cpp.obj
 .PHONY : chat.cpp.obj
 
 chat.i: chat.cpp.i
@@ -314,7 +301,7 @@ chat.i: chat.cpp.i
 
 # target to preprocess a source file
 chat.cpp.i:
-	$(MAKE) $(MAKESILENT) -f CMakeFiles\client.dir\build.make CMakeFiles/client.dir/chat.cpp.i
+	$(MAKE) $(MAKESILENT) -f CMakeFiles\AllInPoker.dir\build.make CMakeFiles/AllInPoker.dir/chat.cpp.i
 .PHONY : chat.cpp.i
 
 chat.s: chat.cpp.s
@@ -322,39 +309,15 @@ chat.s: chat.cpp.s
 
 # target to generate assembly for a file
 chat.cpp.s:
-	$(MAKE) $(MAKESILENT) -f CMakeFiles\client.dir\build.make CMakeFiles/client.dir/chat.cpp.s
+	$(MAKE) $(MAKESILENT) -f CMakeFiles\AllInPoker.dir\build.make CMakeFiles/AllInPoker.dir/chat.cpp.s
 .PHONY : chat.cpp.s
-
-client.obj: client.cpp.obj
-.PHONY : client.obj
-
-# target to build an object file
-client.cpp.obj:
-	$(MAKE) $(MAKESILENT) -f CMakeFiles\client.dir\build.make CMakeFiles/client.dir/client.cpp.obj
-.PHONY : client.cpp.obj
-
-client.i: client.cpp.i
-.PHONY : client.i
-
-# target to preprocess a source file
-client.cpp.i:
-	$(MAKE) $(MAKESILENT) -f CMakeFiles\client.dir\build.make CMakeFiles/client.dir/client.cpp.i
-.PHONY : client.cpp.i
-
-client.s: client.cpp.s
-.PHONY : client.s
-
-# target to generate assembly for a file
-client.cpp.s:
-	$(MAKE) $(MAKESILENT) -f CMakeFiles\client.dir\build.make CMakeFiles/client.dir/client.cpp.s
-.PHONY : client.cpp.s
 
 client_in_client.obj: client_in_client.cpp.obj
 .PHONY : client_in_client.obj
 
 # target to build an object file
 client_in_client.cpp.obj:
-	$(MAKE) $(MAKESILENT) -f CMakeFiles\client.dir\build.make CMakeFiles/client.dir/client_in_client.cpp.obj
+	$(MAKE) $(MAKESILENT) -f CMakeFiles\AllInPoker.dir\build.make CMakeFiles/AllInPoker.dir/client_in_client.cpp.obj
 .PHONY : client_in_client.cpp.obj
 
 client_in_client.i: client_in_client.cpp.i
@@ -362,7 +325,7 @@ client_in_client.i: client_in_client.cpp.i
 
 # target to preprocess a source file
 client_in_client.cpp.i:
-	$(MAKE) $(MAKESILENT) -f CMakeFiles\client.dir\build.make CMakeFiles/client.dir/client_in_client.cpp.i
+	$(MAKE) $(MAKESILENT) -f CMakeFiles\AllInPoker.dir\build.make CMakeFiles/AllInPoker.dir/client_in_client.cpp.i
 .PHONY : client_in_client.cpp.i
 
 client_in_client.s: client_in_client.cpp.s
@@ -370,7 +333,7 @@ client_in_client.s: client_in_client.cpp.s
 
 # target to generate assembly for a file
 client_in_client.cpp.s:
-	$(MAKE) $(MAKESILENT) -f CMakeFiles\client.dir\build.make CMakeFiles/client.dir/client_in_client.cpp.s
+	$(MAKE) $(MAKESILENT) -f CMakeFiles\AllInPoker.dir\build.make CMakeFiles/AllInPoker.dir/client_in_client.cpp.s
 .PHONY : client_in_client.cpp.s
 
 client_in_server.obj: client_in_server.cpp.obj
@@ -378,7 +341,7 @@ client_in_server.obj: client_in_server.cpp.obj
 
 # target to build an object file
 client_in_server.cpp.obj:
-	$(MAKE) $(MAKESILENT) -f CMakeFiles\server.dir\build.make CMakeFiles/server.dir/client_in_server.cpp.obj
+	$(MAKE) $(MAKESILENT) -f CMakeFiles\AllInPoker.dir\build.make CMakeFiles/AllInPoker.dir/client_in_server.cpp.obj
 .PHONY : client_in_server.cpp.obj
 
 client_in_server.i: client_in_server.cpp.i
@@ -386,7 +349,7 @@ client_in_server.i: client_in_server.cpp.i
 
 # target to preprocess a source file
 client_in_server.cpp.i:
-	$(MAKE) $(MAKESILENT) -f CMakeFiles\server.dir\build.make CMakeFiles/server.dir/client_in_server.cpp.i
+	$(MAKE) $(MAKESILENT) -f CMakeFiles\AllInPoker.dir\build.make CMakeFiles/AllInPoker.dir/client_in_server.cpp.i
 .PHONY : client_in_server.cpp.i
 
 client_in_server.s: client_in_server.cpp.s
@@ -394,7 +357,7 @@ client_in_server.s: client_in_server.cpp.s
 
 # target to generate assembly for a file
 client_in_server.cpp.s:
-	$(MAKE) $(MAKESILENT) -f CMakeFiles\server.dir\build.make CMakeFiles/server.dir/client_in_server.cpp.s
+	$(MAKE) $(MAKESILENT) -f CMakeFiles\AllInPoker.dir\build.make CMakeFiles/AllInPoker.dir/client_in_server.cpp.s
 .PHONY : client_in_server.cpp.s
 
 deck.obj: deck.cpp.obj
@@ -402,8 +365,7 @@ deck.obj: deck.cpp.obj
 
 # target to build an object file
 deck.cpp.obj:
-	$(MAKE) $(MAKESILENT) -f CMakeFiles\server.dir\build.make CMakeFiles/server.dir/deck.cpp.obj
-	$(MAKE) $(MAKESILENT) -f CMakeFiles\client.dir\build.make CMakeFiles/client.dir/deck.cpp.obj
+	$(MAKE) $(MAKESILENT) -f CMakeFiles\AllInPoker.dir\build.make CMakeFiles/AllInPoker.dir/deck.cpp.obj
 .PHONY : deck.cpp.obj
 
 deck.i: deck.cpp.i
@@ -411,8 +373,7 @@ deck.i: deck.cpp.i
 
 # target to preprocess a source file
 deck.cpp.i:
-	$(MAKE) $(MAKESILENT) -f CMakeFiles\server.dir\build.make CMakeFiles/server.dir/deck.cpp.i
-	$(MAKE) $(MAKESILENT) -f CMakeFiles\client.dir\build.make CMakeFiles/client.dir/deck.cpp.i
+	$(MAKE) $(MAKESILENT) -f CMakeFiles\AllInPoker.dir\build.make CMakeFiles/AllInPoker.dir/deck.cpp.i
 .PHONY : deck.cpp.i
 
 deck.s: deck.cpp.s
@@ -420,8 +381,7 @@ deck.s: deck.cpp.s
 
 # target to generate assembly for a file
 deck.cpp.s:
-	$(MAKE) $(MAKESILENT) -f CMakeFiles\server.dir\build.make CMakeFiles/server.dir/deck.cpp.s
-	$(MAKE) $(MAKESILENT) -f CMakeFiles\client.dir\build.make CMakeFiles/client.dir/deck.cpp.s
+	$(MAKE) $(MAKESILENT) -f CMakeFiles\AllInPoker.dir\build.make CMakeFiles/AllInPoker.dir/deck.cpp.s
 .PHONY : deck.cpp.s
 
 game.obj: game.cpp.obj
@@ -429,7 +389,7 @@ game.obj: game.cpp.obj
 
 # target to build an object file
 game.cpp.obj:
-	$(MAKE) $(MAKESILENT) -f CMakeFiles\client.dir\build.make CMakeFiles/client.dir/game.cpp.obj
+	$(MAKE) $(MAKESILENT) -f CMakeFiles\AllInPoker.dir\build.make CMakeFiles/AllInPoker.dir/game.cpp.obj
 .PHONY : game.cpp.obj
 
 game.i: game.cpp.i
@@ -437,7 +397,7 @@ game.i: game.cpp.i
 
 # target to preprocess a source file
 game.cpp.i:
-	$(MAKE) $(MAKESILENT) -f CMakeFiles\client.dir\build.make CMakeFiles/client.dir/game.cpp.i
+	$(MAKE) $(MAKESILENT) -f CMakeFiles\AllInPoker.dir\build.make CMakeFiles/AllInPoker.dir/game.cpp.i
 .PHONY : game.cpp.i
 
 game.s: game.cpp.s
@@ -445,7 +405,7 @@ game.s: game.cpp.s
 
 # target to generate assembly for a file
 game.cpp.s:
-	$(MAKE) $(MAKESILENT) -f CMakeFiles\client.dir\build.make CMakeFiles/client.dir/game.cpp.s
+	$(MAKE) $(MAKESILENT) -f CMakeFiles\AllInPoker.dir\build.make CMakeFiles/AllInPoker.dir/game.cpp.s
 .PHONY : game.cpp.s
 
 images.obj: images.cpp.obj
@@ -453,7 +413,7 @@ images.obj: images.cpp.obj
 
 # target to build an object file
 images.cpp.obj:
-	$(MAKE) $(MAKESILENT) -f CMakeFiles\client.dir\build.make CMakeFiles/client.dir/images.cpp.obj
+	$(MAKE) $(MAKESILENT) -f CMakeFiles\AllInPoker.dir\build.make CMakeFiles/AllInPoker.dir/images.cpp.obj
 .PHONY : images.cpp.obj
 
 images.i: images.cpp.i
@@ -461,7 +421,7 @@ images.i: images.cpp.i
 
 # target to preprocess a source file
 images.cpp.i:
-	$(MAKE) $(MAKESILENT) -f CMakeFiles\client.dir\build.make CMakeFiles/client.dir/images.cpp.i
+	$(MAKE) $(MAKESILENT) -f CMakeFiles\AllInPoker.dir\build.make CMakeFiles/AllInPoker.dir/images.cpp.i
 .PHONY : images.cpp.i
 
 images.s: images.cpp.s
@@ -469,15 +429,39 @@ images.s: images.cpp.s
 
 # target to generate assembly for a file
 images.cpp.s:
-	$(MAKE) $(MAKESILENT) -f CMakeFiles\client.dir\build.make CMakeFiles/client.dir/images.cpp.s
+	$(MAKE) $(MAKESILENT) -f CMakeFiles\AllInPoker.dir\build.make CMakeFiles/AllInPoker.dir/images.cpp.s
 .PHONY : images.cpp.s
+
+main.obj: main.cpp.obj
+.PHONY : main.obj
+
+# target to build an object file
+main.cpp.obj:
+	$(MAKE) $(MAKESILENT) -f CMakeFiles\AllInPoker.dir\build.make CMakeFiles/AllInPoker.dir/main.cpp.obj
+.PHONY : main.cpp.obj
+
+main.i: main.cpp.i
+.PHONY : main.i
+
+# target to preprocess a source file
+main.cpp.i:
+	$(MAKE) $(MAKESILENT) -f CMakeFiles\AllInPoker.dir\build.make CMakeFiles/AllInPoker.dir/main.cpp.i
+.PHONY : main.cpp.i
+
+main.s: main.cpp.s
+.PHONY : main.s
+
+# target to generate assembly for a file
+main.cpp.s:
+	$(MAKE) $(MAKESILENT) -f CMakeFiles\AllInPoker.dir\build.make CMakeFiles/AllInPoker.dir/main.cpp.s
+.PHONY : main.cpp.s
 
 mainmenu.obj: mainmenu.cpp.obj
 .PHONY : mainmenu.obj
 
 # target to build an object file
 mainmenu.cpp.obj:
-	$(MAKE) $(MAKESILENT) -f CMakeFiles\client.dir\build.make CMakeFiles/client.dir/mainmenu.cpp.obj
+	$(MAKE) $(MAKESILENT) -f CMakeFiles\AllInPoker.dir\build.make CMakeFiles/AllInPoker.dir/mainmenu.cpp.obj
 .PHONY : mainmenu.cpp.obj
 
 mainmenu.i: mainmenu.cpp.i
@@ -485,7 +469,7 @@ mainmenu.i: mainmenu.cpp.i
 
 # target to preprocess a source file
 mainmenu.cpp.i:
-	$(MAKE) $(MAKESILENT) -f CMakeFiles\client.dir\build.make CMakeFiles/client.dir/mainmenu.cpp.i
+	$(MAKE) $(MAKESILENT) -f CMakeFiles\AllInPoker.dir\build.make CMakeFiles/AllInPoker.dir/mainmenu.cpp.i
 .PHONY : mainmenu.cpp.i
 
 mainmenu.s: mainmenu.cpp.s
@@ -493,7 +477,7 @@ mainmenu.s: mainmenu.cpp.s
 
 # target to generate assembly for a file
 mainmenu.cpp.s:
-	$(MAKE) $(MAKESILENT) -f CMakeFiles\client.dir\build.make CMakeFiles/client.dir/mainmenu.cpp.s
+	$(MAKE) $(MAKESILENT) -f CMakeFiles\AllInPoker.dir\build.make CMakeFiles/AllInPoker.dir/mainmenu.cpp.s
 .PHONY : mainmenu.cpp.s
 
 server.obj: server.cpp.obj
@@ -501,7 +485,7 @@ server.obj: server.cpp.obj
 
 # target to build an object file
 server.cpp.obj:
-	$(MAKE) $(MAKESILENT) -f CMakeFiles\server.dir\build.make CMakeFiles/server.dir/server.cpp.obj
+	$(MAKE) $(MAKESILENT) -f CMakeFiles\AllInPoker.dir\build.make CMakeFiles/AllInPoker.dir/server.cpp.obj
 .PHONY : server.cpp.obj
 
 server.i: server.cpp.i
@@ -509,7 +493,7 @@ server.i: server.cpp.i
 
 # target to preprocess a source file
 server.cpp.i:
-	$(MAKE) $(MAKESILENT) -f CMakeFiles\server.dir\build.make CMakeFiles/server.dir/server.cpp.i
+	$(MAKE) $(MAKESILENT) -f CMakeFiles\AllInPoker.dir\build.make CMakeFiles/AllInPoker.dir/server.cpp.i
 .PHONY : server.cpp.i
 
 server.s: server.cpp.s
@@ -517,7 +501,7 @@ server.s: server.cpp.s
 
 # target to generate assembly for a file
 server.cpp.s:
-	$(MAKE) $(MAKESILENT) -f CMakeFiles\server.dir\build.make CMakeFiles/server.dir/server.cpp.s
+	$(MAKE) $(MAKESILENT) -f CMakeFiles\AllInPoker.dir\build.make CMakeFiles/AllInPoker.dir/server.cpp.s
 .PHONY : server.cpp.s
 
 server_helpers.obj: server_helpers.cpp.obj
@@ -525,7 +509,7 @@ server_helpers.obj: server_helpers.cpp.obj
 
 # target to build an object file
 server_helpers.cpp.obj:
-	$(MAKE) $(MAKESILENT) -f CMakeFiles\server.dir\build.make CMakeFiles/server.dir/server_helpers.cpp.obj
+	$(MAKE) $(MAKESILENT) -f CMakeFiles\AllInPoker.dir\build.make CMakeFiles/AllInPoker.dir/server_helpers.cpp.obj
 .PHONY : server_helpers.cpp.obj
 
 server_helpers.i: server_helpers.cpp.i
@@ -533,7 +517,7 @@ server_helpers.i: server_helpers.cpp.i
 
 # target to preprocess a source file
 server_helpers.cpp.i:
-	$(MAKE) $(MAKESILENT) -f CMakeFiles\server.dir\build.make CMakeFiles/server.dir/server_helpers.cpp.i
+	$(MAKE) $(MAKESILENT) -f CMakeFiles\AllInPoker.dir\build.make CMakeFiles/AllInPoker.dir/server_helpers.cpp.i
 .PHONY : server_helpers.cpp.i
 
 server_helpers.s: server_helpers.cpp.s
@@ -541,23 +525,15 @@ server_helpers.s: server_helpers.cpp.s
 
 # target to generate assembly for a file
 server_helpers.cpp.s:
-	$(MAKE) $(MAKESILENT) -f CMakeFiles\server.dir\build.make CMakeFiles/server.dir/server_helpers.cpp.s
+	$(MAKE) $(MAKESILENT) -f CMakeFiles\AllInPoker.dir\build.make CMakeFiles/AllInPoker.dir/server_helpers.cpp.s
 .PHONY : server_helpers.cpp.s
-
-server_icon.obj: server_icon.rc.obj
-.PHONY : server_icon.obj
-
-# target to build an object file
-server_icon.rc.obj:
-	$(MAKE) $(MAKESILENT) -f CMakeFiles\server.dir\build.make CMakeFiles/server.dir/server_icon.rc.obj
-.PHONY : server_icon.rc.obj
 
 uibuttons.obj: uibuttons.cpp.obj
 .PHONY : uibuttons.obj
 
 # target to build an object file
 uibuttons.cpp.obj:
-	$(MAKE) $(MAKESILENT) -f CMakeFiles\client.dir\build.make CMakeFiles/client.dir/uibuttons.cpp.obj
+	$(MAKE) $(MAKESILENT) -f CMakeFiles\AllInPoker.dir\build.make CMakeFiles/AllInPoker.dir/uibuttons.cpp.obj
 .PHONY : uibuttons.cpp.obj
 
 uibuttons.i: uibuttons.cpp.i
@@ -565,7 +541,7 @@ uibuttons.i: uibuttons.cpp.i
 
 # target to preprocess a source file
 uibuttons.cpp.i:
-	$(MAKE) $(MAKESILENT) -f CMakeFiles\client.dir\build.make CMakeFiles/client.dir/uibuttons.cpp.i
+	$(MAKE) $(MAKESILENT) -f CMakeFiles\AllInPoker.dir\build.make CMakeFiles/AllInPoker.dir/uibuttons.cpp.i
 .PHONY : uibuttons.cpp.i
 
 uibuttons.s: uibuttons.cpp.s
@@ -573,7 +549,7 @@ uibuttons.s: uibuttons.cpp.s
 
 # target to generate assembly for a file
 uibuttons.cpp.s:
-	$(MAKE) $(MAKESILENT) -f CMakeFiles\client.dir\build.make CMakeFiles/client.dir/uibuttons.cpp.s
+	$(MAKE) $(MAKESILENT) -f CMakeFiles\AllInPoker.dir\build.make CMakeFiles/AllInPoker.dir/uibuttons.cpp.s
 .PHONY : uibuttons.cpp.s
 
 # Help Target
@@ -591,10 +567,9 @@ help:
 	@echo ... package_source
 	@echo ... rebuild_cache
 	@echo ... update_mappings
-	@echo ... client
+	@echo ... AllInPoker
 	@echo ... glfw
 	@echo ... raylib
-	@echo ... server
 	@echo ... app_icon.obj
 	@echo ... buttons.obj
 	@echo ... buttons.i
@@ -605,9 +580,6 @@ help:
 	@echo ... chat.obj
 	@echo ... chat.i
 	@echo ... chat.s
-	@echo ... client.obj
-	@echo ... client.i
-	@echo ... client.s
 	@echo ... client_in_client.obj
 	@echo ... client_in_client.i
 	@echo ... client_in_client.s
@@ -623,6 +595,9 @@ help:
 	@echo ... images.obj
 	@echo ... images.i
 	@echo ... images.s
+	@echo ... main.obj
+	@echo ... main.i
+	@echo ... main.s
 	@echo ... mainmenu.obj
 	@echo ... mainmenu.i
 	@echo ... mainmenu.s
@@ -632,7 +607,6 @@ help:
 	@echo ... server_helpers.obj
 	@echo ... server_helpers.i
 	@echo ... server_helpers.s
-	@echo ... server_icon.obj
 	@echo ... uibuttons.obj
 	@echo ... uibuttons.i
 	@echo ... uibuttons.s
