@@ -46,29 +46,29 @@ add_subdirectory(${CMAKE_SOURCE_DIR}/raylib raylib_build)
 # ---- One combined executable ----
 add_executable(AllInPoker
   # New main file for the full app
-  main.cpp
+  src/main.cpp
 
   # Server-side code
   # Only include server.cpp if it does NOT contain int main()
-  server.cpp
-  client_in_server.cpp
-  server_helpers.cpp
+  src/server/server.cpp
+  src/server/client_in_server.cpp
+  src/server/server_helpers.cpp
 
   # Client-side code
-  client_in_client.cpp
-  game.cpp
-  chat.cpp
-  cards.cpp
-  images.cpp
-  buttons.cpp
-  uibuttons.cpp
-  mainmenu.cpp
+  src/client/client_in_client.cpp
+  src/client/game.cpp
+  src/client/chat.cpp
+  src/client/cards.cpp
+  src/client/images.cpp
+  src/client/buttons.cpp
+  src/client/uibuttons.cpp
+  src/client/mainmenu.cpp
 
   # Shared code
-  deck.cpp
+  src/shared/deck.cpp
 
   # Icon
-  app_icon.rc
+  resources/app_icon.rc
 )
 
 # Force static MSVC runtime
@@ -84,7 +84,14 @@ target_link_libraries(AllInPoker PRIVATE Threads::Threads)
 
 # Boost headers
 set(BOOST_ROOT "C:\\boost\\boost_1_84_0")
-target_include_directories(AllInPoker PRIVATE "${BOOST_ROOT}")
+target_include_directories(AllInPoker PRIVATE
+  "${CMAKE_SOURCE_DIR}/src"
+  "${CMAKE_SOURCE_DIR}/src/client"
+  "${CMAKE_SOURCE_DIR}/src/server"
+  "${CMAKE_SOURCE_DIR}/src/shared"
+  "${CMAKE_SOURCE_DIR}/resources"
+  "${BOOST_ROOT}"
+)
 
 # Link libraries
 target_link_libraries(AllInPoker PRIVATE raylib)

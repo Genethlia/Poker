@@ -8,7 +8,7 @@ set(CMAKE_DEPENDS_LANGUAGES
   )
 # The set of files for implicit dependencies of each language:
 set(CMAKE_DEPENDS_CHECK_RC
-  "C:/Users/tgene/OneDrive - MOEC/Poker/app_icon.rc" "C:/Users/tgene/OneDrive - MOEC/Poker/build/CMakeFiles/AllInPoker.dir/app_icon.rc.obj"
+  "C:/Users/tgene/OneDrive - MOEC/Poker/resources/app_icon.rc" "C:/Users/tgene/OneDrive - MOEC/Poker/build/CMakeFiles/AllInPoker.dir/resources/app_icon.rc.obj"
   )
 
 # Preprocessor definitions for this target.
@@ -22,25 +22,30 @@ set(CMAKE_TARGET_DEFINITIONS_RC
 
 # The include file search paths:
 set(CMAKE_RC_TARGET_INCLUDE_PATH
+  "C:/Users/tgene/OneDrive - MOEC/Poker/src"
+  "C:/Users/tgene/OneDrive - MOEC/Poker/src/client"
+  "C:/Users/tgene/OneDrive - MOEC/Poker/src/server"
+  "C:/Users/tgene/OneDrive - MOEC/Poker/src/shared"
+  "C:/Users/tgene/OneDrive - MOEC/Poker/resources"
   "C:/boost/boost_1_84_0"
   "C:/Users/tgene/OneDrive - MOEC/Poker/raylib/src"
   )
 
 # The set of dependency files which are needed:
 set(CMAKE_DEPENDS_DEPENDENCY_FILES
-  "C:/Users/tgene/OneDrive - MOEC/Poker/buttons.cpp" "CMakeFiles/AllInPoker.dir/buttons.cpp.obj" "gcc" "CMakeFiles/AllInPoker.dir/buttons.cpp.obj.d"
-  "C:/Users/tgene/OneDrive - MOEC/Poker/cards.cpp" "CMakeFiles/AllInPoker.dir/cards.cpp.obj" "gcc" "CMakeFiles/AllInPoker.dir/cards.cpp.obj.d"
-  "C:/Users/tgene/OneDrive - MOEC/Poker/chat.cpp" "CMakeFiles/AllInPoker.dir/chat.cpp.obj" "gcc" "CMakeFiles/AllInPoker.dir/chat.cpp.obj.d"
-  "C:/Users/tgene/OneDrive - MOEC/Poker/client_in_client.cpp" "CMakeFiles/AllInPoker.dir/client_in_client.cpp.obj" "gcc" "CMakeFiles/AllInPoker.dir/client_in_client.cpp.obj.d"
-  "C:/Users/tgene/OneDrive - MOEC/Poker/client_in_server.cpp" "CMakeFiles/AllInPoker.dir/client_in_server.cpp.obj" "gcc" "CMakeFiles/AllInPoker.dir/client_in_server.cpp.obj.d"
-  "C:/Users/tgene/OneDrive - MOEC/Poker/deck.cpp" "CMakeFiles/AllInPoker.dir/deck.cpp.obj" "gcc" "CMakeFiles/AllInPoker.dir/deck.cpp.obj.d"
-  "C:/Users/tgene/OneDrive - MOEC/Poker/game.cpp" "CMakeFiles/AllInPoker.dir/game.cpp.obj" "gcc" "CMakeFiles/AllInPoker.dir/game.cpp.obj.d"
-  "C:/Users/tgene/OneDrive - MOEC/Poker/images.cpp" "CMakeFiles/AllInPoker.dir/images.cpp.obj" "gcc" "CMakeFiles/AllInPoker.dir/images.cpp.obj.d"
-  "C:/Users/tgene/OneDrive - MOEC/Poker/main.cpp" "CMakeFiles/AllInPoker.dir/main.cpp.obj" "gcc" "CMakeFiles/AllInPoker.dir/main.cpp.obj.d"
-  "C:/Users/tgene/OneDrive - MOEC/Poker/mainmenu.cpp" "CMakeFiles/AllInPoker.dir/mainmenu.cpp.obj" "gcc" "CMakeFiles/AllInPoker.dir/mainmenu.cpp.obj.d"
-  "C:/Users/tgene/OneDrive - MOEC/Poker/server.cpp" "CMakeFiles/AllInPoker.dir/server.cpp.obj" "gcc" "CMakeFiles/AllInPoker.dir/server.cpp.obj.d"
-  "C:/Users/tgene/OneDrive - MOEC/Poker/server_helpers.cpp" "CMakeFiles/AllInPoker.dir/server_helpers.cpp.obj" "gcc" "CMakeFiles/AllInPoker.dir/server_helpers.cpp.obj.d"
-  "C:/Users/tgene/OneDrive - MOEC/Poker/uibuttons.cpp" "CMakeFiles/AllInPoker.dir/uibuttons.cpp.obj" "gcc" "CMakeFiles/AllInPoker.dir/uibuttons.cpp.obj.d"
+  "C:/Users/tgene/OneDrive - MOEC/Poker/src/client/buttons.cpp" "CMakeFiles/AllInPoker.dir/src/client/buttons.cpp.obj" "gcc" "CMakeFiles/AllInPoker.dir/src/client/buttons.cpp.obj.d"
+  "C:/Users/tgene/OneDrive - MOEC/Poker/src/client/cards.cpp" "CMakeFiles/AllInPoker.dir/src/client/cards.cpp.obj" "gcc" "CMakeFiles/AllInPoker.dir/src/client/cards.cpp.obj.d"
+  "C:/Users/tgene/OneDrive - MOEC/Poker/src/client/chat.cpp" "CMakeFiles/AllInPoker.dir/src/client/chat.cpp.obj" "gcc" "CMakeFiles/AllInPoker.dir/src/client/chat.cpp.obj.d"
+  "C:/Users/tgene/OneDrive - MOEC/Poker/src/client/client_in_client.cpp" "CMakeFiles/AllInPoker.dir/src/client/client_in_client.cpp.obj" "gcc" "CMakeFiles/AllInPoker.dir/src/client/client_in_client.cpp.obj.d"
+  "C:/Users/tgene/OneDrive - MOEC/Poker/src/client/game.cpp" "CMakeFiles/AllInPoker.dir/src/client/game.cpp.obj" "gcc" "CMakeFiles/AllInPoker.dir/src/client/game.cpp.obj.d"
+  "C:/Users/tgene/OneDrive - MOEC/Poker/src/client/images.cpp" "CMakeFiles/AllInPoker.dir/src/client/images.cpp.obj" "gcc" "CMakeFiles/AllInPoker.dir/src/client/images.cpp.obj.d"
+  "C:/Users/tgene/OneDrive - MOEC/Poker/src/client/mainmenu.cpp" "CMakeFiles/AllInPoker.dir/src/client/mainmenu.cpp.obj" "gcc" "CMakeFiles/AllInPoker.dir/src/client/mainmenu.cpp.obj.d"
+  "C:/Users/tgene/OneDrive - MOEC/Poker/src/client/uibuttons.cpp" "CMakeFiles/AllInPoker.dir/src/client/uibuttons.cpp.obj" "gcc" "CMakeFiles/AllInPoker.dir/src/client/uibuttons.cpp.obj.d"
+  "C:/Users/tgene/OneDrive - MOEC/Poker/src/main.cpp" "CMakeFiles/AllInPoker.dir/src/main.cpp.obj" "gcc" "CMakeFiles/AllInPoker.dir/src/main.cpp.obj.d"
+  "C:/Users/tgene/OneDrive - MOEC/Poker/src/server/client_in_server.cpp" "CMakeFiles/AllInPoker.dir/src/server/client_in_server.cpp.obj" "gcc" "CMakeFiles/AllInPoker.dir/src/server/client_in_server.cpp.obj.d"
+  "C:/Users/tgene/OneDrive - MOEC/Poker/src/server/server.cpp" "CMakeFiles/AllInPoker.dir/src/server/server.cpp.obj" "gcc" "CMakeFiles/AllInPoker.dir/src/server/server.cpp.obj.d"
+  "C:/Users/tgene/OneDrive - MOEC/Poker/src/server/server_helpers.cpp" "CMakeFiles/AllInPoker.dir/src/server/server_helpers.cpp.obj" "gcc" "CMakeFiles/AllInPoker.dir/src/server/server_helpers.cpp.obj.d"
+  "C:/Users/tgene/OneDrive - MOEC/Poker/src/shared/deck.cpp" "CMakeFiles/AllInPoker.dir/src/shared/deck.cpp.obj" "gcc" "CMakeFiles/AllInPoker.dir/src/shared/deck.cpp.obj.d"
   )
 
 # Targets to which this target links which contain Fortran sources.
