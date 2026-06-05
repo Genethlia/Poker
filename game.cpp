@@ -6,6 +6,7 @@ Font Game::cardFontStatic{}; // Definition of the static card font variable
 
 Game::Game()
 {
+    leaveButton = {VIRTUAL_WIDTH - 230, 110, 200, 40};
 }
 
 Game::~Game()
@@ -26,7 +27,7 @@ void Game::start()
 {
 
     SetConfigFlags(FLAG_WINDOW_RESIZABLE);
-    InitWindow(VIRTUAL_WIDTH, VIRTUAL_HEIGHT, "Poker Game");
+    InitWindow(VIRTUAL_WIDTH, VIRTUAL_HEIGHT, "All In Poker");
     SetTargetFPS(60);
 
     target = LoadRenderTexture(VIRTUAL_WIDTH, VIRTUAL_HEIGHT);
@@ -108,11 +109,7 @@ void Game::update()
     }
     else
     {
-        if (IsKeyPressed(KEY_TAB))
-        {
-            leaveToMainMenu();
-            return;
-        }
+        updateLeaveButton();
         updateGameState();
         clearCardsIfNecessary();
         updatePopUpMessages();
@@ -138,12 +135,22 @@ void Game::update()
 void Game::updateGameState()
 {
     auto newState = client.getClientStateCopy();
+
+    bool positionsChanged = currentState.PlayerPosition != newState.PlayerPosition;
+
     if (newState.gameState != currentState.gameState)
     {
         onServerStateChange(newState.gameState);
     }
     buildMoneyChips();
     currentState = newState;
+
+    if (positionsChanged)
+    {
+        visualState.reset();
+        DrawnCount.clear();
+    }
+
     if (visualState.gameState == GameState::Showdown)
     {
         if (hasEnoughTimePassed(visualState.showdownTimerStartTime, 5.0))
@@ -290,6 +297,7 @@ void Game::draw()
         drawPopUpMessages();
         drawCodeAndSpectators();
         uiButton.Draw();
+        drawLeaveButton();
     }
 }
 
@@ -355,6 +363,14 @@ void Game::VisualState::drawCards()
     {
         card.Draw();
     }
+}
+
+void Game::VisualState::reset()
+{
+    myCards.clear();
+    opponentCards.clear();
+    communityCards.clear();
+    idToShowCardsOf.clear();
 }
 
 void Game::updateVisualState()
@@ -461,7 +477,13 @@ void Game::drawPopUpMessages()
 
 void Game::onServerStateChange(GameState newState)
 {
+    if (newState == GameState::PreFlop)
+    {
+        resetForNewGame();
+    }
+
     visualState.gameState = newState;
+
     if (newState == GameState::Showdown)
     {
         visualState.showdownTimerStartTime = GetTime();
@@ -474,8 +496,14 @@ void Game::resetForNewGame()
     visualState.opponentCards.clear();
     visualState.myCards.clear();
     visualState.idToShowCardsOf.clear();
-    DrawnCount.clear();
+
+    currentState.communityCards.clear();
+    currentState.opponentCards.clear();
+    currentState.myCards.clear();
+    currentState.idToShowCardsOf.clear();
+
     visualState.showdownTimerStartTime = 0.0;
+    DrawnCount.clear();
 }
 
 void Game::drawChat()
@@ -503,6 +531,24 @@ void Game::drawCodeAndSpectators()
     {
         string spectatorText = TextFormat("Spectators: %d", spectatorCount);
         DrawTextCentered({VIRTUAL_WIDTH - textWidth - 30.0f, 30.0f, textWidth, 20.0f}, spectatorText.c_str(), 20, mainFont, WHITE);
+    }
+}
+
+void Game::drawLeaveButton()
+{
+    Vector2 mouse = GetVirtualMousePosition();
+    Color bg = CheckCollisionPointRec(mouse, leaveButton) ? buttonColorSchemes[0].first : buttonColorSchemes[0].second;
+    DrawRectangleRounded(leaveButton, 0.5f, 16, bg);
+    DrawTextCentered(leaveButton, "LEAVE", 30, mainFont, BLACK);
+}
+
+void Game::updateLeaveButton()
+{
+    Vector2 mouse = GetVirtualMousePosition();
+    bool clicked = IsMouseButtonPressed(MOUSE_BUTTON_LEFT) && CheckCollisionPointRec(mouse, leaveButton);
+    if (clicked)
+    {
+        leaveToMainMenu();
     }
 }
 

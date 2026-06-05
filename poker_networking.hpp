@@ -269,7 +269,7 @@ inline std::string serialize_server(const MessageServerToClient &m)
         out << "PLAYER_JOINED " << m.playerId << " " << m.name << " " << m.isSpectator << " " << m.isSeated;
         break;
     case MessageTypeServerToClient::PlayerLeft:
-        out << "PLAYER_LEFT " << m.playerId;
+        out << "PLAYER_LEFT " << m.playerId << " " << m.name;
         break;
     case MessageTypeServerToClient::PlayerReady:
         out << "PLAYER_READY " << m.playerId;
@@ -422,7 +422,7 @@ inline MessageServerToClient deserialize_server(const std::string &line)
         else if (command == "PLAYER_LEFT")
         {
             msg.type = MessageTypeServerToClient::PlayerLeft;
-            in >> msg.playerId;
+            in >> msg.playerId >> msg.name;
         }
         else if (command == "PLAYER_READY")
         {

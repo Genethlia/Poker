@@ -55,6 +55,7 @@ void Server::end()
 void Server::play_game()
 {
     promoteWaitingPlayers();
+    broadcastUnorderedMapUpdates();
     vector<shared_ptr<Client>> players = orderedActivePlayers();
     sort(players.begin(), players.end(), [](const shared_ptr<Client> &a, const shared_ptr<Client> &b)
          { return a->id < b->id; });
@@ -119,7 +120,9 @@ void Server::play_game()
     state.currentBet = state.bigBlind;
     state.minRaise = state.bigBlind;
 
+    broadcastUnorderedMapUpdates();
     broadcastBettingUpdate(state.bigBlind);
+    broadcastGameState();
     state.handstate.hole.clear();
 
     cout << "All players are ready. Starting game...\n";
@@ -662,10 +665,20 @@ void Server::handleDisconnect(int playerId)
     if (!p)
         return;
 
+    std::string name = p->display_name();
+
+    cout << "Handling disconnect for " << name << "\n";
+
+    MessageServerToClient msg;
+    msg.type = MessageTypeServerToClient::PlayerLeft;
+    msg.playerId = playerId;
+    msg.name = name;
+    state.broadcast_all(serialize_server(msg));
+
     p->connected = false;
     p->ready = false;
-
-    cout << "Handling disconnect for " << p->display_name() << "\n";
+    p->spectator = true;
+    p->seated = false;
 
     if (p->inHand)
     {
@@ -677,13 +690,15 @@ void Server::handleDisconnect(int playerId)
     if (state.toAct == playerId)
         state.toAct = -1;
 
-    // state.idToMoney[playerId] = p->money;
+    state.needsAction.erase(playerId);
 
-    // MessageServerToClient msg;
-    // msg.type = MessageTypeServerToClient::PlayerLeft;
-    // msg.playerId = playerId;
-    // msg.name = findNameById(playerId);
-    // state.broadcast_all(serialize_server(msg));
+    state.broadcast_all(serialize_server(MessageServerToClient{
+        .type = MessageTypeServerToClient::UnorderedMapUpdate,
+        .playerNames = state.buildNameSnapshot(),
+        .playerMoney = state.buildMoneySnapshot(),
+        .isSpectatorMap = state.buildSpectatorSnapshot(),
+        .isSeatedMap = state.buildSeatedSnapshot(),
+        .betThisRoundMap = state.buildBetThisRoundSnapshot()}));
 
     if (!gameInProgress)
     {
@@ -703,11 +718,6 @@ void Server::removeDisconnectedClients()
     }
     for (auto &c : toRemove)
     {
-        MessageServerToClient msg;
-        msg.type = MessageTypeServerToClient::PlayerLeft;
-        msg.playerId = c->id;
-        msg.name = findNameById(c->id);
-        state.broadcast_all(serialize_server(msg));
         state.needsAction.erase(c->id);
         state.clients.erase(c);
         cout << "Removed client " << c->display_name() << " from server.\n";

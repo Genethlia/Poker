@@ -52,6 +52,8 @@ private:
     void drawChat();
     void updateChat();
     void drawCodeAndSpectators();
+    void drawLeaveButton();
+    void updateLeaveButton();
 
     PokerClient client = PokerClient();
     PokerClient::ClientState currentState;
@@ -82,6 +84,7 @@ private:
 
         void updateCards();
         void drawCards();
+        void reset();
     };
 
     VisualState visualState;
@@ -149,4 +152,6 @@ private:
 
     void leaveToMainMenu();
     void stopHostedServerIfNeeded();
+
+    Rectangle leaveButton;
 };

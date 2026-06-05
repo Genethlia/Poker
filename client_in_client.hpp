@@ -1,6 +1,7 @@
 #pragma once
 #include "poker_networking.hpp"
 #include "cards.h"
+#include <algorithm>
 
 enum class popUpMessageType
 {
@@ -145,6 +146,7 @@ private:
     };
 
     void rebuildPlayerPositions();
+    void removeOpponentCardsAndIdToShowCards(const int &id);
 
     string winPowerTranslation(int winPower);
 };

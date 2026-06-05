@@ -415,3 +415,14 @@ void Server::scheduleNextGame()
                                  }
                                 play_game(); });
 }
+
+void Server::broadcastUnorderedMapUpdates()
+{
+    state.broadcast_all(serialize_server(MessageServerToClient{
+        .type = MessageTypeServerToClient::UnorderedMapUpdate,
+        .playerNames = state.buildNameSnapshot(),
+        .playerMoney = state.buildMoneySnapshot(),
+        .isSpectatorMap = state.buildSpectatorSnapshot(),
+        .isSeatedMap = state.buildSeatedSnapshot(),
+        .betThisRoundMap = state.buildBetThisRoundSnapshot()}));
+}

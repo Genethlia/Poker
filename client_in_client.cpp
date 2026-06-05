@@ -14,7 +14,7 @@ pop PokerClient::createPopUpMessage(MessageServerToClient msg)
     case MessageTypeServerToClient::PlayerJoined:
         return pop(nameOfUnsafe(msg.playerId) + " joined the game.", popUpMessageType::PlayerJoined);
     case MessageTypeServerToClient::PlayerLeft:
-        return pop(nameOfUnsafe(msg.playerId) + " left the game.", popUpMessageType::PlayerLeft);
+        return pop(msg.name + " left the game.", popUpMessageType::PlayerLeft);
     case MessageTypeServerToClient::PlayerReady:
         return pop(nameOfUnsafe(msg.playerId) + " is ready.", popUpMessageType::PlayerReady);
     case MessageTypeServerToClient::ChatFrom:
@@ -366,6 +366,7 @@ void PokerClient::handle_line(const string &line)
             state.playerMoney.erase(msg.playerId); // Remove player money for the player who left
             state.isSpectator.erase(msg.playerId); // Remove spectator status for the player who left
             state.isSeated.erase(msg.playerId);    // Remove seated status for the player who left
+            removeOpponentCardsAndIdToShowCards(msg.playerId);
             rebuildPlayerPositions();
             break;
         }
@@ -470,6 +471,13 @@ void PokerClient::handle_line(const string &line)
             state.bigBlindId = msg.bigBlindId;     // Update the client state with the new big blind ID
             for (auto &[id, hand] : msg.playerHands)
             {
+                cout << "Graphics hand for id " << id
+                     << " hasName=" << state.playerNames.count(id)
+                     << " seated=" << (state.isSeated.count(id) ? state.isSeated[id] : false)
+                     << " spectator=" << (state.isSpectator.count(id) ? state.isSpectator[id] : false)
+                     << " hasPosition=" << state.PlayerPosition.count(id)
+                     << "\n";
+
                 state.opponentCards.push_back({id, hand.first});
                 state.opponentCards.push_back({id, hand.second});
             }
@@ -602,28 +610,46 @@ void PokerClient::rebuildPlayerPositions()
 
     vector<int> visualOrder{};
 
-    for (size_t i = 0; i < ids.size(); i++)
+    if (selfIndex != -1)
     {
-        int index = (selfIndex + i) % ids.size();
-        visualOrder.push_back(ids[index]);
+        for (size_t i = 0; i < ids.size(); i++)
+        {
+            int index = (selfIndex + i) % ids.size();
+            visualOrder.push_back(ids[index]);
+        }
+
+        int otherPlayerCount = 0;
+
+        for (int id : visualOrder)
+        {
+            if (id == state.myId)
+            {
+                state.PlayerPosition[id] = playerCardPositionsAndAngles.back(); // Position for self
+                // state.PlayerPosition[id] = {Seat::Left, 90}; // Debug: Temporarily set self to Left seat for chat testing.
+            }
+            else
+            {
+                if (otherPlayerCount >= (int)playerCardPositionsAndAngles.size() - 1)
+                    break;
+                state.PlayerPosition[id] = playerCardPositionsAndAngles[otherPlayerCount++]; // Positions for opponents
+            }
+        }
     }
-
-    int otherPlayerCount = 0;
-
-    for (int id : visualOrder)
+    else
     {
-        if (id == state.myId)
+        for (size_t i = 0; i < ids.size() && i < playerCardPositionsAndAngles.size(); i++)
         {
-            state.PlayerPosition[id] = playerCardPositionsAndAngles.back(); // Position for self
-            // state.PlayerPosition[id] = {Seat::Left, 90}; // Debug: Temporarily set self to Left seat for chat testing.
-        }
-        else
-        {
-            if (otherPlayerCount >= (int)playerCardPositionsAndAngles.size() - 1)
-                break;
-            state.PlayerPosition[id] = playerCardPositionsAndAngles[otherPlayerCount++]; // Positions for opponents
+            state.PlayerPosition[ids[i]] = playerCardPositionsAndAngles[i];
         }
     }
+}
+
+void PokerClient::removeOpponentCardsAndIdToShowCards(const int &id)
+{
+    state.opponentCards.erase(std::remove_if(state.opponentCards.begin(), state.opponentCards.end(), [&](const auto &cardPair)
+                                             { return cardPair.first == id; }),
+                              state.opponentCards.end());
+    state.idToShowCardsOf.erase(std::remove(state.idToShowCardsOf.begin(), state.idToShowCardsOf.end(), id), state.idToShowCardsOf.end());
 }
 
 string PokerClient::winPowerTranslation(int winPower)

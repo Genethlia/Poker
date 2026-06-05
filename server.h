@@ -54,6 +54,7 @@ private:
     void chooseBlinds(const std::vector<int> &activeIds);
     void postBlind(int playerId, int amount);
     void scheduleNextGame();
+    void broadcastUnorderedMapUpdates();
 
     int countInHand();
     int CountCanAct();

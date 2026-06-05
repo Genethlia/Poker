@@ -14,7 +14,7 @@ void MainMenu::Update()
     int key = GetCharPressed();
     while (key > 0)
     {
-        if (key >= 32 && key <= 126)
+        if (key > 32 && key <= 126)
         {
             if (typingName && name.size() < 10)
             {
