@@ -16,6 +16,8 @@ public:
 	void SetHidden(bool v);
 	void GoImmediatelyToTarget();
 	void StartFlip();
+	int getValue();
+	int getSuit();
 	Vector2 pos;
 	valRank card;
 	Vector2 target;

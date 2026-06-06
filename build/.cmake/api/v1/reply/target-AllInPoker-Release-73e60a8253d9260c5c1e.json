@@ -71,12 +71,6 @@
 				"parent" : 6
 			},
 			{
-				"command" : 3,
-				"file" : 0,
-				"line" : 83,
-				"parent" : 0
-			},
-			{
 				"command" : 4,
 				"file" : 0,
 				"line" : 25,
@@ -96,22 +90,6 @@
 			}
 		]
 	},
-	"codemodelVersion" : 
-	{
-		"major" : 2,
-		"minor" : 9
-	},
-	"compileDependencies" : 
-	[
-		{
-			"backtrace" : 8,
-			"id" : "Threads::Threads::@6890427a1f51a3e7e1df"
-		},
-		{
-			"backtrace" : 4,
-			"id" : "raylib::@52310b9926f245239ea7"
-		}
-	],
 	"compileGroups" : 
 	[
 		{
@@ -121,15 +99,15 @@
 					"fragment" : "-O3 -DNDEBUG -std=gnu++20"
 				},
 				{
-					"backtrace" : 9,
+					"backtrace" : 8,
 					"fragment" : "-Wall"
 				},
 				{
-					"backtrace" : 9,
+					"backtrace" : 8,
 					"fragment" : "-Wextra"
 				},
 				{
-					"backtrace" : 9,
+					"backtrace" : 8,
 					"fragment" : "-Wpedantic"
 				}
 			],
@@ -140,7 +118,7 @@
 					"define" : "GRAPHICS_API_OPENGL_33"
 				},
 				{
-					"backtrace" : 10,
+					"backtrace" : 9,
 					"define" : "NOMINMAX"
 				},
 				{
@@ -148,38 +126,38 @@
 					"define" : "PLATFORM_DESKTOP"
 				},
 				{
-					"backtrace" : 10,
+					"backtrace" : 9,
 					"define" : "WIN32_LEAN_AND_MEAN"
 				},
 				{
-					"backtrace" : 10,
+					"backtrace" : 9,
 					"define" : "_WIN32_WINNT=0x0A00"
 				}
 			],
 			"includes" : 
 			[
 				{
-					"backtrace" : 11,
+					"backtrace" : 10,
 					"path" : "C:/Users/tgene/OneDrive - MOEC/Poker/src"
 				},
 				{
-					"backtrace" : 11,
+					"backtrace" : 10,
 					"path" : "C:/Users/tgene/OneDrive - MOEC/Poker/src/client"
 				},
 				{
-					"backtrace" : 11,
+					"backtrace" : 10,
 					"path" : "C:/Users/tgene/OneDrive - MOEC/Poker/src/server"
 				},
 				{
-					"backtrace" : 11,
+					"backtrace" : 10,
 					"path" : "C:/Users/tgene/OneDrive - MOEC/Poker/src/shared"
 				},
 				{
-					"backtrace" : 11,
+					"backtrace" : 10,
 					"path" : "C:/Users/tgene/OneDrive - MOEC/Poker/resources"
 				},
 				{
-					"backtrace" : 11,
+					"backtrace" : 10,
 					"path" : "C:/boost/boost_1_84_0"
 				},
 				{
@@ -221,7 +199,7 @@
 					"define" : "GRAPHICS_API_OPENGL_33"
 				},
 				{
-					"backtrace" : 10,
+					"backtrace" : 9,
 					"define" : "NOMINMAX"
 				},
 				{
@@ -229,38 +207,38 @@
 					"define" : "PLATFORM_DESKTOP"
 				},
 				{
-					"backtrace" : 10,
+					"backtrace" : 9,
 					"define" : "WIN32_LEAN_AND_MEAN"
 				},
 				{
-					"backtrace" : 10,
+					"backtrace" : 9,
 					"define" : "_WIN32_WINNT=0x0A00"
 				}
 			],
 			"includes" : 
 			[
 				{
-					"backtrace" : 11,
+					"backtrace" : 10,
 					"path" : "C:/Users/tgene/OneDrive - MOEC/Poker/src"
 				},
 				{
-					"backtrace" : 11,
+					"backtrace" : 10,
 					"path" : "C:/Users/tgene/OneDrive - MOEC/Poker/src/client"
 				},
 				{
-					"backtrace" : 11,
+					"backtrace" : 10,
 					"path" : "C:/Users/tgene/OneDrive - MOEC/Poker/src/server"
 				},
 				{
-					"backtrace" : 11,
+					"backtrace" : 10,
 					"path" : "C:/Users/tgene/OneDrive - MOEC/Poker/src/shared"
 				},
 				{
-					"backtrace" : 11,
+					"backtrace" : 10,
 					"path" : "C:/Users/tgene/OneDrive - MOEC/Poker/resources"
 				},
 				{
-					"backtrace" : 11,
+					"backtrace" : 10,
 					"path" : "C:/boost/boost_1_84_0"
 				},
 				{
@@ -352,29 +330,6 @@
 		],
 		"language" : "CXX"
 	},
-	"linkLibraries" : 
-	[
-		{
-			"backtrace" : 8,
-			"id" : "Threads::Threads::@6890427a1f51a3e7e1df"
-		},
-		{
-			"backtrace" : 4,
-			"id" : "raylib::@52310b9926f245239ea7"
-		},
-		{
-			"backtrace" : 5,
-			"fragment" : "ws2_32"
-		},
-		{
-			"backtrace" : 5,
-			"fragment" : "mswsock"
-		},
-		{
-			"backtrace" : 5,
-			"fragment" : "iphlpapi"
-		}
-	],
 	"name" : "AllInPoker",
 	"nameOnDisk" : "AllInPoker.exe",
 	"paths" : 

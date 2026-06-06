@@ -134,18 +134,6 @@
 			}
 		]
 	},
-	"codemodelVersion" : 
-	{
-		"major" : 2,
-		"minor" : 9
-	},
-	"compileDependencies" : 
-	[
-		{
-			"backtrace" : 5,
-			"id" : "glfw::@0007fcb0029cba81045f"
-		}
-	],
 	"compileGroups" : 
 	[
 		{
@@ -236,53 +224,8 @@
 			"path" : "C:/Program Files (x86)/POKER"
 		}
 	},
-	"interfaceLinkLibraries" : 
-	[
-		{
-			"backtrace" : 5,
-			"fragment" : "opengl32"
-		},
-		{
-			"backtrace" : 5,
-			"fragment" : "glu32"
-		},
-		{
-			"backtrace" : 5,
-			"fragment" : "winmm"
-		},
-		{
-			"backtrace" : 5,
-			"id" : "glfw::@0007fcb0029cba81045f"
-		}
-	],
-	"linkLibraries" : 
-	[
-		{
-			"backtrace" : 5,
-			"fragment" : "opengl32"
-		},
-		{
-			"backtrace" : 5,
-			"fragment" : "glu32"
-		},
-		{
-			"backtrace" : 5,
-			"fragment" : "winmm"
-		},
-		{
-			"backtrace" : 5,
-			"id" : "glfw::@0007fcb0029cba81045f"
-		}
-	],
 	"name" : "raylib",
 	"nameOnDisk" : "libraylib.a",
-	"objectDependencies" : 
-	[
-		{
-			"backtrace" : 1,
-			"id" : "glfw::@0007fcb0029cba81045f"
-		}
-	],
 	"paths" : 
 	{
 		"build" : "raylib_build/raylib",

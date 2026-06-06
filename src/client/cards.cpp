@@ -169,6 +169,16 @@ void Card::StartFlip()
     flipProgress = 0.0f;
 }
 
+int Card::getValue()
+{
+    return card.value;
+}
+
+int Card::getSuit()
+{
+    return card.suit;
+}
+
 string Card::cardnum(valRank cardInfo)
 {
     if (cardInfo.value == 14)

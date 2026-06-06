@@ -1073,7 +1073,7 @@ CMakeFiles/AllInPoker.dir/src/server/server_helpers.cpp.obj: \
  C:/mingw64/include/c++/15.2.0/thread C:/mingw64/include/c++/15.2.0/queue \
  C:/mingw64/include/c++/15.2.0/bits/stl_queue.h \
  C:\Users\tgene\OneDrive\ -\ MOEC\Poker\src\server\client_in_server.hpp \
- C:\Users\tgene\OneDrive\ -\ MOEC\Poker\src\server\game_logic.hpp \
+ C:/Users/tgene/ONEDRI~1/Poker/src/shared/game_logic.hpp \
  C:/mingw64/include/c++/15.2.0/random C:/mingw64/include/c++/15.2.0/cmath \
  C:/mingw64/x86_64-w64-mingw32/include/math.h \
  C:/mingw64/include/c++/15.2.0/bits/specfun.h \

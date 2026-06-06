@@ -54,7 +54,7 @@ void UiButton::Init(PokerClient *client, deque<PokerClient::popUpMessage> *popUp
         {
             this->client->sendAction(PlayerActionType::Check);
         } }, &currentState->toAct, &currentState->myId, &currentState->toCall, buttonFont);
-    raiseButton.Init(1020, 820, 500, 50, currentState, &raiseAmount, &buttonInteractionFlag, &quick, buttonFont);
+    raiseButton.Init(1030, 820, 500, 50, currentState, &raiseAmount, &buttonInteractionFlag, &quick, buttonFont);
     confirmRaiseButton.Init(450, 800, 200, 80, "Bet", [this]()
                             {
                                                 if (raiseAmount > 0)

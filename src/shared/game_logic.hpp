@@ -200,3 +200,169 @@ inline vector<int> determine_winner(const vector<hand> &playerHand, const vector
     }
     return winners;
 }
+
+static Score scoreLessThan5(const vector<valRank> cards)
+{
+    if (cards.empty())
+        return Score{0, 0, 0, 0, 0, 0};
+
+    unordered_map<int, int> valueCount;
+
+    for (auto &card : cards)
+    {
+        valueCount[valueOf(card)]++;
+    }
+
+    vector<pair<int, int>> groups;
+
+    for (auto &[value, count] : valueCount)
+    {
+        groups.push_back({count, value});
+    }
+
+    sort(groups.begin(), groups.end(), [](auto a, auto b)
+         {
+             if (a.first != b.first)
+                 return a.first > b.first; // bigger group first
+
+             return a.second > b.second; // higher value first
+         });
+
+    vector<int> kickers;
+
+    for (auto &g : groups)
+    {
+        if (g.first == 1)
+            kickers.push_back(g.second);
+    }
+
+    sort(kickers.begin(), kickers.end(), greater<int>());
+
+    if (groups[0].first == 4)
+    {
+        return Score{8, groups[0].second, 0, 0, 0, 0};
+    }
+
+    if (groups[0].first == 3)
+    {
+        int k1 = kickers.size() > 0 ? kickers[0] : 0;
+        return Score{4, groups[0].second, k1, 0, 0, 0};
+    }
+
+    if (groups.size() >= 2 && groups[0].first == 2 && groups[1].first == 2)
+    {
+        int highPair = max(groups[0].second, groups[1].second);
+        int lowPair = min(groups[0].second, groups[1].second);
+
+        return Score{3, highPair, lowPair, 0, 0, 0};
+    }
+
+    if (groups[0].first == 2)
+    {
+        int k1 = kickers.size() > 0 ? kickers[0] : 0;
+        int k2 = kickers.size() > 1 ? kickers[1] : 0;
+
+        return Score{2, groups[0].second, k1, k2, 0, 0};
+    }
+
+    // High card
+    vector<int> values;
+
+    for (auto &card : cards)
+    {
+        values.push_back(valueOf(card));
+    }
+
+    sort(values.begin(), values.end(), greater<int>());
+
+    Score score{1, 0, 0, 0, 0, 0};
+
+    for (int i = 0; i < values.size() && i < 5; i++)
+    {
+        score[i + 1] = values[i];
+    }
+
+    return score;
+}
+
+static Score scoreVisibleCards(const vector<valRank> cards)
+{
+    if (cards.size() < 5)
+    {
+        return scoreLessThan5(cards);
+    }
+
+    if (cards.size() == 5)
+    {
+        array<valRank, 5> hand5;
+
+        for (int i = 0; i < 5; i++)
+        {
+            hand5[i] = cards[i];
+        }
+
+        return score5(hand5);
+    }
+
+    Score bestScore{0, 0, 0, 0, 0, 0};
+
+    for (int a = 0; a < cards.size() - 4; a++)
+    {
+        for (int b = a + 1; b < cards.size() - 3; b++)
+        {
+            for (int c = b + 1; c < cards.size() - 2; c++)
+            {
+                for (int d = c + 1; d < cards.size() - 1; d++)
+                {
+                    for (int e = d + 1; e < cards.size(); e++)
+                    {
+                        array<valRank, 5> combo = {
+                            cards[a],
+                            cards[b],
+                            cards[c],
+                            cards[d],
+                            cards[e]};
+
+                        Score score = score5(combo);
+
+                        if (scoreLess(bestScore, score))
+                        {
+                            bestScore = score;
+                        }
+                    }
+                }
+            }
+        }
+    }
+
+    return bestScore;
+}
+
+static std::string scoreName(const int score)
+{
+    switch (score)
+    {
+    case 10:
+        return "Royal Flush";
+    case 9:
+        return "Straight Flush";
+    case 8:
+        return "Four of a Kind";
+    case 7:
+        return "Full House";
+    case 6:
+        return "Flush";
+    case 5:
+        return "Straight";
+    case 4:
+        return "Three of a Kind";
+    case 3:
+        return "Two Pair";
+    case 2:
+        return "One Pair";
+    case 1:
+        return "High Card";
+    default:
+        return "";
+    }
+}

@@ -1027,7 +1027,7 @@ CMakeFiles/AllInPoker.dir/src/client/client_in_client.cpp.obj: \
  C:/mingw64/include/c++/15.2.0/bits/stl_queue.h \
  C:\Users\tgene\OneDrive\ -\ MOEC\Poker\src\client\cards.h \
  C:/Users/tgene/ONEDRI~1/Poker/src/shared/deck.h \
- C:/Users/tgene/ONEDRI~1/Poker/src/server/game_logic.hpp \
+ C:/Users/tgene/ONEDRI~1/Poker/src/shared/game_logic.hpp \
  C:/mingw64/include/c++/15.2.0/random C:/mingw64/include/c++/15.2.0/cmath \
  C:/mingw64/x86_64-w64-mingw32/include/math.h \
  C:/mingw64/include/c++/15.2.0/bits/specfun.h \

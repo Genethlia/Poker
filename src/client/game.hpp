@@ -54,6 +54,7 @@ private:
     void drawCodeAndSpectators();
     void drawLeaveButton();
     void updateLeaveButton();
+    void drawCurrentHandText();
 
     PokerClient client = PokerClient();
     PokerClient::ClientState currentState;

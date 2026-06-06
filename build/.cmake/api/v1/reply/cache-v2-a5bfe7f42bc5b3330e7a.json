@@ -75,7 +75,7 @@
 			[
 				{
 					"name" : "HELPSTRING",
-					"value" : "Choose the type of build, options are: None Debug Release RelWithDebInfo MinSizeRel ..."
+					"value" : "No help, variable specified on the command line."
 				}
 			],
 			"type" : "STRING",
@@ -115,7 +115,7 @@
 				}
 			],
 			"type" : "INTERNAL",
-			"value" : "2"
+			"value" : "1"
 		},
 		{
 			"name" : "CMAKE_CACHE_PATCH_VERSION",
@@ -127,7 +127,7 @@
 				}
 			],
 			"type" : "INTERNAL",
-			"value" : "3"
+			"value" : "0"
 		},
 		{
 			"name" : "CMAKE_COLOR_MAKEFILE",
@@ -155,7 +155,7 @@
 				}
 			],
 			"type" : "INTERNAL",
-			"value" : "C:/Program Files/CMake/bin/cmake.exe"
+			"value" : "C:/mingw64/bin/cmake.exe"
 		},
 		{
 			"name" : "CMAKE_CPACK_COMMAND",
@@ -167,7 +167,7 @@
 				}
 			],
 			"type" : "INTERNAL",
-			"value" : "C:/Program Files/CMake/bin/cpack.exe"
+			"value" : "C:/mingw64/bin/cpack.exe"
 		},
 		{
 			"name" : "CMAKE_CTEST_COMMAND",
@@ -179,7 +179,7 @@
 				}
 			],
 			"type" : "INTERNAL",
-			"value" : "C:/Program Files/CMake/bin/ctest.exe"
+			"value" : "C:/mingw64/bin/ctest.exe"
 		},
 		{
 			"name" : "CMAKE_CXX_COMPILER",
@@ -191,10 +191,10 @@
 				},
 				{
 					"name" : "HELPSTRING",
-					"value" : "CXX compiler"
+					"value" : "No help, variable specified on the command line."
 				}
 			],
-			"type" : "STRING",
+			"type" : "FILEPATH",
 			"value" : "C:/mingw64/bin/g++.exe"
 		},
 		{
@@ -335,10 +335,10 @@
 				},
 				{
 					"name" : "HELPSTRING",
-					"value" : "C compiler"
+					"value" : "No help, variable specified on the command line."
 				}
 			],
-			"type" : "STRING",
+			"type" : "FILEPATH",
 			"value" : "C:/mingw64/bin/gcc.exe"
 		},
 		{
@@ -1443,7 +1443,7 @@
 				}
 			],
 			"type" : "INTERNAL",
-			"value" : "C:/Program Files/CMake/share/cmake-4.2"
+			"value" : "C:/mingw64/share/cmake-4.1"
 		},
 		{
 			"name" : "CMAKE_SHARED_LINKER_FLAGS",

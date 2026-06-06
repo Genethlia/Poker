@@ -15,3 +15,5 @@ inline unordered_map<string, Color> all_Colors = {
     {"woodColor", {60, 30, 10, 255}},
     {"tableRed", {200, 33, 42, 255}},
     {"background", {82, 36, 0, 255}}};
+
+inline Color dark_Gold = {255, 189, 0, 230};

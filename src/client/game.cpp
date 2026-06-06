@@ -298,6 +298,7 @@ void Game::draw()
         drawCodeAndSpectators();
         uiButton.Draw();
         drawLeaveButton();
+        drawCurrentHandText();
     }
 }
 
@@ -550,6 +551,33 @@ void Game::updateLeaveButton()
     {
         leaveToMainMenu();
     }
+}
+
+void Game::drawCurrentHandText()
+{
+    vector<valRank> visibleCards;
+
+    for (auto &card : visualState.myCards)
+        visibleCards.push_back({card.getValue(), card.getSuit()});
+
+    for (auto &card : visualState.communityCards)
+        visibleCards.push_back({card.getValue(), card.getSuit()});
+
+    if (visibleCards.empty())
+        return;
+
+    Score currentScore = scoreVisibleCards(visibleCards);
+
+    string text = scoreName(currentScore[0]);
+
+    Rectangle hand = GetVirtualCenteredRectangle(200, 800, 80);
+    DrawRectangleRounded(
+        hand,
+        0.5f,
+        16,
+        dark_Gold);
+
+    DrawTextCentered(hand, text.c_str(), 30, mainFont, BLACK);
 }
 
 Color Game::getColorForPopUpMessageType(popUpMessageType type)

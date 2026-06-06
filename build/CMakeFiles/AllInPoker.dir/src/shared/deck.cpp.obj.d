@@ -1,7 +1,7 @@
 CMakeFiles/AllInPoker.dir/src/shared/deck.cpp.obj: \
  C:\Users\tgene\OneDrive\ -\ MOEC\Poker\src\shared\deck.cpp \
  C:\Users\tgene\OneDrive\ -\ MOEC\Poker\src\shared\deck.h \
- C:/Users/tgene/ONEDRI~1/Poker/src/server/game_logic.hpp \
+ C:\Users\tgene\OneDrive\ -\ MOEC\Poker\src\shared\game_logic.hpp \
  C:/mingw64/include/c++/15.2.0/utility \
  C:/mingw64/include/c++/15.2.0/x86_64-w64-mingw32/bits/c++config.h \
  C:/mingw64/include/c++/15.2.0/x86_64-w64-mingw32/bits/os_defines.h \
@@ -212,7 +212,7 @@ CMakeFiles/AllInPoker.dir/src/shared/deck.cpp.obj: \
  C:/mingw64/include/c++/15.2.0/bits/enable_special_members.h \
  C:/mingw64/include/c++/15.2.0/bits/node_handle.h \
  C:/mingw64/include/c++/15.2.0/bits/erase_if.h \
- C:/Users/tgene/ONEDRI~1/Poker/src/shared/poker_networking.hpp \
+ C:\Users\tgene\OneDrive\ -\ MOEC\Poker\src\shared\poker_networking.hpp \
  C:/boost/boost_1_84_0/boost/asio.hpp \
  C:/boost/boost_1_84_0/boost/asio/any_completion_executor.hpp \
  C:/boost/boost_1_84_0/boost/asio/detail/config.hpp \
