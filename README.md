@@ -2,6 +2,10 @@
 
 All In Poker is a LAN multiplayer poker game built with C++, raylib, and Boost.Asio. It supports hosting, joining by room code, betting actions, spectators, chat, all-ins, side pots, and graphical gameplay.
 
+## Download
+
+Download the latest playable version from the Releases page.
+
 ## Demo
 
 Watch the demo video:  
