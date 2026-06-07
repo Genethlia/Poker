@@ -4,7 +4,7 @@ All In Poker is a LAN multiplayer poker game built with C++, raylib, and Boost.A
 
 ## Download
 
-Download the latest playable version from the Releases page.
+Download the latest playable version from the Releases page. https://github.com/Genethlia/Poker/releases/tag/v1.0
 
 ## Demo
 
