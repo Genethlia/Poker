@@ -5,12 +5,12 @@ All In Poker is a LAN multiplayer poker game built with C++, raylib, and Boost.A
 ## Demo
 
 Watch the demo video:  
-[All In Poker Demo](media/demo/all-in-poker-demo.mp4)
+[All In Poker Demo](media/demo/AllInPokerDemo.mp4)
 
 ## Screenshots
 
 ### Main Menu
-![Main Menu](media/screenshots/mainmenu.png)
+![Main Menu](media/screenshots/mainMenu.png)
 
 ### Gameplay
 ![Gameplay](media/screenshots/gameplay.png)
