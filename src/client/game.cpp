@@ -93,6 +93,8 @@ void Game::start()
 
 void Game::update()
 {
+    updateFullScreen();
+    updateDimensions();
     if (screenState == ScreenState::MainMenu)
     {
         mainMenu.Update();
@@ -113,8 +115,6 @@ void Game::update()
         updateGameState();
         clearCardsIfNecessary();
         updatePopUpMessages();
-        updateFullScreen();
-        updateDimensions();
         uiButton.Update();
         updateChat();
 
@@ -163,7 +163,7 @@ void Game::updateGameState()
 
 void Game::updateFullScreen()
 {
-    if (IsKeyPressed(KEY_F11) || IsKeyPressed(KEY_KP_ENTER) && IsKeyDown(KEY_LEFT_ALT))
+    if (IsKeyPressed(KEY_F11) || (IsKeyPressed(KEY_F) && IsKeyDown(KEY_LEFT_ALT)))
     {
         ToggleFullscreen();
     }
