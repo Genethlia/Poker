@@ -401,6 +401,7 @@ void PokerClient::handle_line(const string &line)
         }
         case MessageTypeServerToClient::PlayerHand:
         {
+            rebuildPlayerPositions();
             auto temp = extractCardValueSuit(msg);
             cout << "Received hand card for player " << msg.playerId << ": Value = " << temp.value << ", Suit = " << temp.suit << "\n";
             if (msg.playerId == state.myId)

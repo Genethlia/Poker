@@ -15,6 +15,9 @@ void Server::start()
     {
 
         io.restart();
+
+        resetServerState();
+
         acceptor.reset();
         acceptor.emplace(io, tcp::endpoint(tcp::v4(), 6767));
 
@@ -50,6 +53,7 @@ void Server::end()
 
     state.clients.clear();
 
+    resetServerState();
     io.stop();
 }
 void Server::play_game()
@@ -236,7 +240,7 @@ void Server::AdvanceBetting()
         broadcastGameState();
         gameInProgress = false;
         cout << "Game ended. Waiting for players to be ready for the next game...\n";
-        gameEndedReset();
+        scheduleHandReset();
         return;
     }
 
@@ -245,7 +249,7 @@ void Server::AdvanceBetting()
         runOutToFive();
         doShowdown();
         gameInProgress = false;
-        gameEndedReset();
+        scheduleHandReset();
         cout << "Game ended. Waiting for players to be ready for the next game...\n";
 
         return;
@@ -275,7 +279,7 @@ void Server::AdvanceBetting()
         {
             doShowdown();
             gameInProgress = false;
-            gameEndedReset();
+            scheduleHandReset();
             cout << "Game ended. Waiting for players to be ready for the next game...\n";
             return;
         }
@@ -519,7 +523,7 @@ void Server::gameEndedReset()
     removeBrokePlayers();
     promoteWaitingPlayers();
 
-    scheduleNextGame();
+    scheduleHandReset();
 }
 
 void Server::removeBrokePlayers()
@@ -722,4 +726,41 @@ void Server::removeDisconnectedClients()
         state.clients.erase(c);
         cout << "Removed client " << c->display_name() << " from server.\n";
     }
+}
+
+void Server::resetServerState()
+{
+    boost::system::error_code ec;
+
+    nextGameTimer.cancel();
+
+    if (acceptor && acceptor->is_open())
+    {
+        acceptor->close(ec);
+    }
+
+    for (auto &client : state.clients)
+    {
+        if (client)
+        {
+            client->connected = false;
+            client->socket.close(ec);
+        }
+    }
+    state.clients.clear();
+
+    gameInProgress = false;
+
+    state.pot = 0;
+    state.currentBet = 0;
+    state.minRaise = state.bigBlind;
+    state.toAct = -1;
+    state.needsAction.clear();
+
+    state.dealerId = -1;
+    state.smallBlindId = -1;
+    state.bigBlindId = -1;
+
+    state.handstate.clear();
+    state.gameState = GameState::WaitingForPlayers;
 }

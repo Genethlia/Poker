@@ -53,8 +53,9 @@ private:
     void advanceDealer(const std::vector<int> &activeIds);
     void chooseBlinds(const std::vector<int> &activeIds);
     void postBlind(int playerId, int amount);
-    void scheduleNextGame();
+    void scheduleHandReset();
     void broadcastUnorderedMapUpdates();
+    void resetServerState();
 
     int countInHand();
     int CountCanAct();

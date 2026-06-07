@@ -378,6 +378,12 @@ void Game::updateVisualState()
 {
     while (currentState.myCards.size() > visualState.myCards.size())
     {
+        seatLayout layout;
+        if (!tryGetSeatLayout(currentState.myId, layout))
+        {
+            cout << "No seat layout for me\n";
+            return;
+        };
         valRank cardInfo = currentState.myCards[visualState.myCards.size()];
         visualState.myCards.emplace_back(getSeatLayout(currentState.myId).cardPos.x + DrawnCount[currentState.myId] * 25, getSeatLayout(currentState.myId).cardPos.y + DrawnCount[currentState.myId] * 5, cardInfo, &suitTextures[cardInfo.suit], &cardFont, &hiddenCardImage);
         DrawnCount[currentState.myId]++;
@@ -386,10 +392,12 @@ void Game::updateVisualState()
     {
         auto &[id, cardInfo] = currentState.opponentCards[visualState.opponentCards.size()];
 
-        if (!currentState.PlayerPosition.count(id))
+        seatLayout layout;
+        if (!tryGetSeatLayout(id, layout))
         {
-            cout << "Error: Received card for player ID " << id << " but no position information is available.\n";
-            break;
+            cout << "Waiting for seat layout before drawing cards for player ID "
+                 << id << "\n";
+            return;
         }
         pos basePos = getSeatLayout(id).cardPos;
         int offsetX = DrawnCount[id] * 80;
@@ -653,6 +661,22 @@ seatLayout Game::getSeatLayout(int id)
         return seatLayout();
     }
     return it->second;
+}
+
+bool Game::tryGetSeatLayout(int id, seatLayout &out)
+{
+    auto posIt = currentState.PlayerPosition.find(id);
+    if (posIt == currentState.PlayerPosition.end())
+        return false;
+
+    Seat seat = posIt->second.first;
+
+    auto layoutIt = seatLayouts.find(seat);
+    if (layoutIt == seatLayouts.end())
+        return false;
+
+    out = layoutIt->second;
+    return true;
 }
 
 int Game::getPlayerCardRotationAngle(int id)

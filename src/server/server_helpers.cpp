@@ -396,7 +396,7 @@ void Server::postBlind(int playerId, int amount)
         p->allin = true;
 }
 
-void Server::scheduleNextGame()
+void Server::scheduleHandReset()
 {
     nextGameTimer.expires_after(std::chrono::seconds(5));
     nextGameTimer.async_wait([this](const boost::system::error_code &ec)
@@ -405,6 +405,7 @@ void Server::scheduleNextGame()
                                  {
                                      return;
                                  }
+                                 gameEndedReset();
                                  if(!state.all_ready())
                                  {
                                      return;

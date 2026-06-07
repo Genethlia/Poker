@@ -105,6 +105,7 @@ private:
         {Seat::Right, {{VIRTUAL_WIDTH - 230, VIRTUAL_HEIGHT / 2 + 40}, {VIRTUAL_WIDTH - 200, VIRTUAL_HEIGHT / 2 - 40}, {VIRTUAL_WIDTH - 420, VIRTUAL_HEIGHT / 2 - 10}, {VIRTUAL_WIDTH - 290, VIRTUAL_HEIGHT / 2 - 30}}},
         {Seat::Bottom, {{VIRTUAL_WIDTH / 2 - 50, VIRTUAL_HEIGHT - 170}, {VIRTUAL_WIDTH / 2 - 150, VIRTUAL_HEIGHT - 250}, {VIRTUAL_WIDTH / 2 - 20, VIRTUAL_HEIGHT - 250}, {VIRTUAL_WIDTH / 2 + 50, VIRTUAL_HEIGHT - 200}}}};
 
+    bool tryGetSeatLayout(int id, seatLayout &out);
     int getPlayerCardRotationAngle(int id);
     std::unordered_map<int, int> DrawnCount = {};
 
