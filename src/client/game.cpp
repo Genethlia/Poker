@@ -395,8 +395,7 @@ void Game::updateVisualState()
         seatLayout layout;
         if (!tryGetSeatLayout(id, layout))
         {
-            cout << "Waiting for seat layout before drawing cards for player ID "
-                 << id << "\n";
+            cout << "Waiting for seat layout before drawing cards for player ID " << id << "\n";
             return;
         }
         pos basePos = getSeatLayout(id).cardPos;

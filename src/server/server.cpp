@@ -58,6 +58,8 @@ void Server::end()
 }
 void Server::play_game()
 {
+
+    nextGameTimer.cancel();
     promoteWaitingPlayers();
     broadcastUnorderedMapUpdates();
     vector<shared_ptr<Client>> players = orderedActivePlayers();
@@ -291,9 +293,15 @@ void Server::AdvanceBetting()
     }
 
     int next = nextIdNeedingAction(state.toAct);
+    if (next == -1 && !state.needsAction.empty())
+    {
+        next = *state.needsAction.begin();
+    }
+
     if (next == -1)
     {
-        cout << "ERROR: no active ids, cannot pick toAct\n";
+        cout << "ERROR: no player needs action\n";
+        state.toAct = -1;
         return;
     }
     state.toAct = next;
@@ -709,8 +717,28 @@ void Server::handleDisconnect(int playerId)
         removeDisconnectedClients();
         return;
     }
+    if (state.needsAction.empty())
+    {
+        AdvanceBetting();
+        return;
+    }
 
-    AdvanceBetting();
+    int next = nextIdNeedingAction(playerId);
+
+    if (next == -1)
+        next = *state.needsAction.begin();
+
+    state.toAct = next;
+
+    auto nextPlayer = find_client_by_id(next);
+    if (nextPlayer)
+    {
+        int toCall = std::max(0, state.currentBet - nextPlayer->betThisRound);
+        broadcastBettingUpdate(toCall);
+    }
+
+    removeDisconnectedClients();
+    return;
 }
 void Server::removeDisconnectedClients()
 {
